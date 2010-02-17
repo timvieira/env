@@ -1,0 +1,33 @@
+## My escape key:
+escape ``
+
+## general settings:
+vbell off                       # default: off
+autodetach on           # default: on
+startup_message off     # default: on
+crlf off                        # default: off
+defscrollback 5000      # default: 100
+silencewait 15                  
+shell -$SHELL
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+hardstatus alwayslastline 
+hardstatus string "%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{r}(%{W}%n*%f %t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{W} %m/%d %{W}%c %{g}]"
+
+## keybindings
+bind k
+bind ^k
+bind .
+bind ^\
+bind \\
+bind ^h
+bind h
+bind 'K' kill
+bind 'I' login on
+bind 'O' login off
+bind '}' history
+bind = resize =
+bind + resize +3
+bind - resize -3
+msgwait 15
+activity "Activity in %n ^G"
+
