@@ -6,6 +6,12 @@
 [ -z "$PS1" ] && return
 
 #______________________________________________________________________________
+# Keybindings
+
+# appends "|less" to the end of current line
+bind "'\C-o': '\C-e |less'"
+
+#______________________________________________________________________________
 # Bash History
 
 # don't put duplicate lines in the history. See bash(1) for more options
@@ -18,8 +24,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTFILESIZE=1000000000000
-
+export HISTSIZE=10000000000
+export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear"
 
 shopt -s cmdhist
@@ -106,22 +112,43 @@ export PATH=$PATH:~/projects/bin
 export PYTHONPATH=/home/timv/projects/python-extras:/home/timv/projects:$PYTHONPATH
 export PYTHONSTARTUP=/home/timv/projects/python-extras/pythonstartup.py
 
+
+JAVAEXTRAS=/home/timv/projects/java-extras
+export CLASSPATH=.:$CLASSPATH
+
 # Learning-Based Java (LBJ)
-LBJDIR=/home/timv/projects/java-extras/lbj-things
+LBJDIR=$JAVAEXTRAS/lbj-things
 export CLASSPATH=$CLASSPATH:$LBJDIR/LBJPOS.jar:$LBJDIR/LBJ2.jar:$LBJDIR/LBJ2Library.jar
 
 # Jython
-export JYTHON_HOME=/home/timv/projects/java-extras/jython
+export JYTHON_HOME=$JAVAEXTRAS/jython
 export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
+
+# Redstone xml-rpc
+R=$JAVAEXTRAS/redstone-xmlrpc
+export CLASSPATH=$CLASSPATH:$R/simple-4.0.1.jar:$R/simple-xmlrpc-1.0.jar:$R/xmlrpc-1.1.1.jar
+
+
+# Apache xml-rpc
+A=$JAVAEXTRAS/apache-xmlrpc-3.1.2/lib/
+export CLASSPATH=$A/commons-logging-1.1.jar:$A/ws-commons-util-1.0.2.jar:$CLASSPATH
+export CLASSPATH=$A/xmlrpc-common-3.1.2.jar:$A/xmlrpc-client-3.1.2.jar:$A/xmlrpc-server-3.1.2.jar:$CLASSPATH
+
+# Ubigraph-Java Client
+export CLASSPATH=$JAVAEXTRAS/ubigraph.jar:$CLASSPATH
+
 
 # bash will check all the directories in the $CDPATH list for matches to the directory name.
 # export CDPATH='.:~:/usr/local/apache/htdocs:/disk/backups'
+
+# XXX: THIS MIGHT NOT BE NECESSARY:
+export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
 
 #______________________________________________________________________________
 # Aliases
 
 # Colorization aliases
-# enable color support of ls and also add handy aliases
+# enable color support of several utils
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -136,7 +163,7 @@ fi
 alias ll='ls -lAh'
 alias la='ls -A'
 alias l='ls -CF'
-alias lll='ls -h -l --group-directories-first --ignore=*.pyc' # --ignore-backup
+alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.class' # --ignore-backup
 
 # cd aliases
 alias ..='cd ..'
@@ -146,6 +173,8 @@ alias .....='cd ../../../..'
 
 # ssh aliases
 alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
+alias jasper='ssh timv@jasper.cs.umass.edu'
+
 
 #______________________________________________________________________________
 # bash functions
@@ -174,26 +203,26 @@ function print-loki() {
     ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
 }
 
-##extract () {
-##    if [ -f $1 ] ; then
-##        case $1 in
-##            *.tar.bz2)   tar xvjf $1        ;;
-##            *.tar.gz)    tar xvzf $1     ;;
-##            *.bz2)       bunzip2 $1       ;;
-##            *.rar)       unrar x $1     ;;
-##            *.gz)        gunzip $1     ;;
-##            *.tar)       tar xvf $1        ;;
-##            *.tbz2)      tar xvjf $1      ;;
-##            *.tgz)       tar xvzf $1       ;;
-##            *.zip)       unzip $1     ;;
-##            *.Z)         uncompress $1  ;;
-##            *.7z)        7z x $1    ;;
-##            *)           echo "'$1' cannot be extracted via >extract<" ;;
-##        esac
-##    else
-##        echo "'$1' is not a valid file"
-##    fi
-##}
+function extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1        ;;
+            *.tar.gz)    tar xvzf $1     ;;
+            *.bz2)       bunzip2 $1       ;;
+            *.rar)       unrar x $1     ;;
+            *.gz)        gunzip $1     ;;
+            *.tar)       tar xvf $1        ;;
+            *.tbz2)      tar xvjf $1      ;;
+            *.tgz)       tar xvzf $1       ;;
+            *.zip)       unzip $1     ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1    ;;
+            *)           echo "'$1' cannot be extracted via >extract<" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
 
 
 #______________________________________________
@@ -224,3 +253,9 @@ function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
 #export PS1="${RED}[\u@\h \W]\$${NO_COLOUR} "
 # set a fancy prompt
 #export PS1="`EXT_COLOR 172`[\u@\h \W]\$${NO_COLOUR} "
+
+
+#pronounce() {
+#    wget -qO- $(wget -qO- "http://www.m-w.com/dictionary/$@" | grep 'return au' | sed -r "s|.*return au\('([^']*)', '([^'])[^']*'\).*|http://cougar.eb.com/soundc11/\2/\1|") | aplay -q; 
+#}
+
