@@ -8,8 +8,8 @@
 #______________________________________________________________________________
 # Keybindings
 
-# appends "|less" to the end of current line
-bind "'\C-o': '\C-e |less'"
+# appends "2>&1 |less" to the end of current line
+bind "'\C-o': '\C-e 2>&1 |less'"
 
 #______________________________________________________________________________
 # Bash History
@@ -163,7 +163,7 @@ fi
 alias ll='ls -lAh'
 alias la='ls -A'
 alias l='ls -CF'
-alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.class' # --ignore-backup
+alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.o --ignore=*.class' # --ignore-backup
 
 # cd aliases
 alias ..='cd ..'

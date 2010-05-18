@@ -1,13 +1,20 @@
+
+
+;; maximize screen real estate
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)     ; hide menu-bar
+(line-number-mode 1)   ; show line number near mode=line
+;(linum-mode 1)         ; show line numbers on the side
+
+
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(case-fold-search t)
  '(current-language-environment "Latin-1")
  '(default-input-method "latin-1-prefix")
- '(ecb-compile-window-height 6)
- '(ecb-options-version "2.32")
  '(global-font-lock-mode t nil (font-lock))
  '(hippie-expand-try-functions-list (quote (try-expand-all-abbrevs try-expand-list try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill)))
  '(ibuffer-saved-filter-groups nil)
@@ -16,9 +23,10 @@
  '(inhibit-startup-screen t)
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
- '(tool-bar-mode nil nil (tool-bar))
  '(transient-mark-mode t)
  '(truncate-lines t))
+
+
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -29,25 +37,6 @@
  '(bold ((t (:weight extra-bold))))
  '(comint-highlight-prompt ((t (:foreground "light blue"))))
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
- '(diredp-dir-priv ((t (:foreground "DarkRed"))))
- '(diredp-exec-priv ((t (:foreground "green1"))))
- '(diredp-file-name ((t (:foreground "LightBlue"))))
- '(diredp-file-suffix ((t nil)))
- '(diredp-flag-mark ((t (:foreground "Yellow"))))
- '(diredp-flag-mark-line ((t (:foreground "yellow"))))
- '(diredp-no-priv ((t nil)))
- '(diredp-other-priv ((t nil)))
- '(diredp-read-priv ((t nil)))
- '(diredp-write-priv ((t (:foreground "green3"))))
- '(ediff-current-diff-A ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
- '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
- '(ediff-even-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
- '(ediff-even-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
- '(ediff-fine-diff-A ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
- '(ediff-fine-diff-B ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
- '(ediff-odd-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
- '(ediff-odd-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
-;; '(fixed-pitch ((t (:family "Bitstream Vera Sans Mono"))))
  '(flymake-errline ((((class color)) (:underline "red"))))
  '(flymake-warnline ((((class color)) (:underline "yellow"))))
  '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
@@ -61,13 +50,71 @@
  '(minibuffer-prompt ((t (:foreground "white"))))
  '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
  '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
- '(nxml-name-face ((((class color) (background light)) (:foreground "blue"))))
  '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
- '(w3m-anchor-face ((((class color) (background light)) (:foreground "yellow"))))
- '(w3m-arrived-anchor-face ((((class color) (background light)) (:foreground "yellow3"))))
- '(w3m-header-line-location-content-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button)))))
- '(w3m-header-line-location-title-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button))))))
+ '(rst-level-1-face ((t (:background "darkgreen" :weight extra-bold))) t)
+ '(rst-level-2-face ((t (:background "darkgreen"))) t)
+ '(rst-level-3-face ((t (:background "darkgreen"))) t)
+ '(rst-level-4-face ((t (:background "darkgreen"))) t))
 
+;; '(w3m-anchor-face ((((class color) (background light)) (:foreground "yellow"))))
+;; '(w3m-arrived-anchor-face ((((class color) (background light)) (:foreground "yellow3"))))
+;; '(w3m-header-line-location-content-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button)))))
+;; '(w3m-header-line-location-title-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button))))))
+;;
+;; '(diredp-dir-priv ((t (:foreground "DarkRed"))))
+;; '(diredp-exec-priv ((t (:foreground "green1"))))
+;; '(diredp-file-name ((t (:foreground "LightBlue"))))
+;; '(diredp-file-suffix ((t nil)))
+;; '(diredp-flag-mark ((t (:foreground "Yellow"))))
+;; '(diredp-flag-mark-line ((t (:foreground "yellow"))))
+;; '(diredp-no-priv ((t nil)))
+;; '(diredp-other-priv ((t nil)))
+;; '(diredp-read-priv ((t nil)))
+;; '(diredp-write-priv ((t (:foreground "green3"))))
+;;
+;; '(ediff-current-diff-A ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
+;; '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
+;; '(ediff-even-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
+;; '(ediff-even-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
+;; '(ediff-fine-diff-A ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
+;; '(ediff-fine-diff-B ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
+;; '(ediff-odd-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
+;; '(ediff-odd-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
+
+
+
+(defun my-window-placement ()
+  (interactive)
+  (if (window-system)
+    (progn
+      (set-frame-height (selected-frame) 82)
+      (set-frame-width (selected-frame) 120)
+      (set-frame-position (selected-frame) 420 0))))
+(my-window-placement)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(column-number-mode 1) ; show column number near mode-line
+(setq scroll-step 1)   ; line-by-line scrolling
+
+;; Column width (used in longlines-mode)
+(setq auto-fill-mode 1)
+(setq-default fill-column 100)
+
+;; No tabs, always use spaces.
+(setq-default tab-width 4)            ;; XXX: might want to consider changing this back to 2...
+;(setq tab-width 4)
+(setq-default indent-tabs-mode nil)
+
+
+;;(setq-default case-fold-search nil) ; case-sensitive search
+(setq-default case-fold-search t)  ; case-insensitive search
+
+;; Make text-mode the default mode for new buffers.
+(defvar default-major-mode 'text-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Common lisp
 (require 'cl)
@@ -77,15 +124,10 @@
 (setq semanticdb-default-save-directory "~/.emacs.d/semantic/")   ; put semantic.cache files somewhere far away.
 (partial-completion-mode)
 
-;; No tabs, always use spaces.
-(setq-default tab-width 4)            ;; XXX: might want to consider changing this back to 2...
-;(setq tab-width 4)
-(setq-default indent-tabs-mode nil)
 
 
 (setq browse-url-browser-function
-      '(
-        ;; regex . browser-function
+      '(;; regex . browser-function
         ("." . browse-url-firefox)))
 
 (defun revert-buffer-and-refind-position ()
@@ -141,8 +183,7 @@
   (global-set-key [(control kp-subtract)] 'delete-window)
   ; (define-key help-mode-map [(kp-subtract)] 'kill-current-buffer)
   ; (define-key help-mode-map [(shift kp-subtract)] 'kill-current-buffer-and-window)
-  (require 'picture)
-  (global-set-key [(shift right)] 'picture-forward-column)
+  ;(require 'picture) (global-set-key [(shift right)] 'picture-forward-column)
   ;; splitting and deleting windows
   (global-set-key [(control ?1)] 'delete-window)
   (global-set-key [(control ?2)] 'split-window-horizontally)
@@ -164,6 +205,8 @@
    ((boundp 'minibuffer-local-filename-completion-map)
     (define-key minibuffer-local-filename-completion-map [(?\ )] 'minibuffer-complete))))
 
+(my-keys)
+
 
 (defun my-indent-function ()
   (interactive)
@@ -172,15 +215,6 @@
         (t
          (indent-region (point-marker) (mark-marker)))))
 
-(my-keys)
-
-;; (defvar cperl-mode-hook)
-
-;;(defconst *cmucl* "/usr/sen/tmp1/saunders/home.local/bin/cmucl-19c/bin/lisp")
-
-;;(defconst *lisp*
-;;  (cond
-;;   ((file-exists-p *cmucl*) *cmucl*)))
 
 ;; I either want to load up a heavyweight emacs if I am on my local machine
 ;;   and my slag heap o' elisp is available, or, if I am launching from
@@ -208,7 +242,6 @@
       (add-path "site-lisp/org-mode-contrib/lisp")
       (add-path "site-lisp/org-mode-contrib/packages/org-export-freemind-0.1.0")
       (add-path "site-lisp/remember")
-
       ;;(add-path "site-lisp/slime-2.0")
       (add-path "site-lisp/scala-mode")
       (add-path "site-lisp/python-mode-1.0")
@@ -219,12 +252,10 @@
       (add-path "site-lisp/color-theme-6.6.0")
       (add-path "site-lisp/cc-mode")
       (add-path "site-lisp/cedet-1.0pre4/common")
-      (add-path "site-lisp/ecb-2.32")
+      ;;(add-path "site-lisp/ecb-2.32")
       (add-path "site-lisp/elib-1.0")
       (add-path "site-lisp/jde-2.3.5.1/lisp") ;; Java IDE support
-
       (add-path "site-lisp/pymacs.el")
-
       ;; TIM: IPython itegration (python-mode, pymacs, ipython, ropemacs)
       (add-path "site-lisp/ipython.el")
       (add-path "site-lisp/ropemacs-0.6")
@@ -232,7 +263,7 @@
    (t nil)))
 
 
-(defun scala-mode-setup()
+(defun scala-mode-setup ()
   (interactive)
   (require 'scala-mode-auto)
   (load (concat *emacs-root* "site-lisp/sbt-compile.el"))
@@ -250,7 +281,7 @@
 ;;  ; (filesets-support-dired)
 ;;  )
 
-(defun org-mode-setup()
+(defun org-mode-setup ()
   (interactive)
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   (global-set-key "\C-cl" 'org-store-link)
@@ -285,22 +316,20 @@
     (org-mode-setup)
     ;;(load "ani-fcsh.el")
     ;;(setup-actionscript)
-
     (ido-mode t)
     ;;(filesets-setup)
     ;;(load-library "perl-config") ;; extra support for perl coding
     (load-library "my-emisc")
-    (autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
-    (setq auto-mode-alist
-      (cons '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode)
-        auto-mode-alist)))
+    ;(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
+    ;(setq auto-mode-alist (cons '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode) auto-mode-alist))
+    )
    (t nil)))
 
 (defun x-setup ()
   (interactive)
   (common-setup)
   (require 'cedet)
-  (require 'ecb)
+  ;;(require 'ecb)
   (x-colors)
   ;;(defalias 'perl-mode 'cperl-mode)
 )
@@ -314,9 +343,6 @@
   ;;(load-library "my-java-config")
   ;; Load saved keyboard macros:
   (load-file (concat *emacs-root* "kbd-macros.el"))
-  (defun find-kbd-macro-file ()
-    (interactive)
-    (set-buffer (find-file (concat *emacs-root* "kbd-macros.el"))))
   ; (setup-slime)  ;; uncomment for gnuserv
   (server-start)
   (set-mouse-color "black")
@@ -328,32 +354,29 @@
   (add-to-list 'auto-mode-alist '("\\.[aj]s$" . ecmascript-mode))
   (require 'protobuf-mode)
   (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
-
   ;;(require 'cython-mode)
-
   ;; add the simple cython-mode
-  ;(add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
+  (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
 )
 
 
-;; (define-derived-mode cython-mode python-mode "Cython"
-;;   (font-lock-add-keywords
-;;    nil
-;;    `((,(concat "\\<\\(NULL"
-;;                "\\|c\\(def\\|import\\|har\\|typedef\\)"
-;;                "\\|e\\(num\\|xtern\\)"
-;;                "\\|float\\|double\\|unsigned"
-;;                "\\|in\\(clude\\|t\\|line\\)"
-;;                "\\|object\\|public\\|struct\\|type\\|union\\|void"
-;;                "\\)\\>")
-;;       1 font-lock-keyword-face t))))
-;; 
+(define-derived-mode cython-mode python-mode "Cython"
+  (font-lock-add-keywords
+   nil
+   `((,(concat "\\<\\(NULL"
+               "\\|c\\(def\\|import\\|har\\|typedef\\)"
+               "\\|e\\(num\\|xtern\\)"
+               "\\|float\\|double\\|unsigned"
+               "\\|in\\(clude\\|t\\|line\\)"
+               "\\|object\\|public\\|struct\\|type\\|union\\|void"
+               "\\)\\>")
+      1 font-lock-keyword-face t))))
+
 
 
 
 
 (defun nox-setup ()
-  ;; todo put in some lightweight configurations for terminal mode
   (common-setup)
   (term-colors))
 
@@ -367,33 +390,21 @@
 
 (defvar *init*)
 (setq *init*
-      (cond
-       ;; Running in a terminal:
-       ((eq window-system nil)
-        #'(lambda()
-            (nox-setup)))
-       ;; Running under X
-       (t #'(lambda ()
-        (x-setup)))))
-
+      (cond ((eq window-system nil)        ;; Running in a terminal:
+             #'(lambda () (nox-setup)))
+            (t #'(lambda () (x-setup)))))  ;; Running under X
 (funcall *init*)
 
 (setq dired-use-ls-dired nil)
 (setq c-basic-offset 2)
 (defvar c-tab-always-indent nil)
 
-;;(setq-default case-fold-search nil) ; case-sensitive search
-(setq-default case-fold-search t)  ; case-insensitive search
-
-;; Make Text mode the default mode for new buffers.
-(defvar default-major-mode 'text-mode)
-
 (defun flip-to-last-buffer (&optional n)
   (interactive "p")
   (switch-to-buffer (car (cdr (buffer-list)))))
 
-;;; Load the default-dir.el package which installs fancy handling of
-;;; the initial contents in the minibuffer when reading file names.
+;; Load the default-dir.el package which installs fancy handling of
+;; the initial contents in the minibuffer when reading file names.
 (condition-case nil
     (require 'default-dir)
   (error nil))
@@ -403,21 +414,9 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
-;; Disable the menubar (promotes good emacs memory :)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode nil)    ; hide menu-bar
-(line-number-mode 1)   ; show line number near mode=line
-;(linum-mode 1)         ; show line numbers on the side
-(column-number-mode 1) ; show column number near mode-line
-(setq scroll-step 1)   ; line-by-line scrolling
-
-;; Column width (used in longlines-mode)
-(setq auto-fill-mode 1)
-(setq-default fill-column 100)
 
 ;; Turns off audible bell
-;;(setq-default visible-bell t)
+; (setq-default visible-bell t)
 
 ;; ???: from nicholas lara's stuff...
 ;; Better middle mouse button interaction
@@ -442,13 +441,17 @@
   minibuffer-confirm-incomplete t
   minibuffer-max-depth nil)
 
-;;; pending-delete-mode causes typed text to replace a selection, rather than append
+
+;; pending-delete-mode causes typed text to replace a selection, rather than append
+;; When Delete Selection mode is enabled, Transient Mark mode is also enabled and typed
+;; text replaces the selection if the selection is active. Otherwise, typed text is just
+;; inserted at point regardless of any selection
 (pending-delete-mode 1)
 
 
-(setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load
-              move print shell symlink uncompress recursive-delete kill-file-buffer
-              kill-dired-buffer patch create-top-dir revert-subdirs))
+(setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load move print
+                                      shell symlink uncompress recursive-delete kill-file-buffer
+                                      kill-dired-buffer patch create-top-dir revert-subdirs))
 
 
 (setq backup-by-copying t
@@ -515,23 +518,29 @@
 ;; (fset 'latex-compile-and-open
 ;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace backspace backspace backspace backspace backspace backspace ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; my LaTeX stuff
 (defun latex-thing ()
   (interactive)
   (let ((pdf-file (concat (substring (buffer-file-name) 0 -4) ".pdf")))
     (if (file-exists-p pdf-file)
         (delete-file pdf-file))
-;    (tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
+    ;(tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
     (shell-command (concat "pdflatex " (buffer-file-name)))
     ;; !  ==> Fatal error occurred, no output PDF file produced!
     ;;(find-file pdf-file)
     (shell-command (concat "evince " pdf-file " &")))
   (delete-other-windows))
 
-;; (defun ask-before-quit ()
-;;   "Ask me before I quit emacs if I think that's a good thing to do"
-;;   (interactive)
-;;   (yes-or-no-p "Do you really want to quit Emacs? "))
-;;
+(add-hook 'latex-mode-hook
+          '(lambda ()
+             (flyspell-mode t)
+             (flyspell-buffer)
+             (longlines-mode t)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 ;; (defun reload-dot-emacs ()
 ;;   "Reload .emacs on the fly"
 ;;   (interactive)
@@ -540,12 +549,15 @@
 ;;   (load-file "~/.emacs")
 ;;   (message ".emacs reloaded successfully"))
 
+(defun find-kbd-macro-file ()
+  (interactive)
+  (set-buffer (find-file (concat *emacs-root* "kbd-macros.el"))))
 
 (defun fullscreen ()
   "make the emacs window fullscreen"
   (interactive)
   (set-frame-parameter nil 'fullscreen
-		       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
+                       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
 
 (defun goto-matching-paren ()
   "If point is sitting on a parenthetic character, jump to its match."
@@ -555,26 +567,11 @@
            (backward-char 1)
            (looking-at "\\s\)")) (forward-char 1) (backward-list 1))))
 
-(defun my-window-placement ()
-  (interactive)
-  (if (window-system)
-    (progn
-      ;(set-frame-height (selected-frame) 80)
-      (set-frame-width (selected-frame) 120)
-      (set-frame-position (selected-frame) 420 0))))
-(my-window-placement)
-
 
 ;; When turning on flyspell-mode, automatically check the entire buffer.
 ;(defadvice flyspell-mode (after advice-flyspell-check-buffer-on-start activate) (flyspell-buffer))
 
-(add-hook 'latex-mode-hook 
-          '(lambda () 
-             (flyspell-mode t) 
-             (flyspell-buffer)
-             (longlines-mode t)))
 
-;; (defun print-loki ()
-;;   (interactive)
-;;   (if (eq (substring (buffer-file-name) -4) ".pdf")  
-;;     (shell-command (concat "print-loki " (buffer-file-name))))
+(defun change-java-indent (w)
+  (interactive "nWidth: ")
+  (set-variable 'c-basic-offset w))
