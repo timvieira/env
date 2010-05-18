@@ -27,13 +27,12 @@
  '(truncate-lines t))
 
 
-
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :family "Bitstream Vera Sans Mono Roman"))))
+ '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
  '(bold ((t (:weight extra-bold))))
  '(comint-highlight-prompt ((t (:foreground "light blue"))))
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
@@ -520,7 +519,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; my LaTeX stuff
+;; My LaTeX stuff
 (defun latex-thing ()
   (interactive)
   (let ((pdf-file (concat (substring (buffer-file-name) 0 -4) ".pdf")))
@@ -538,8 +537,8 @@
              (flyspell-mode t)
              (flyspell-buffer)
              (longlines-mode t)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (defun reload-dot-emacs ()
 ;;   "Reload .emacs on the fly"
