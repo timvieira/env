@@ -1,0 +1,18 @@
+syntax: glob
+.\#*
+*~
+class/**
+*.class
+*.elc
+*.pyc
+
+.DS_Store
+.svn
+
+hg-*
+*.log
+semantic.cache
+
+#########
+###
+syntax: regexp
