@@ -2,14 +2,14 @@
 
 ;; Copyright (C) 1992,1993,1994  Tim Peters
 
-;; Author: 2003-2004 http://sf.net/projects/python-mode
+;; Author: 2003-2006 http://sf.net/projects/python-mode
 ;;         1995-2002 Barry A. Warsaw
 ;;         1992-1994 Tim Peters
 ;; Maintainer: python-mode@python.org
 ;; Created:    Feb 1992
 ;; Keywords:   python languages oop
 
-(defconst py-version "$Revision: 1.1.1.1 $"
+(defconst py-version "$Revision: 4.78 $"
   "`python-mode' version number.")
 
 ;; This software is provided as-is, without express or implied
@@ -402,17 +402,22 @@ support for features needed by `python-mode'.")
   "Face for builtins like TypeError, object, open, and exec.")
 (make-face 'py-builtins-face)
 
+;; XXX, TODO, and FIXME comments and such
+(defvar py-XXX-tag-face 'py-XXX-tag-face
+  "Face for XXX, TODO, and FIXME tags")
+(make-face 'py-XXX-tag-face)
+
 (defun py-font-lock-mode-hook ()
   (or (face-differs-from-default-p 'py-pseudo-keyword-face)
       (copy-face 'font-lock-keyword-face 'py-pseudo-keyword-face))
   (or (face-differs-from-default-p 'py-builtins-face)
       (copy-face 'font-lock-keyword-face 'py-builtins-face))
   (or (face-differs-from-default-p 'py-decorators-face)
-      (copy-face 'py-pseudo-keyword-face 'py-decorators-face)) 
-) 
-
+      (copy-face 'py-pseudo-keyword-face 'py-decorators-face))
+  (or (face-differs-from-default-p 'py-XXX-tag-face)
+      (copy-face 'font-lock-comment-face 'py-XXX-tag-face))
+  )
 (add-hook 'font-lock-mode-hook 'py-font-lock-mode-hook)
-
 
 (defvar python-font-lock-keywords
   (let ((kw1 (mapconcat 'identity
@@ -421,8 +426,8 @@ support for features needed by `python-mode'.")
 			  "else"     "except"   "exec"    "for"
 			  "from"     "global"   "if"      "import"
 			  "in"       "is"       "lambda"  "not"
-			  "or"       "pass"     "raise"
-			  "return"   "while"    "yield"   "as"    ;; TIM: added "as" as a keyword
+			  "or"       "pass"     "print"   "raise"
+			  "return"   "while"    "yield"
 			  )
 			"\\|"))
 	(kw2 (mapconcat 'identity
@@ -446,7 +451,7 @@ support for features needed by `python-mode'.")
 			  "raw_input" "reduce" "reload" "repr" "round"
 			  "setattr" "slice" "staticmethod" "str" "sum"
 			  "super" "tuple" "type" "unichr" "unicode" "vars"
-			  "xrange" "zip" "print")
+			  "xrange" "zip")
 			"\\|"))
 	(kw4 (mapconcat 'identity
 			;; Exceptions and warnings
@@ -470,25 +475,30 @@ support for features needed by `python-mode'.")
 			"\\|"))
 	)
     (list
-     ;; decorators
      '("^[ \t]*\\(@.+\\)" 1 'py-decorators-face)
      ;; keywords
      (cons (concat "\\<\\(" kw1 "\\)\\>[ \n\t(]") 1)
      ;; builtins when they don't appear as object attributes
-     (list (concat "\\([^. \t]\\|^\\)[ \t]*\\<\\(" kw3 "\\)\\>[ \n\t(]") 2 'py-builtins-face)
+     (list (concat "\\([^. \t]\\|^\\)[ \t]*\\<\\(" kw3 "\\)\\>[ \n\t(]") 2
+	   'py-builtins-face)
      ;; block introducing keywords with immediately following colons.
      ;; Yes "except" is in both lists.
      (cons (concat "\\<\\(" kw2 "\\)[ \n\t(]") 1)
      ;; Exceptions
      (list (concat "\\<\\(" kw4 "\\)[ \n\t:,(]") 1 'py-builtins-face)
      ;; `as' but only in "import foo as bar"
-     ;;'("[ \t]*\\(\\<from\\>.*\\)?\\<import\\>.*\\<\\(as\\)\\>" . 2)  ;; TIM: move "as" to always be a keyword
+     '("[ \t]*\\(\\<from\\>.*\\)?\\<import\\>.*\\<\\(as\\)\\>" . 2)
+
      ;; classes
      '("\\<class[ \t]+\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)" 1 font-lock-type-face)
      ;; functions
-     '("\\<def[ \t]+\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)" 1 font-lock-function-name-face)
+     '("\\<def[ \t]+\\([a-zA-Z_]+[a-zA-Z0-9_]*\\)"
+       1 font-lock-function-name-face)
      ;; pseudo-keywords
-     '("\\<\\(self\\|None\\|True\\|False\\|Ellipsis\\)\\>" 1 py-pseudo-keyword-face)
+     '("\\<\\(self\\|None\\|True\\|False\\|Ellipsis\\)\\>"
+       1 py-pseudo-keyword-face)
+     ;; XXX, TODO, and FIXME tags
+     '("XXX\\|TODO\\|FIXME" 0 py-XXX-tag-face t)
      ))
   "Additional expressions to highlight in Python mode.")
 (put 'python-mode 'font-lock-defaults '(python-font-lock-keywords))
@@ -3876,32 +3886,35 @@ and initial `#'s.
 If point is inside a string, narrow to that string and fill.
 "
   (interactive "P")
-  (let* ((bod (py-point 'bod))
-	 (pps (parse-partial-sexp bod (point))))
-    (cond
-     ;; are we inside a comment or on a line with only whitespace before
-     ;; the comment start?
-     ((or (nth 4 pps)
-	  (save-excursion (beginning-of-line) (looking-at "[ \t]*#")))
-      (py-fill-comment justify))
-     ;; are we inside a string?
-     ((nth 3 pps)
-      (py-fill-string (nth 8 pps)))
-     ;; are we at the opening quote of a string, or in the indentation?
-     ((save-excursion
-	(forward-word 1)
-	(eq (py-in-literal) 'string))
-      (save-excursion
-	(py-fill-string (py-point 'boi))))
-     ;; are we at or after the closing quote of a string?
-     ((save-excursion
-	(backward-word 1)
-	(eq (py-in-literal) 'string))
-      (save-excursion
-	(py-fill-string (py-point 'boi))))
-     ;; otherwise use the default
-     (t
-      (fill-paragraph justify)))))
+  ;; fill-paragraph will narrow incorrectly
+  (save-restriction
+    (widen)
+    (let* ((bod (py-point 'bod))
+	   (pps (parse-partial-sexp bod (point))))
+      (cond
+       ;; are we inside a comment or on a line with only whitespace before
+       ;; the comment start?
+       ((or (nth 4 pps)
+	    (save-excursion (beginning-of-line) (looking-at "[ \t]*#")))
+	(py-fill-comment justify))
+       ;; are we inside a string?
+       ((nth 3 pps)
+	(py-fill-string (nth 8 pps)))
+       ;; are we at the opening quote of a string, or in the indentation?
+       ((save-excursion
+	  (forward-word 1)
+	  (eq (py-in-literal) 'string))
+	(save-excursion
+	  (py-fill-string (py-point 'boi))))
+       ;; are we at or after the closing quote of a string?
+       ((save-excursion
+	  (backward-word 1)
+	  (eq (py-in-literal) 'string))
+	(save-excursion
+	  (py-fill-string (py-point 'boi))))
+       ;; otherwise use the default
+       (t
+	(fill-paragraph justify))))))
 
 
 
