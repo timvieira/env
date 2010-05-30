@@ -74,7 +74,19 @@
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
-      (list "epylint" (list local-file))))
+
+		  ; disabled warnings, other examples
+		  ;; "C0103",  # Naming convention
+		  ;; "I0011",  # Warning locally suppressed using disable-msg
+		  ;; "I0012",  # Warning locally suppressed using disable-msg
+		  ;; "W0511",  # FIXME/TODO
+		  ;; "W0142",  # *args or **kwargs magic.
+		  ;; "R0904",  # Too many public methods
+		  ;; "R0201",  # Method could be a function
+	  (list "epylint" (list local-file "CRI" "--disable-msg=W0511"))
+      ;(list "epylint" (list local-file))
+  ))
+
     
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pylint-init)))

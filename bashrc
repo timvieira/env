@@ -2,8 +2,55 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+#______________________________________________________________________________
+# Environment variables
+
+PROJECTS=/home/timv/projects
+
+# Java
+export JAVA_HOME="/usr/lib/jvm/java-6-sun"
+export JDK_HOME=$JAVA_HOME
+
+# The Path
+export PATH=$PATH:$JAVA_HOME/bin
+export PATH=$PATH:~/projects/bin
+
+# Python
+export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS:$PYTHONPATH
+#export PYTHONSTARTUP=$PROJECTS/python-extras/pythonstartup.py
+
+JAVAEXTRAS=$PROJECTS/java-extras
+export CLASSPATH=.:$CLASSPATH
+
+# Learning-Based Java (LBJ)
+LBJDIR=$JAVAEXTRAS/lbj-things
+export CLASSPATH=$CLASSPATH:$LBJDIR/LBJPOS.jar:$LBJDIR/LBJ2.jar:$LBJDIR/LBJ2Library.jar
+
+# Jython
+export JYTHON_HOME=$JAVAEXTRAS/jython
+export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
+
+# Redstone xml-rpc
+R=$JAVAEXTRAS/redstone-xmlrpc
+export CLASSPATH=$CLASSPATH:$R/simple-4.0.1.jar:$R/simple-xmlrpc-1.0.jar:$R/xmlrpc-1.1.1.jar
+
+# Apache xml-rpc
+A=$JAVAEXTRAS/apache-xmlrpc-3.1.2/lib/
+export CLASSPATH=$A/commons-logging-1.1.jar:$A/ws-commons-util-1.0.2.jar:$CLASSPATH
+export CLASSPATH=$A/xmlrpc-common-3.1.2.jar:$A/xmlrpc-client-3.1.2.jar:$A/xmlrpc-server-3.1.2.jar:$CLASSPATH
+
+# Ubigraph-Java Client
+export CLASSPATH=$JAVAEXTRAS/ubigraph.jar:$CLASSPATH
+
+# Emacs is my preferred editor, dammit!
+export EDITOR=emacs
+export HGEDITOR='emacs -nw'
+
+
+############################################################
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
+############################################################
 
 #______________________________________________________________________________
 # Keybindings
@@ -94,55 +141,13 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-#______________________________________________________________________________
-# Environment variables
-
-# Emacs is my preferred editor, dammit!
-export EDITOR=emacs
-export HGEDITOR=emacs
-
-# Java
-export JAVA_HOME=/usr/lib/jvm/java-6-sun
-
-# The Path
-export PATH=$PATH:$JAVA_HOME/bin
-export PATH=$PATH:~/projects/bin
-
-# Python
-export PYTHONPATH=/home/timv/projects/python-extras:/home/timv/projects:$PYTHONPATH
-export PYTHONSTARTUP=/home/timv/projects/python-extras/pythonstartup.py
-
-
-JAVAEXTRAS=/home/timv/projects/java-extras
-export CLASSPATH=.:$CLASSPATH
-
-# Learning-Based Java (LBJ)
-LBJDIR=$JAVAEXTRAS/lbj-things
-export CLASSPATH=$CLASSPATH:$LBJDIR/LBJPOS.jar:$LBJDIR/LBJ2.jar:$LBJDIR/LBJ2Library.jar
-
-# Jython
-export JYTHON_HOME=$JAVAEXTRAS/jython
-export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
-
-# Redstone xml-rpc
-R=$JAVAEXTRAS/redstone-xmlrpc
-export CLASSPATH=$CLASSPATH:$R/simple-4.0.1.jar:$R/simple-xmlrpc-1.0.jar:$R/xmlrpc-1.1.1.jar
-
-
-# Apache xml-rpc
-A=$JAVAEXTRAS/apache-xmlrpc-3.1.2/lib/
-export CLASSPATH=$A/commons-logging-1.1.jar:$A/ws-commons-util-1.0.2.jar:$CLASSPATH
-export CLASSPATH=$A/xmlrpc-common-3.1.2.jar:$A/xmlrpc-client-3.1.2.jar:$A/xmlrpc-server-3.1.2.jar:$CLASSPATH
-
-# Ubigraph-Java Client
-export CLASSPATH=$JAVAEXTRAS/ubigraph.jar:$CLASSPATH
 
 
 # bash will check all the directories in the $CDPATH list for matches to the directory name.
 # export CDPATH='.:~:/usr/local/apache/htdocs:/disk/backups'
 
 # XXX: THIS MIGHT NOT BE NECESSARY:
-export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
+#export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib:$LD_LIBRARY_PATH
 
 #______________________________________________________________________________
 # Aliases
@@ -259,3 +264,11 @@ function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
 #    wget -qO- $(wget -qO- "http://www.m-w.com/dictionary/$@" | grep 'return au' | sed -r "s|.*return au\('([^']*)', '([^'])[^']*'\).*|http://cougar.eb.com/soundc11/\2/\1|") | aplay -q; 
 #}
 
+
+
+function my_pkill() {
+    pids=$(ps -ef \
+          | grep "$@" \
+          | python -c "import re,sys; print ' '.join(re.findall('timv\s*(\d+)', line)[0] for line in sys.stdin)")
+    kill -9 $pids
+}

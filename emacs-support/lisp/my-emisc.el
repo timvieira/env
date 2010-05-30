@@ -1,34 +1,7 @@
-;; (defun rubify()
-;;  (interactive)
-;;  (perlify))
-;;
-;; (defun perlify()
-;;   (interactive)
-;;   (save-excursion
-;;     (re-search-backward "^#\\!@\\(\\(perl\\|ruby\\) .*\\)$")
-;;     (setq perl-command (match-string 1))
-;;     (vertical-motion 1)
-;;     (setq script-start (point))
-;;     (re-search-forward "^#\\!@<<")
-;;     (beginning-of-line)
-;;     (setq script-end (point))
-;;     (setq script (buffer-substring script-start script-end))
-;;     (vertical-motion 1)
-;;     (setq doc-start (point-marker))
-;;     (setq command (concat perl-command " -e '" script "'"))
-;;     (re-search-forward "^END")
-;;     (beginning-of-line)
-;;     (setq doc-end (point-marker))
-;;     ;; (goto-char doc-end)
-;;     ;; (insert-string (concat "<-doc-end"))
-;;     ;; (insert-string (concat "command: " command))
-;;     (shell-command-on-region doc-start doc-end command t t "*Command Error*")))
-
 
 (defun escape-squote(str)
   (string-match "'" str)
   (replace-match "\\\'" t t  str))
-
 
 (defun describe-face-at-point ()
   "Describe face at point."
@@ -61,7 +34,6 @@ as point as well."
     (setq face (car face)))
     face))
 
-
 (defun kill-whitespace-in-region()
   (interactive)
   (let* ((start (min (point) (mark)))
@@ -76,15 +48,12 @@ as point as well."
       (setq  charcount (1- charcount))
       )))
 
-
-
 (defun kill-Ms ()
   (interactive)
   (save-excursion
     (goto-char (point-min))
     (while (re-search-forward "")
       (replace-match ""))))
-
 
 (defun make-one-liner ()
   (interactive)
@@ -133,20 +102,6 @@ as point as well."
   (interactive)
   (insert (format-time-string "[%D]")))
 
-;; (defun journal-section-header ()
-;;   (interactive)
-;;   (insert "==== ")
-;;   (insert-date)
-;;   (insert " @")
-;;   (insert-time)
-;;   (insert " ===="))
-;;
-;; (defun journal-subsection-header ()
-;;   (interactive)
-;;   (insert "  == @")
-;;   (insert-time))
-
-
 (defun journal-section-header ()
   (interactive)
   (insert "* ==== ")
@@ -158,9 +113,6 @@ as point as well."
   (insert "*** == ")
   (org-time-stamp-inactive t)
   (insert " =="))
-
-
-
 
 (defun bracket-text (left right)
   (interactive "sLeft delim:\nsRight delim:")
@@ -183,87 +135,3 @@ as point as well."
         (setq linecount (1- linecount))
         ))))
 
-;;  Copied here to hack it a bit: don't want filename expansion to stop at '-' chars.
-;;   (defun minibuffer-complete-word ()
-;;     "Complete the minibuffer contents at most a single word.
-;;    After one word is completed as much as possible, a space or hyphen
-;;    is added, provided that matches some possible completion.
-;;    Return nil if there is no valid completion, else t."
-;;     (interactive)
-;;     (let* ((buffer-string (buffer-string))
-;;       (completion (try-completion buffer-string
-;;                       minibuffer-completion-table
-;;                       minibuffer-completion-predicate))
-;;       (status (minibuffer-do-completion-1 buffer-string completion)))
-;;       (cond ((eq status 'none)
-;;         (ding nil 'no-completion)
-;;         (temp-minibuffer-message " [No match]")
-;;         nil)
-;;        ((eq status 'unique)
-;;         ;; New message, only in this new Lisp code
-;;         (temp-minibuffer-message " [Sole completion]")
-;;         t)
-;;        (t
-;;         (cond ((or (eq status 'uncompleted)
-;;                (eq status 'exact))
-;;            (let ((foo #'(lambda (s)
-;;                   (condition-case nil
-;;                       (if (try-completion
-;;                        (concat buffer-string s)
-;;                        minibuffer-completion-table
-;;                        minibuffer-completion-predicate)
-;;                       (progn
-;;                         (goto-char (point-max))
-;;                         (insert s)
-;;                         t)
-;;                         nil)
-;;                     (error nil))))
-;;              (char last-command-char))
-;;              ;; Try to complete by adding a word-delimiter
-;;              (or (and (characterp char) (> char 0)
-;;                   (funcall foo (char-to-string char)))
-;;              (and (not (eq char ?\ ))
-;;                   (funcall foo " "))
-;;              (and (not (eq char ?\-))
-;;                   (funcall foo "-"))
-;;              (progn
-;;                (if completion-auto-help
-;;                    (minibuffer-completion-help)
-;;                  ;; New message, only in this new Lisp code
-;;                  ;; rewritten for I18N3 snarfing
-;;                  (if (eq status 'exact)
-;;                  (temp-minibuffer-message
-;;                   " [Complete, but not unique]")
-;;                    (temp-minibuffer-message " [Ambiguous]")))
-;;                nil))))
-;;           (t
-;;            (erase-buffer)
-;;            (insert completion)
-;;
-;;            ;; this is hacked out to expand '-' chars in filenames without stopping at each one
-;;            ;; First word-break in stuff found by completion
-;;                      ;;;;(goto-char (point-min))
-;;                      ;;;;(let ((len (length buffer-string))
-;;                      ;;;;      n)
-;;                      ;;;;  (if (and (< len (length completion))
-;;                      ;;;;           (catch 'match
-;;                      ;;;;             (setq n 0)
-;;                      ;;;;             (while (< n len)
-;;                      ;;;;               (if (char-equal
-;;                      ;;;;                     (upcase (aref buffer-string n))
-;;                      ;;;;                     (upcase (aref completion n)))
-;;                      ;;;;                   (setq n (1+ n))
-;;                      ;;;;                   (throw 'match nil)))
-;;                      ;;;;             t)
-;;                      ;;;;           (progn
-;;                      ;;;;             (goto-char (point-min))
-;;                      ;;;;             (forward-char len)
-;;                      ;;;;             (re-search-forward "\\W" nil t)))
-;;                      ;;;;      (delete-region (point) (point-max))
-;;                      ;;;;      (goto-char (point-max))))
-;;
-;;            t))))))
-;;
-
-;; this is another (possible) way to accomplish the '-' expansion hack above
-;; (modify-syntax-entry ?\- "w " completion-list-mode-syntax-table)
