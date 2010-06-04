@@ -53,46 +53,15 @@
  '(rst-level-1-face ((t (:background "darkgreen" :weight extra-bold))) t)
  '(rst-level-2-face ((t (:background "darkgreen"))) t)
  '(rst-level-3-face ((t (:background "darkgreen"))) t)
- '(rst-level-4-face ((t (:background "darkgreen"))) t))
+ '(rst-level-4-face ((t (:background "darkgreen"))) t)
+)
 
+
+(partial-completion-mode)
 
 ;; XXX: add this to my-python-config
-(font-lock-add-keywords
-; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)" . 'font-lock-constant-face)))
-
- 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
-
-
-;\\(\\b\\(e\\)\\b\\([0-9]+\\)\\)?
-;1.0e4
-
-
-
-;; '(w3m-anchor-face ((((class color) (background light)) (:foreground "yellow"))))
-;; '(w3m-arrived-anchor-face ((((class color) (background light)) (:foreground "yellow3"))))
-;; '(w3m-header-line-location-content-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button)))))
-;; '(w3m-header-line-location-title-face ((((class color) (background light)) (:box (:line-width 2 :color "grey75" :style released-button))))))
-;;
-;; '(diredp-dir-priv ((t (:foreground "DarkRed"))))
-;; '(diredp-exec-priv ((t (:foreground "green1"))))
-;; '(diredp-file-name ((t (:foreground "LightBlue"))))
-;; '(diredp-file-suffix ((t nil)))
-;; '(diredp-flag-mark ((t (:foreground "Yellow"))))
-;; '(diredp-flag-mark-line ((t (:foreground "yellow"))))
-;; '(diredp-no-priv ((t nil)))
-;; '(diredp-other-priv ((t nil)))
-;; '(diredp-read-priv ((t nil)))
-;; '(diredp-write-priv ((t (:foreground "green3"))))
-;;
-;; '(ediff-current-diff-A ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
-;; '(ediff-current-diff-B ((((class color) (min-colors 16)) (:background "grey50" :foreground "yellow"))))
-;; '(ediff-even-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
-;; '(ediff-even-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
-;; '(ediff-fine-diff-A ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
-;; '(ediff-fine-diff-B ((((class color) (min-colors 16)) (:background "grey40" :foreground "red2"))))
-;; '(ediff-odd-diff-A ((((class color) (min-colors 16)) (:foreground "yellow2"))))
-;; '(ediff-odd-diff-B ((((class color) (min-colors 16)) (:foreground "yellow2"))))
-
+;(font-lock-add-keywords
+; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
 
 
 (defun my-window-placement ()
@@ -112,10 +81,9 @@
 
 (defvar c-tab-always-indent nil)
 
-(setq-default indent-tabs-mode nil) ; No tabs!
+(setq-default indent-tabs-mode nil) ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 
 (setq
-;; indent-tabs-mode nil        ; XXX: why does this need to be set with `setq-default`
  tab-width 4                   ; XXX: might want to consider changing this back to 2...
  default-major-mode 'text-mode ; Make text-mode the default mode for new buffers.
 
@@ -127,34 +95,51 @@
  case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
 ; read-file-name-completion-ignore-case t
 ; completion-ignore-case t
-
- scroll-step 1                       ; line-by-line scrolling
  cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
- ;x-stretch-cursor t                  ; A wide characters ask for a wide cursor
  mouse-yank-at-point t               ; mouse yank at point, not click!
-
 )
+
+
+; scroll-margin: line where scrolling should start;
+; scroll-conservatively: how far the cursor is allowed to be center when scrolling starts
+; scroll-preserve-screen-position: maintain screen position when you hit Page(Up|Down)
+(setq
+ scroll-margin 0                   
+ scroll-conservatively 10000       
+ scroll-preserve-screen-position 1 
+)
+
+;; ido makes competing buffers and finding files easier
+;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
+(ido-mode 'both) ; enable ido for both buffers and files
+(setq 
+  ido-case-fold  t                    ; be case-insensitive
+  ido-enable-last-directory-history t ; remember last used dirs
+  ido-use-filename-at-point nil       ; don't use filename at point (annoying)
+  ido-use-url-at-point nil            ; don't use url at point (annoying)
+  ido-enable-flex-matching nil        ; don't try to be too smart
+  ido-confirm-unique-completion t     ; wait for RET, even with unique completion
+)
+
+;; when using ido, this confirmation is rather annoying...
+(setq confirm-nonexistent-file-or-buffer nil)
 
 ;; typed text replaces a selection, rather than append
 (pending-delete-mode nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; get rid of yes-or-no questions - y or n is enough
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+; What to do if visiting a symbolic link to a file under version control.
+(setq vc-follow-symlinks t)
 
 ;; Emacs-related stuff under ~/emacs
 (setq
  semantic-load-turn-useful-things-on t
  semanticdb-default-save-directory "~/.emacs.d/semantic/" ; put semantic.cache files somewhere far away.
 )
-(partial-completion-mode)
 
-
-
-;; ANNYOYANCES ----------------------------------------------------------------
-;; get rid of yes-or-no questions - y or n is enough
-(defalias 'yes-or-no-p 'y-or-n-p)
-; What to do if visiting a symbolic link to a file under version control.
-(setq vc-follow-symlinks t)
-;;------------------------------------------------------------------------------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (defun revert-buffer-and-refind-position ()
@@ -189,12 +174,6 @@
   ;; F3 opens .emacs file
   (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
 
-  ;; filesets definitions
-  ;(global-set-key [(control f6)] '(lambda()(interactive)
-  ;                                  (set-buffer (find-file (concat *emacs-root* "lisp/filesets-defs.el")))))
-  ;;(global-set-key [f6] 'filesets-open)
-  ;;(global-set-key [(meta f6)] 'filesets-close)
-
   ;; hippie-expand M-/
   (global-unset-key [(meta ?/)])
   (global-set-key [(meta ?/)] 'hippie-expand)
@@ -211,7 +190,6 @@
   (global-set-key [(control kp-subtract)] 'delete-window)
   ; (define-key help-mode-map [(kp-subtract)] 'kill-current-buffer)
   ; (define-key help-mode-map [(shift kp-subtract)] 'kill-current-buffer-and-window)
-  ;(require 'picture) (global-set-key [(shift right)] 'picture-forward-column)
   ;; splitting and deleting windows
   (global-set-key [(control ?1)] 'delete-window)
   (global-set-key [(control ?2)] 'split-window-horizontally)
@@ -262,6 +240,8 @@
   (cond
    (*full-elisp-available*
     (labels ((add-path (p) (add-to-list 'load-path (concat *emacs-root* p))))
+      ;;(add-path "site-lisp/python")
+      (add-path "site-lisp/pymacs.el")
       (add-path "lisp")      ;; my elisp code
       (add-path "site-lisp") ;; stuff found elsewhere
       ;; org-mode stuff
@@ -271,21 +251,15 @@
       (add-path "site-lisp/remember")
       ;;(add-path "site-lisp/slime-2.0")
       (add-path "site-lisp/scala-mode")
-      (add-path "site-lisp/python-mode-1.0")
       (add-path "site-lisp/protobuf-mode.el")
       (add-path "site-lisp/nxml-mode-20041004")
       ;;(add-path "site-lisp/ruby")
-      ;;(add-path "site-lisp/filesets")
       (add-path "site-lisp/color-theme-6.6.0")
       (add-path "site-lisp/cc-mode")
       (add-path "site-lisp/cedet-1.0pre4/common")
       ;;(add-path "site-lisp/ecb-2.32")
       (add-path "site-lisp/elib-1.0")
       (add-path "site-lisp/jde-2.3.5.1/lisp") ;; Java IDE support
-      (add-path "site-lisp/pymacs.el")
-      ;; TIM: IPython itegration (python-mode, pymacs, ipython, ropemacs)
-;      (add-path "site-lisp/ipython.el")
-;      (add-path "site-lisp/ropemacs-0.6")
       ))
    (t nil)))
 
@@ -296,17 +270,6 @@
   (load (concat *emacs-root* "site-lisp/sbt-compile.el"))
   (add-hook 'scala-mode-hook
             '(lambda () (yas/minor-mode-on))))
-
-;;(defun filesets-setup()
-;;  (load-library "filesets+") ;;
-;;  (filesets-init)
-;;  (load-library "filesets-defs")
-;;  ; (require 'filesets-tellib)
-;;  ; (require 'filesets-emacs)
-;;  ; (filesets-install t)
-;;  ; (filesets-support-ibuffer)
-;;  ; (filesets-support-dired)
-;;  )
 
 ;;(defun gnuplot-mode-setup()
 ;;  (interactive)
@@ -331,20 +294,22 @@
 (defun common-setup()
   (interactive)
   (setup-paths)
+
+  ;(require 'python-mode)
+  (require 'parenface)
+  (require 'dired+)
+  (require 'filecache)
+  (require 'ido)
+  (require 'smooth-scrolling)   ; this is a little annoying
+  
   (global-font-lock-mode t)
   (cond
    (*full-elisp-available*
-    (require 'smooth-scrolling)
-    (require 'parenface)
-    (require 'dired+)
-    (require 'filecache)
-    (require 'ido)
     (scala-mode-setup)
     ;;(org-mode-setup)
     ;;(load "ani-fcsh.el")
     ;;(setup-actionscript)
     (ido-mode t)
-    ;;(filesets-setup)
     ;;(load-library "perl-config") ;; extra support for perl coding
     (load-library "my-emisc")
     ;(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
@@ -356,32 +321,31 @@
   (interactive)
   (common-setup)
   (require 'cedet)
+  (require 'yaml-mode)
+  (require 'ecmascript-mode)
+  (require 'protobuf-mode)
+  ;;(require 'cython-mode)    ; we also have a simple cython-mode
   ;;(require 'ecb)
   ;;(defalias 'perl-mode 'cperl-mode)
   ; (setup-slime)  ;; uncomment for gnuserv
-
   ;(load-library "my-color-theme")
   ;(require 'color-theme-autoloads)
   ;(color-theme-initialize)
   ;;(setq cperl-mode-hook 'my-cperl-customizations)
   ;;(load-library "my-java-config")
-
   (load-library "my-python-config")
   ;; Load saved keyboard macros:
   (load-file (concat *emacs-root* "kbd-macros.el"))
   (server-start)
   (set-mouse-color "black")
-  (require 'yaml-mode)
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
-  (require 'ecmascript-mode)
   (add-to-list 'auto-mode-alist '("\\.[aj]s$" . ecmascript-mode))
-  (require 'protobuf-mode)
   (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
-  ;;(require 'cython-mode)
-  ;; add the simple cython-mode
-  (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
+  (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
+;  (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 )
 
+;; Simple cython-mode:
 (define-derived-mode cython-mode python-mode "Cython"
   (font-lock-add-keywords
    nil
@@ -459,7 +423,6 @@
 
 (setq browse-url-browser-function '(("." . browse-url-firefox)))
 
-
 (setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load move print
                                       shell symlink uncompress recursive-delete kill-file-buffer
                                       kill-dired-buffer patch create-top-dir revert-subdirs))
@@ -519,7 +482,6 @@
 ;; (provide 'python-programming)
 
 
-
 ;; Keyboard macros:
 ;;  1. start-kbd-macro
 ;;  2. end-kbd-macro
@@ -530,7 +492,6 @@
 ;;     backspace backspace backspace backspace backspace backspace 
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; My LaTeX stuff
@@ -553,14 +514,6 @@
              (longlines-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (defun reload-dot-emacs ()
-;;   "Reload .emacs on the fly"
-;;   (interactive)
-;;   (if (bufferp (get-file-buffer ".emacs"))
-;;       (save-buffer (get-buffer ".emacs")))
-;;   (load-file "~/.emacs")
-;;   (message ".emacs reloaded successfully"))
 
 (defun find-kbd-macro-file ()
   (interactive)

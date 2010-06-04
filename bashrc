@@ -6,6 +6,7 @@
 # Environment variables
 
 PROJECTS=/home/timv/projects
+JAVAEXTRAS=$PROJECTS/java-extras
 
 # Java
 export JAVA_HOME="/usr/lib/jvm/java-6-sun"
@@ -19,7 +20,7 @@ export PATH=$PATH:~/projects/bin
 export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS:$PYTHONPATH
 #export PYTHONSTARTUP=$PROJECTS/python-extras/pythonstartup.py
 
-JAVAEXTRAS=$PROJECTS/java-extras
+# Classpath
 export CLASSPATH=.:$CLASSPATH
 
 # Learning-Based Java (LBJ)
@@ -183,6 +184,11 @@ alias jasper='ssh timv@jasper.cs.umass.edu'
 
 #______________________________________________________________________________
 # bash functions
+
+function idea () {
+  $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
+  disown `pgrep -f "com\.intellij\.idea\.Main"`
+}
 
 function emacsd() {
     ps -C emacs >/dev/null && return 1
