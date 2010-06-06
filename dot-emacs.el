@@ -109,20 +109,20 @@
  scroll-preserve-screen-position 1 
 )
 
-;; ido makes competing buffers and finding files easier
-;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
-(ido-mode 'both) ; enable ido for both buffers and files
-(setq 
+
+(require 'ido)
+(setq
   ido-case-fold  t                    ; be case-insensitive
   ido-enable-last-directory-history t ; remember last used dirs
   ido-use-filename-at-point nil       ; don't use filename at point (annoying)
   ido-use-url-at-point nil            ; don't use url at point (annoying)
   ido-enable-flex-matching nil        ; don't try to be too smart
   ido-confirm-unique-completion t     ; wait for RET, even with unique completion
+  confirm-nonexistent-file-or-buffer nil
 )
+(ido-mode t)
 
-;; when using ido, this confirmation is rather annoying...
-(setq confirm-nonexistent-file-or-buffer nil)
+
 
 ;; typed text replaces a selection, rather than append
 (pending-delete-mode nil)
@@ -299,7 +299,6 @@
   (require 'parenface)
   (require 'dired+)
   (require 'filecache)
-  (require 'ido)
   (require 'smooth-scrolling)   ; this is a little annoying
   
   (global-font-lock-mode t)
@@ -309,7 +308,6 @@
     ;;(org-mode-setup)
     ;;(load "ani-fcsh.el")
     ;;(setup-actionscript)
-    (ido-mode t)
     ;;(load-library "perl-config") ;; extra support for perl coding
     (load-library "my-emisc")
     ;(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
@@ -539,3 +537,4 @@
 (defun change-indent (w)
   (interactive "nWidth: ")
   (set-variable 'c-basic-offset w))
+
