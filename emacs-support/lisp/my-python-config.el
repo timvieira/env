@@ -3,6 +3,8 @@
 	    (eldoc-mode 1) 
 	    (setq outline-regexp "def\\|class ")))
 
+(load-library "pylint")
+
 (defcustom py-python-command "python"
   "*Shell command used to start Python interpreter."
   :type 'string
@@ -23,73 +25,28 @@
   (view-buffer-other-window "*PYDOCS*" t 'kill-buffer-and-window))
 
 
-;;; Pylint.el, from pylint distribution
-
-;; adapted from pychecker for pylint
 (defun my-python-hook ()
-  (defun pylint ()
-    "Run pylint against the file behind the current buffer after
-    checking if unsaved buffers should be saved."
-    (interactive)
-    (let* ((file (buffer-file-name (current-buffer)))
-           (command (concat "pylint --output-format=parseable \"" file "\"")))
-      (save-some-buffers (not compilation-ask-about-save) nil) ; save  files.
-      (compile-internal command "No more errors or warnings" "pylint")))
-                                        ; (local-set-key [f1] 'pylint)
-                                        ; (local-set-key [f2] 'previous-error)
-                                        ; (local-set-key [f3] 'next-error)
-  
   (local-set-key [f7] 'flymake-mode)
-  ;;(local-set-key [(shift f7)] 'flymake-display-err-menu-for-current-line)
-
-  ;(load-library "flymake-cursor.el")
-  
-  ;  (define-key
-  ;    py-mode-map
-  ;    [menu-bar Python pylint-separator]
-  ;    '("--" . pylint-seperator))
-  ;  
-  ;  (define-key
-  ;    py-mode-map
-  ;    [menu-bar Python next-error]
-  ;    '("Next error" . next-error))
-  ;  (define-key
-  ;    py-mode-map
-  ;    [menu-bar Python prev-error]
-  ;    '("Previous error" . previous-error))
-  ;  (define-key
-  ;    py-mode-map
-  ;    [menu-bar Python lint]
-  ;    '("Pylint" . pylint))
-  ;
 )
-
 (add-hook 'python-mode-hook 'my-python-hook)
 
 
+;; Configure flymake for python
 (when (load "flymake" t)
   (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-		       'flymake-create-temp-inplace))
+                       'flymake-create-temp-inplace))
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
+      (list "epylint" (list local-file))))
 
-		  ; disabled warnings, other examples
-		  ;; "C0103",  # Naming convention
-		  ;; "I0011",  # Warning locally suppressed using disable-msg
-		  ;; "I0012",  # Warning locally suppressed using disable-msg
-		  ;; "W0511",  # FIXME/TODO
-		  ;; "W0142",  # *args or **kwargs magic.
-		  ;; "R0904",  # Too many public methods
-		  ;; "R0201",  # Method could be a function
-	  (list "epylint" (list local-file "CRI" "--disable-msg=W0511"))
-      ;(list "epylint" (list local-file))
-  ))
-
-    
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pylint-init)))
+
+;; Set as a minor mode for python
+(add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+
 
 
 ; This is a function which simplifies the insertion of debugging print
