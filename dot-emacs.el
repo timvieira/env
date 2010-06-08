@@ -87,10 +87,6 @@
  tab-width 4                   ; XXX: might want to consider changing this back to 2...
  default-major-mode 'text-mode ; Make text-mode the default mode for new buffers.
 
- ;; Column width (used in longlines-mode)
- auto-fill-mode 1
- fill-column 100
-
 ; case-fold-search t            ; case-insensitive search
  case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
 ; read-file-name-completion-ignore-case t
@@ -99,6 +95,11 @@
  mouse-yank-at-point t               ; mouse yank at point, not click!
 )
 
+(setq-default
+ ;; Column width (used in longlines-mode)
+ auto-fill-mode 1
+ fill-column 100
+)
 
 ; scroll-margin: line where scrolling should start;
 ; scroll-conservatively: how far the cursor is allowed to be center when scrolling starts
@@ -118,7 +119,7 @@
   ido-use-url-at-point nil            ; don't use url at point (annoying)
   ido-enable-flex-matching nil        ; don't try to be too smart
   ido-confirm-unique-completion t     ; wait for RET, even with unique completion
-  confirm-nonexistent-file-or-buffer nil
+  confirm-nonexistent-file-or-buffer t
 )
 (ido-mode t)
 
@@ -241,6 +242,7 @@
    (*full-elisp-available*
     (labels ((add-path (p) (add-to-list 'load-path (concat *emacs-root* p))))
       ;;(add-path "site-lisp/python")
+      (add-path "site-lisp/pylint.el")
       (add-path "site-lisp/pymacs.el")
       (add-path "lisp")      ;; my elisp code
       (add-path "site-lisp") ;; stuff found elsewhere
@@ -332,6 +334,7 @@
   ;;(setq cperl-mode-hook 'my-cperl-customizations)
   ;;(load-library "my-java-config")
   (load-library "my-python-config")
+
   ;; Load saved keyboard macros:
   (load-file (concat *emacs-root* "kbd-macros.el"))
   (server-start)
