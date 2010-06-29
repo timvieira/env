@@ -209,9 +209,13 @@ function pyclean() {
 function print-loki() {
     PFROM="loki.cs.umass.edu"
     PNAME="woper-dbl"
-    BASENAME=$(basename $1)
-    scp $1 $PFROM:~/tmp/$BASENAME
-    ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
+    for f in $@
+    do
+        BASENAME=$(basename $f)
+        scp $f $PFROM:~/tmp/$BASENAME
+        ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
+        echo
+    done
 }
 
 function extract () {
@@ -277,4 +281,8 @@ function my_pkill() {
           | grep "$@" \
           | python -c "import re,sys; print ' '.join(re.findall('timv\s*(\d+)', line)[0] for line in sys.stdin)")
     kill -9 $pids
+}
+
+function cow() {
+    aplay /usr/lib/openoffice/basis3.1/share/gallery/sounds/cow.wav &
 }
