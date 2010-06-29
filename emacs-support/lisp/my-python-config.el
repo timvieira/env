@@ -31,11 +31,28 @@
 (add-hook 'python-mode-hook 'my-python-hook)
 
 
+
+
+;;;; general init-cleanup and helper routines
+(defun tim-flymake-create-temp-inplace (file-name prefix)
+  (unless (stringp file-name)
+    (error "Invalid file-name"))
+  (or prefix
+      (setq prefix "flymake"))
+  (let* ((temp-name   (concat "/tmp/" (replace-regexp-in-string "/" "_" (file-name-sans-extension file-name))
+			      "_" prefix
+			      (and (file-name-extension file-name)
+				   (concat "." (file-name-extension file-name))))))
+    (flymake-log 3 "create-temp-inplace: file=%s temp=%s" file-name temp-name)
+    temp-name))
+
+
 ;; Configure flymake for python
 (when (load "flymake" t)
   (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
+                       'tim-flymake-create-temp-inplace)
+                      )
            (local-file (file-relative-name
                         temp-file
                         (file-name-directory buffer-file-name))))
