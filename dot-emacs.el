@@ -24,7 +24,8 @@
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
- '(truncate-lines t))
+ '(truncate-lines t)
+)
 
 
 (custom-set-faces
@@ -101,12 +102,13 @@
  fill-column 100
 )
 
+;; Note: I think the smooth-scrolling cannot be on for these settings to take effect
 ; scroll-margin: line where scrolling should start;
 ; scroll-conservatively: how far the cursor is allowed to be center when scrolling starts
 ; scroll-preserve-screen-position: maintain screen position when you hit Page(Up|Down)
 (setq
  scroll-margin 0                   
- scroll-conservatively 10000       
+ scroll-conservatively 100000 
  scroll-preserve-screen-position 1 
 )
 
@@ -243,7 +245,7 @@
     (labels ((add-path (p) (add-to-list 'load-path (concat *emacs-root* p))))
       ;;(add-path "site-lisp/python")
       (add-path "site-lisp/pylint.el")
-      (add-path "site-lisp/pymacs.el")
+      ;(add-path "site-lisp/pymacs.el")
       (add-path "lisp")      ;; my elisp code
       (add-path "site-lisp") ;; stuff found elsewhere
       ;; org-mode stuff
@@ -269,7 +271,6 @@
 (defun scala-mode-setup ()
   (interactive)
   (require 'scala-mode-auto)
-  (load (concat *emacs-root* "site-lisp/sbt-compile.el"))
   (add-hook 'scala-mode-hook
             '(lambda () (yas/minor-mode-on))))
 
@@ -301,7 +302,7 @@
   (require 'parenface)
   (require 'dired+)
   (require 'filecache)
-  (require 'smooth-scrolling)   ; this is a little annoying
+  ;(require 'smooth-scrolling)   ; this is a little annoying
   
   (global-font-lock-mode t)
   (cond
