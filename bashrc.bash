@@ -59,6 +59,7 @@ export HGEDITOR='emacs -nw'
 # appends "2>&1 |less" to the end of current line
 bind "'\C-o': '\C-e 2>&1 |less'"
 
+
 #______________________________________________________________________________
 # Bash History
 
@@ -180,6 +181,7 @@ alias .....='cd ../../../..'
 # ssh aliases
 alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
 alias jasper='ssh timv@jasper.cs.umass.edu'
+alias vinci8='ssh timv@vinci8.cs.umass.edu'
 
 
 #______________________________________________________________________________
@@ -188,16 +190,6 @@ alias jasper='ssh timv@jasper.cs.umass.edu'
 function idea () {
   $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
   disown `pgrep -f "com\.intellij\.idea\.Main"`
-}
-
-function emacsd() {
-    ps -C emacs >/dev/null && return 1
-    emacs $@ 2>&1 >/dev/null &
-    disown `pgrep emacs`  # get emacs PID and detach it from this shell.
-}
-
-function visit() {
-    ( emacsd $@ 2>&1 >/dev/null ) || ( emacsclient $@ 2>&1 >/dev/null & )
 }
 
 function pyclean() {
