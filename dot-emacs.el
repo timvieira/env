@@ -6,7 +6,7 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)     ; hide menu-bar
 (line-number-mode 1)   ; show line number near mode=line
-;(linum-mode 1)         ; show line numbers on the side
+;(linum-mode 0)         ; show line numbers on the side
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
@@ -26,7 +26,6 @@
  '(transient-mark-mode t)
  '(truncate-lines t)
 )
-
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -57,7 +56,6 @@
  '(rst-level-4-face ((t (:background "darkgreen"))) t)
 )
 
-
 (partial-completion-mode)
 
 ;; XXX: add this to my-python-config
@@ -73,7 +71,6 @@
       (set-frame-width (selected-frame) 120)
       (set-frame-position (selected-frame) 420 0))))
 (my-window-placement)
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -151,19 +148,31 @@
     (revert-buffer t t t)
     (goto-char p)))
 
-(defun my-keys()
+(defun my-keys ()
   ;; trying to define an alternate prefix keychord
   ;; (global-set-key (kbd "C-#")
   ;;                 (lookup-key
   ;;                  (lookup-key global-map (kbd "C-x"))
   ;;                  (kbd "r")))
 
-  (global-unset-key [f5])
-  (global-set-key [f5] 'goto-line)  ;; also M-g g
+  (global-unset-key [mouse-2])  ; no more accidental pastes from middle-click
+  ;(global-set-key [mouse-2] '(lambda () (interactive) (message "Middle-click pasting disabled!")))
+
+  ;; Copy-Cut-Paste from clipboard with Super-C Super-X Super-V
+  (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
+  (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
+  (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
+
+  ;(global-unset-key [f5])
+  ;(global-set-key [f5] 'goto-line)  ;; use "M-g g" instead
   (global-set-key [f12] 'revert-buffer-and-refind-position)
   (global-set-key "\C-x\C-k" 'kill-region)
   (global-set-key "\C-c\C-k" 'clipboard-kill-region)
   (global-set-key "\C-b" 'goto-matching-paren)
+
+  (global-unset-key "\M-k")
+  (global-set-key "\M-k" 'kill-current-buffer)
+
 
   ;; set other ways to bring up M-x the "extended command"
   ;;(global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -298,6 +307,10 @@
   (interactive)
   (setup-paths)
 
+  ;; Append to python path just-in-case env is not initialize by ~/.bashrc
+  (setenv "PYTHONPATH"
+          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras"))
+  
   ;(require 'python-mode)
   (require 'parenface)
   (require 'dired+)
@@ -477,7 +490,7 @@
 ;; (add-hook 'python-mode-hook
 ;;           '(lambda () (eldoc-mode 1)) t)
 ;;
-;; ;; IPython code completion
+;; IPython code completion
 ;; (setq ipython-completion-command-string
 ;;       "print(';'.join(__IP.Completer.all_completions('%s')))\n")
 ;;
@@ -541,4 +554,38 @@
 (defun change-indent (w)
   (interactive "nWidth: ")
   (set-variable 'c-basic-offset w))
+
+
+
+;; Word count!
+(defun word-count (&optional filename)
+  "Returns the word count of the current buffer.  If `filename' is not nil, returns the word count of that file."
+  (interactive)
+  (save-some-buffers) ;; Make sure the current buffer is saved
+  (let ((tempfile nil))
+    (if (null filename)
+        (progn
+          (let ((buffer-file (buffer-file-name))
+                (lcase-file (downcase (buffer-file-name))))
+            (if (and (>= (length lcase-file) 4) (string= (substring lcase-file -4 nil) ".tex"))
+                ;; This is a LaTeX document, so DeTeX it!
+                (progn
+                  (setq filename (make-temp-file "wordcount"))
+                  (shell-command-to-string (concat "detex < " buffer-file " > " filename))
+                  (setq tempfile t))
+              (setq filename buffer-file)))))
+    (let ((result (car (split-string (shell-command-to-string (concat "wc -w " filename)) " "))))
+      (if tempfile
+          (delete-file filename))
+      (message (concat "Word Count: " result))
+      )))
+
+
+;(defun my-add-path (path-element)
+;  "Add the specified path element to the Emacs PATH"
+;  (interactive "DEnter directory to be added to path: ")
+;  (if (file-directory-p path-element)
+;      (setenv "PATH"
+;              (concat (expand-file-name path-element)
+;                      path-separator (getenv "PATH")))))
 
