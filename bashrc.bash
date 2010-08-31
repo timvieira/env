@@ -48,6 +48,20 @@ export EDITOR=emacs
 export HGEDITOR='emacs -nw'
 
 
+
+# ls aliases
+alias ll='ls -lAh'
+alias la='ls -A'
+alias l='ls -CF'
+alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.o --ignore=*.class' # --ignore-backup
+
+# cd aliases
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+
 ############################################################
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -166,18 +180,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias ack='ack --color --group'
 fi
 
-# ls aliases
-alias ll='ls -lAh'
-alias la='ls -A'
-alias l='ls -CF'
-alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.o --ignore=*.class' # --ignore-backup
-
-# cd aliases
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-
 # ssh aliases
 alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
 alias jasper='ssh timv@jasper.cs.umass.edu'
@@ -196,6 +198,8 @@ function pyclean() {
     rm -f `find . -name "*.pyc"`
     rm -f `find . -name "*$py.class"`
 }
+
+alias gcal='python -m gcal.quickadd'
 
 # print one file on remove server "loki.cs.umass.edu"
 function print-loki() {
@@ -260,12 +264,6 @@ function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
 #export PS1="${RED}[\u@\h \W]\$${NO_COLOUR} "
 # set a fancy prompt
 #export PS1="`EXT_COLOR 172`[\u@\h \W]\$${NO_COLOUR} "
-
-
-#pronounce() {
-#    wget -qO- $(wget -qO- "http://www.m-w.com/dictionary/$@" | grep 'return au' | sed -r "s|.*return au\('([^']*)', '([^'])[^']*'\).*|http://cougar.eb.com/soundc11/\2/\1|") | aplay -q; 
-#}
-
 
 
 function my_pkill() {
