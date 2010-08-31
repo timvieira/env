@@ -31,3 +31,4 @@ bind - resize -3
 msgwait 15
 activity "Activity in %n ^G"
 
+termcapinfo xterm* ti@:te@
