@@ -5,7 +5,7 @@
 #______________________________________________________________________________
 # Environment variables
 
-PROJECTS=/home/timv/projects
+PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/java-extras
 
 # Java
