@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+function emacsd() {
+    ps -C emacs >/dev/null && return 1
+    emacs $@ 2>&1 >/dev/null &
+    disown `pgrep emacs`  # get emacs PID and detach it from this shell.
+}
+
+( emacsd $@ 2>&1 >/dev/null ) || ( emacsclient $@ 2>&1 >/dev/null & )
