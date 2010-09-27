@@ -7,13 +7,14 @@
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/java-extras
+export SCALA_HOME=~/projects/scala
 
 # Java
 export JAVA_HOME="/usr/lib/jvm/java-6-sun"
 export JDK_HOME=$JAVA_HOME
 
 # The Path
-export PATH=$PATH:$JAVA_HOME/bin
+export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
 export PATH=$PATH:~/projects/bin
 
 # Python
@@ -47,6 +48,9 @@ export CLASSPATH=$JAVAEXTRAS/ubigraph.jar:$CLASSPATH
 export EDITOR=emacs
 export HGEDITOR='emacs -nw'
 
+function pkill9 () {
+  kill -9 `pgrep $@`
+}
 
 
 # ls aliases
@@ -194,45 +198,50 @@ function idea () {
   disown `pgrep -f "com\.intellij\.idea\.Main"`
 }
 
+function visualvm () {
+  $JAVAEXTRAS/visualvm_13/bin/visualvm &
+  disown `pgrep -f "visualvm"`
+}
+
 function pyclean() {
-    rm -f `find . -name "*.pyc"`
-    rm -f `find . -name "*$py.class"`
+  rm -f `find . -name "*.pyc"`
+  rm -f `find . -name "*$py.class"`
 }
 
 alias gcal='python -m gcal.quickadd'
 
 # print one file on remove server "loki.cs.umass.edu"
 function print-loki() {
-    PFROM="loki.cs.umass.edu"
-    PNAME="woper-dbl"
-    for f in $@
-    do
-        BASENAME=$(basename $f)
-        scp $f $PFROM:~/tmp/$BASENAME
-        ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
-        echo
-    done
+  PFROM="loki.cs.umass.edu"
+  PNAME="woper-dbl"
+  for f in $@
+  do
+    BASENAME=$(basename $f)
+    scp $f $PFROM:~/tmp/$BASENAME
+    ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
+    echo
+  done
 }
 
 function extract () {
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1        ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1       ;;
-            *.rar)       unrar x $1     ;;
-            *.gz)        gunzip $1     ;;
-            *.tar)       tar xvf $1        ;;
-            *.tbz2)      tar xvjf $1      ;;
-            *.tgz)       tar xvzf $1       ;;
-            *.zip)       unzip $1     ;;
-            *.Z)         uncompress $1  ;;
-            *.7z)        7z x $1    ;;
-            *)           echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
-    fi
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xvjf $1   ;;
+      *.tar.gz)    tar xvzf $1   ;;
+      *.bz2)       bunzip2 $1    ;;
+      *.rar)       unrar x $1    ;;
+      *.gz)        gunzip $1     ;;
+      *.tar)       tar xvf $1    ;;
+      *.tbz2)      tar xvjf $1   ;;
+      *.tgz)       tar xvzf $1   ;;
+      *.zip)       unzip $1      ;;
+      *.Z)         uncompress $1 ;;
+      *.7z)        7z x $1       ;;
+      *)           echo "'$1' cannot be extracted via >extract<" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
 }
 
 
@@ -266,13 +275,31 @@ function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
 #export PS1="`EXT_COLOR 172`[\u@\h \W]\$${NO_COLOUR} "
 
 
-function my_pkill() {
-    pids=$(ps -ef \
-          | grep "$@" \
-          | python -c "import re,sys; print ' '.join(re.findall('timv\s*(\d+)', line)[0] for line in sys.stdin)")
-    kill -9 $pids
-}
-
-function cow() {
+function cow () {
     aplay /usr/lib/openoffice/basis3.1/share/gallery/sounds/cow.wav &
 }
+
+
+#______________________________________________________________
+# Audio Conversion
+function m4a2wav () {
+  for i in *.m4a; do
+    mplayer -ao pcm "$i" -ao pcm:file="${i%.m4a}.wav"
+  done
+}
+
+function wav2mp3 () {
+  for i in *.wav; do
+    lame -h -b 192 "$i" "${i%.wav}.mp3"
+  done
+}
+
+function m4a2mp3 () {
+  m4a2wav 
+  wav2mp3
+  rm *.wav
+}
+
+#______________________________________________________________
+#
+
