@@ -8,6 +8,15 @@
 (line-number-mode 1)   ; show line number near mode=line
 ;(linum-mode 0)         ; show line numbers on the side
 
+(defun my-window-placement ()
+  (interactive)
+  (if (window-system)
+    (progn
+      (set-frame-height (selected-frame) 82)
+      (set-frame-width (selected-frame) 120)
+      (set-frame-position (selected-frame) 420 0))))
+(my-window-placement)
+
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,34 +36,56 @@
  '(truncate-lines t)
 )
 
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
- '(bold ((t (:weight extra-bold))))
- '(comint-highlight-prompt ((t (:foreground "light blue"))))
- '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
- '(flymake-errline ((((class color)) (:underline "red"))))
- '(flymake-warnline ((((class color)) (:underline "yellow"))))
- '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
- '(font-lock-comment-face ((t (:foreground "red3" :slant italic))))
- '(font-lock-function-name-face ((t (:foreground "blue"))))
- '(font-lock-keyword-face ((t (:foreground "orange"))))
- '(font-lock-string-face ((t (:foreground "green4"))))
- '(font-lock-type-face ((t (:foreground "blue"))))
- '(italic ((t (:foreground "Yellow1" :slant italic))))
- '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
- '(minibuffer-prompt ((t (:foreground "white"))))
- '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
- '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
- '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
- '(rst-level-1-face ((t (:background "darkgreen" :weight extra-bold))) t)
- '(rst-level-2-face ((t (:background "darkgreen"))) t)
- '(rst-level-3-face ((t (:background "darkgreen"))) t)
- '(rst-level-4-face ((t (:background "darkgreen"))) t)
+(defun dark-colors ()
+  (interactive)
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil 
+                  :box nil :strike-through nil :overline nil :underline nil :slant normal 
+                  :weight normal :height 80 :width normal :foundry "bitstream" 
+                  :family "Bitstream Vera Sans Mono"))))
+   '(bold ((t (:weight extra-bold))))
+   '(comint-highlight-prompt ((t (:foreground "light blue"))))
+   '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
+   '(flymake-errline ((((class color)) (:underline "red"))))
+   '(flymake-warnline ((((class color)) (:underline "yellow4"))))
+   '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
+   '(font-lock-comment-face ((t (:foreground "red3" :slant italic))))
+   '(font-lock-function-name-face ((t (:foreground "blue"))))
+   '(font-lock-keyword-face ((t (:foreground "orange"))))
+   '(font-lock-string-face ((t (:foreground "green4"))))
+   '(font-lock-type-face ((t (:foreground "blue"))))
+   '(italic ((t (:foreground "Yellow1" :slant italic))))
+   '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
+   '(minibuffer-prompt ((t (:foreground "white"))))
+   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
+   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
+   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
+   '(rst-level-1-face ((t (:background "darkgreen"))) t)
+   '(rst-level-2-face ((t (:background "darkgreen"))) t)
+   '(rst-level-3-face ((t (:background "darkgreen"))) t)
+   '(rst-level-4-face ((t (:background "darkgreen"))) t)
+  )
+  (my-window-placement)
 )
+
+(dark-colors)
+
+(defun light-colors ()
+  (interactive)
+  (custom-set-faces
+   '(default ((t (:stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
+   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
+   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
+   '(minibuffer-prompt ((t (:foreground "black"))))
+   '(font-lock-keyword-face ((t (:foreground "orange3"))))
+   )
+  (my-window-placement)
+)
+
 
 (partial-completion-mode)
 
@@ -62,15 +93,9 @@
 ;(font-lock-add-keywords
 ; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
 
-
-(defun my-window-placement ()
-  (interactive)
-  (if (window-system)
-    (progn
-      (set-frame-height (selected-frame) 82)
-      (set-frame-width (selected-frame) 120)
-      (set-frame-position (selected-frame) 420 0))))
-(my-window-placement)
+(font-lock-add-keywords
+ nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+        1 font-lock-warning-face t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -374,28 +399,7 @@
       1 font-lock-keyword-face t))))
 
 (defun nox-setup ()
-  (common-setup)
-  (term-colors))
-
-(defun term-colors ()
-  (interactive)
-  (custom-set-faces
-    '(font-lock-string-face ((t (:foreground "darkgreen"))))
-    '(font-lock-comment-face ((t (:foreground "darkred" :slant italic))))
-    '(mode-line ((t (:background "blue" :foreground "white" :weight bold))))
-    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "lightblue" :foreground "white"))))))
-
-(defun light-colors ()
-  (interactive)
-  (custom-set-faces
-   '(default ((t (:stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
-   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
-   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
-   '(minibuffer-prompt ((t (:foreground "black"))))
-   '(help-argument-name ((t (:foreground "orange"))))
-   )
-)
-
+  (common-setup))
 
 (defvar *init*)
 (setq *init*
@@ -422,15 +426,6 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
-
-;; ???: from nicholas lara's stuff...
-;; Better middle mouse button interaction
-;; (setq x-select-enable-clipboard t)
-;; (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
-;; Default window navigation bindings
-;; (windmove-default-keybindings)
-;; Shell colors
-;; (ansi-color-for-comint-mode-on)
 
 (setq find-file-compare-truenames t
       minibuffer-confirm-incomplete t
@@ -588,4 +583,11 @@
 ;      (setenv "PATH"
 ;              (concat (expand-file-name path-element)
 ;                      path-separator (getenv "PATH")))))
+
+
+(defun sudo-edit (&optional arg)
+  (interactive "p")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
