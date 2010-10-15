@@ -146,6 +146,7 @@
   confirm-nonexistent-file-or-buffer t
 )
 (ido-mode t)
+;(ido-mode nil)
 
 
 

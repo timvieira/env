@@ -186,9 +186,12 @@ fi
 
 # ssh aliases
 alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
+alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
 alias jasper='ssh timv@jasper.cs.umass.edu'
 alias vinci8='ssh timv@vinci8.cs.umass.edu'
 
+
+alias difflr="diff -B --expand-tabs --side-by-side"
 
 #______________________________________________________________________________
 # bash functions
@@ -297,7 +300,9 @@ function wav2mp3 () {
 function m4a2mp3 () {
   m4a2wav 
   wav2mp3
-  rm *.wav
+  #rm *.wav
+  echo "There are probably some temporary wav files you can delete."
+  echo "Currenly, m4a2mp3 will *not* delete these for you."
 }
 
 #______________________________________________________________
