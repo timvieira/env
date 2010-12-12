@@ -43,9 +43,9 @@
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
-   '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil 
-                  :box nil :strike-through nil :overline nil :underline nil :slant normal 
-                  :weight normal :height 80 :width normal :foundry "bitstream" 
+   '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil
+                  :box nil :strike-through nil :overline nil :underline nil :slant normal
+                  :weight normal :height 80 :width normal :foundry "bitstream"
                   :family "Bitstream Vera Sans Mono"))))
    '(bold ((t (:weight extra-bold))))
    '(comint-highlight-prompt ((t (:foreground "light blue"))))
@@ -53,10 +53,10 @@
    '(flymake-errline ((((class color)) (:underline "red"))))
    '(flymake-warnline ((((class color)) (:underline "yellow4"))))
    '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
-   '(font-lock-comment-face ((t (:foreground "red3" :slant italic))))
-   '(font-lock-function-name-face ((t (:foreground "blue"))))
+   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))  ; red3
+   '(font-lock-function-name-face ((t (:foreground "blue1"))))
    '(font-lock-keyword-face ((t (:foreground "orange"))))
-   '(font-lock-string-face ((t (:foreground "green4"))))
+   '(font-lock-string-face ((t (:foreground "forest green"))))  ; green4
    '(font-lock-type-face ((t (:foreground "blue"))))
    '(italic ((t (:foreground "Yellow1" :slant italic))))
    '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
@@ -64,10 +64,6 @@
    '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
-   '(rst-level-1-face ((t (:background "darkgreen"))) t)
-   '(rst-level-2-face ((t (:background "darkgreen"))) t)
-   '(rst-level-3-face ((t (:background "darkgreen"))) t)
-   '(rst-level-4-face ((t (:background "darkgreen"))) t)
   )
   (my-window-placement)
 )
@@ -82,7 +78,9 @@
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(minibuffer-prompt ((t (:foreground "black"))))
    '(font-lock-keyword-face ((t (:foreground "orange3"))))
-   )
+   '(font-lock-function-name-face ((t (:foreground "royalblue"))))
+   '(font-lock-type-face ((t (:foreground "royalblue"))))
+  )
   (my-window-placement)
 )
 
@@ -121,7 +119,7 @@
 (setq-default
  ;; Column width (used in longlines-mode)
  auto-fill-mode 1
- fill-column 100
+ fill-column 80
 )
 
 ;; Note: I think the smooth-scrolling cannot be on for these settings to take effect
@@ -129,9 +127,9 @@
 ; scroll-conservatively: how far the cursor is allowed to be center when scrolling starts
 ; scroll-preserve-screen-position: maintain screen position when you hit Page(Up|Down)
 (setq
- scroll-margin 0                   
- scroll-conservatively 100000 
- scroll-preserve-screen-position 1 
+ scroll-margin 0
+ scroll-conservatively 100000
+ scroll-preserve-screen-position 1
 )
 
 
@@ -336,13 +334,13 @@
   ;; Append to python path just-in-case env is not initialize by ~/.bashrc
   (setenv "PYTHONPATH"
           (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras"))
-  
+
   ;(require 'python-mode)
   (require 'parenface)
   (require 'dired+)
   (require 'filecache)
   ;(require 'smooth-scrolling)   ; this is a little annoying
-  
+
   (global-font-lock-mode t)
   (cond
    (*full-elisp-available*
@@ -498,9 +496,9 @@
 ;;  2. end-kbd-macro
 ;;  3. name-last-kbd-macro
 ;; (fset 'latex-compile-and-open
-;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p 
-;;     backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace 
-;;     backspace backspace backspace backspace backspace backspace 
+;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p
+;;     backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace
+;;     backspace backspace backspace backspace backspace backspace
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
@@ -515,11 +513,14 @@
     (shell-command (concat "pdflatex " (buffer-file-name)))
     ;; !  ==> Fatal error occurred, no output PDF file produced!
     ;;(find-file pdf-file)
-    (shell-command (concat "evince " pdf-file " &")))
-  (delete-other-windows))
+    (shell-command (concat "evince " pdf-file " &"))
+    ;(set-buffer (find-file pdf-file))   ; to open in emacs use this line
+    (delete-other-windows)))
 
 (add-hook 'latex-mode-hook
           '(lambda ()
+             (local-unset-key "\C-c\C-c")
+             (local-set-key "\C-c\C-c" 'latex-thing)
              (flyspell-mode t)
              (flyspell-buffer)
              (longlines-mode t)))
@@ -592,3 +593,8 @@
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+
+; I want a buffer killer sniffer
+;(add-hook 'kill-buffer-hook
+;          '(lambda () (if (string-equal (buffer-name (current-buffer)) "dot-emacs.el")
+;                          (y-or-n-p "kill buffer? "))))
