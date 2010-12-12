@@ -189,12 +189,14 @@ alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
 alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
 alias jasper='ssh timv@jasper.cs.umass.edu'
 alias vinci8='ssh timv@vinci8.cs.umass.edu'
-
+alias dali='ssh timv@dalisrv.cs.umass.edu'
 
 alias difflr="diff -B --expand-tabs --side-by-side"
 
 #______________________________________________________________________________
 # bash functions
+
+function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
 
 function idea () {
   $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
@@ -217,8 +219,7 @@ alias gcal='python -m gcal.quickadd'
 function print-loki() {
   PFROM="loki.cs.umass.edu"
   PNAME="woper-dbl"
-  for f in $@
-  do
+  for f in $@; do
     BASENAME=$(basename $f)
     scp $f $PFROM:~/tmp/$BASENAME
     ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
