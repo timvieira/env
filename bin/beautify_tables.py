@@ -22,8 +22,8 @@ def read_block():
 
 block = ['dummy value']
 while len(block):
-    block   = read_block()
-    widths  = [max(imap(len, c)) for c in izip(*block)]
+    block = read_block()
+    widths = [max(imap(len, c)) for c in izip(*block)]
     pattern = '   '.join(imap('%{0}s'.format, widths))
     try:
         for row in block:
