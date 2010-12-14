@@ -196,6 +196,11 @@ alias difflr="diff -B --expand-tabs --side-by-side"
 #______________________________________________________________________________
 # bash functions
 
+# use +1GB for file larger than 1 gig.
+function find-files-by-size () {
+  find -size "$1" -exec ls -lh {} \;
+}
+
 function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
 
 function idea () {
