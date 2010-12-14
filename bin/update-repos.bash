@@ -3,13 +3,18 @@
 REPO=$1
 
 function die () {
-  echo "failed pushing changes to \"$REPO\"."
-  exit 1
+  red "failed pushing changes to \"$REPO\"."
+#  exit 1
 }
 
 function green {
   echo -e "\033[1;32m$1\033[0m"
 }
+
+function red {
+  echo -e "\033[1;31m$1\033[0m"
+}
+
 
 if [ $REPO ]; then
 
