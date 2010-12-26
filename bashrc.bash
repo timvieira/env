@@ -65,6 +65,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# other aliases
+alias ipy='ipython'
 
 ############################################################
 # If not running interactively, don't do anything
