@@ -91,11 +91,6 @@
 ;(font-lock-add-keywords
 ; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
 
-(font-lock-add-keywords
- nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
-        1 font-lock-warning-face t)))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (column-number-mode 1) ; show column number near mode-line
@@ -187,8 +182,6 @@
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
 
-  ;(global-unset-key [f5])
-  ;(global-set-key [f5] 'goto-line)  ;; use "M-g g" instead
   (global-set-key [f12] 'revert-buffer-and-refind-position)
   (global-set-key "\C-x\C-k" 'kill-region)
   (global-set-key "\C-c\C-k" 'clipboard-kill-region)
@@ -218,8 +211,6 @@
   (global-unset-key [(control ?z)])
 
   (global-unset-key [(control ?x) (control ?z)])
-
-  ;(global-set-key [f5] 'mode-compile)
 
   (global-set-key [(kp-subtract)] 'kill-current-buffer)
   (global-set-key [(shift kp-subtract)] 'kill-current-buffer-and-window)
@@ -430,7 +421,9 @@
       minibuffer-confirm-incomplete t
       minibuffer-max-depth nil)
 
-(setq browse-url-browser-function '(("." . browse-url-firefox)))
+;(setq browse-url-browser-function '(("." . browse-url-firefox)))
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
 
 (setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load move print
                                       shell symlink uncompress recursive-delete kill-file-buffer
@@ -453,18 +446,6 @@
 ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))
 
 
-;; ;; TIM: IPython integration
-;; (require 'ipython)
-;; (require 'python-mode)
-;; (require 'pymacs)
-;;
-;; (setq py-python-command-args '( "-colors" "Linux"))
-;; (pymacs-load "ropemacs" "rope-")
-;;
-;; ;;(defadvice py-execute-buffer (around python-keep-focus activate)
-;; ;;  "return focus to python code buffer"
-;; ;;  (save-excursion ad-do-it))
-;;
 ;; (defadvice py-execute-buffer (around python-keep-focus activate)
 ;;   "Thie advice to make focus python source code after execute command py-execute-buffer."
 ;;   (let ((remember-window (selected-window))
@@ -473,22 +454,6 @@
 ;;     (select-window remember-window)
 ;;     (goto-char remember-point)))
 ;;
-;; (defun rgr/python-execute()
-;;   (interactive)
-;;   (if mark-active
-;;     (py-execute-string (buffer-substring-no-properties (region-beginning) (region-end)))
-;;     (py-execute-buffer)))
-;;
-;; (global-set-key (kbd "C-c C-e") 'rgr/python-execute)
-;;
-;; (add-hook 'python-mode-hook
-;;           '(lambda () (eldoc-mode 1)) t)
-;;
-;; IPython code completion
-;; (setq ipython-completion-command-string
-;;       "print(';'.join(__IP.Completer.all_completions('%s')))\n")
-;;
-;; (provide 'python-programming)
 
 
 ;; Keyboard macros:
@@ -511,11 +476,17 @@
         (delete-file pdf-file))
     ;(tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
     (shell-command (concat "pdflatex " (buffer-file-name)))
-    ;; !  ==> Fatal error occurred, no output PDF file produced!
-    ;;(find-file pdf-file)
-    (shell-command (concat "evince " pdf-file " &"))
+    ;; TODO 
+    ;; * if "Fatal error occurred, no output PDF file produced!" don't open evince
+    ;;   possible solutions might check if pdf-file was create via (find-file pdf-file)
+    ;; * i don't like that i get an y/n question if envince is still running
+    (shell-command (concat "evince " pdf-file " &"))   
     ;(set-buffer (find-file pdf-file))   ; to open in emacs use this line
     (delete-other-windows)))
+
+;(setq tex-command "pdftex")
+;(set-variable (quote tex-dvi-view-command) "evince")
+;(setq latex-run-command "pdflatex")
 
 (add-hook 'latex-mode-hook
           '(lambda ()
@@ -598,3 +569,10 @@
 ;(add-hook 'kill-buffer-hook
 ;          '(lambda () (if (string-equal (buffer-name (current-buffer)) "dot-emacs.el")
 ;                          (y-or-n-p "kill buffer? "))))
+
+
+
+(font-lock-add-keywords
+ nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
+        1 font-lock-warning-face t)))
+
