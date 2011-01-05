@@ -480,7 +480,7 @@
     ;; * if "Fatal error occurred, no output PDF file produced!" don't open evince
     ;;   possible solutions might check if pdf-file was create via (find-file pdf-file)
     ;; * i don't like that i get an y/n question if envince is still running
-    (shell-command (concat "evince " pdf-file " &"))   
+    (shell-command (concat "evince " pdf-file " &"))
     ;(set-buffer (find-file pdf-file))   ; to open in emacs use this line
     (delete-other-windows)))
 

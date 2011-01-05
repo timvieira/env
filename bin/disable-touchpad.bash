@@ -15,3 +15,6 @@ xinput set-int-prop "$NAME" "Device Enabled" 8 $ENABLE  # I don't know what the 
 
 # shut down mousetweaks...
 mousetweaks --shutdown
+
+
+# the program xev can be used to be monitor events including mouse clicks and whatnot
