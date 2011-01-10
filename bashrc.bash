@@ -1,6 +1,4 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
 
 #______________________________________________________________________________
 # Environment variables
@@ -19,13 +17,12 @@ export PATH=$PATH:~/projects/bin
 
 # Python
 export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS:$PYTHONPATH
-#export PYTHONSTARTUP=$PROJECTS/python-extras/pythonstartup.py
 
 # Classpath
 export CLASSPATH=.:$CLASSPATH
 
 # Learning-Based Java (LBJ)
-LBJDIR=$JAVAEXTRAS/lbj-things
+LBJDIR=$JAVAEXTRAS/lbj
 export CLASSPATH=$CLASSPATH:$LBJDIR/LBJPOS.jar:$LBJDIR/LBJ2.jar:$LBJDIR/LBJ2Library.jar
 
 # Jython
@@ -137,8 +134,6 @@ fi
 
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-    #print user@host$
     #PS1='\[\033[01;32m\]\u@\h\[\033[00m\]\$ '
 #    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]\n\$ '
     PS1='${debian_chroot:+($debian_chroot)}\[\033[03;32m\]\u@\h\[\033[00m\] \[\033[03;34m\]\w\[\033[00m\]\n\$ '
@@ -164,13 +159,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 
-
-# bash will check all the directories in the $CDPATH list for matches to the directory name.
-# export CDPATH='.:~:/usr/local/apache/htdocs:/disk/backups'
-
-# XXX: THIS MIGHT NOT BE NECESSARY:
-#export LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib:$LD_LIBRARY_PATH
-
 #______________________________________________________________________________
 # Aliases
 
@@ -193,7 +181,10 @@ alias jasper='ssh timv@jasper.cs.umass.edu'
 alias vinci8='ssh timv@vinci8.cs.umass.edu'
 alias dali='ssh timv@dalisrv.cs.umass.edu'
 
+# misc aliases
 alias difflr="diff -B --expand-tabs --side-by-side"
+alias poweroff-display='sleep 1 && xset dpms force off'
+
 
 #______________________________________________________________________________
 # bash functions
@@ -208,11 +199,6 @@ function say { mplayer -really-quiet "http://translate.google.com/translate_tts?
 function idea () {
   $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
   disown `pgrep -f "com\.intellij\.idea\.Main"`
-}
-
-function visualvm () {
-  $JAVAEXTRAS/visualvm_13/bin/visualvm &
-  disown `pgrep -f "visualvm"`
 }
 
 function pyclean() {
@@ -279,12 +265,6 @@ CYAN="\[\033[0;36m\]"
 LIGHT_CYAN="\[\033[1;36m\]"
 
 function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
-
-# set a fancy prompt
-#export PS1="${RED}[\u@\h \W]\$${NO_COLOUR} "
-# set a fancy prompt
-#export PS1="`EXT_COLOR 172`[\u@\h \W]\$${NO_COLOUR} "
-
 
 function cow () {
     aplay /usr/lib/openoffice/basis3.1/share/gallery/sounds/cow.wav &
