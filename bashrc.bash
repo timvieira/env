@@ -266,11 +266,6 @@ LIGHT_CYAN="\[\033[1;36m\]"
 
 function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
 
-function cow () {
-    aplay /usr/lib/openoffice/basis3.1/share/gallery/sounds/cow.wav &
-}
-
-
 #______________________________________________________________
 # Audio Conversion
 function m4a2wav () {
