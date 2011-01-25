@@ -16,7 +16,7 @@ export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
 export PATH=$PATH:~/projects/bin
 
 # Python
-export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS:$PYTHONPATH
+export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS/incubator:$PROJECTS:$PYTHONPATH
 
 # Classpath
 export CLASSPATH=.:$CLASSPATH
