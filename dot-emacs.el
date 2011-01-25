@@ -215,7 +215,7 @@
 
   (defun custom-kill-current-buffer ()
     (interactive)
-    ;; TIM: get around the annoying "Active processes exist" query 
+    ;; get around the annoying "Active processes exist" query 
     (if (get-buffer-process (current-buffer))
         (process-kill-without-query (get-buffer-process (current-buffer))))
     ;; the usual behavior
