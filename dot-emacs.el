@@ -1,3 +1,24 @@
+;; Notes
+;; =======
+;;
+;; Bookmarks 
+;; ---------
+;;  `C-x r m <somekey>` adds a bookmark, 
+;;  `C-x r b <somekey>` visits that bookmark, 
+;;  `C-x r l` lists bookmarks.
+;;
+;; Keyboard macros
+;; ---------------
+;;  1. start-kbd-macro
+;;  2. end-kbd-macro
+;;  3. name-last-kbd-macro
+;; (fset 'latex-compile-and-open
+;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p
+;;     backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace
+;;     backspace backspace backspace backspace backspace backspace
+;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
+;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
+
 ;; Common lisp
 (require 'cl)
 
@@ -34,7 +55,11 @@
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
+ '(visible-cursor nil)
+ '(cursor-in-nonselected-windows nil)
 )
+
+(mouse-avoidance-mode)
 
 (defun dark-colors ()
   (interactive)
@@ -187,9 +212,17 @@
   (global-set-key "\C-c\C-k" 'clipboard-kill-region)
   (global-set-key "\C-b" 'goto-matching-paren)
 
-  (global-unset-key "\M-k")
-  (global-set-key "\M-k" 'kill-current-buffer)
 
+  (defun custom-kill-current-buffer ()
+    (interactive)
+    ;; TIM: get around the annoying "Active processes exist" query 
+    (if (get-buffer-process (current-buffer))
+        (process-kill-without-query (get-buffer-process (current-buffer))))
+    ;; the usual behavior
+    (kill-buffer (current-buffer)))
+
+  (global-unset-key "\M-k")
+  (global-set-key "\M-k" 'custom-kill-current-buffer)
 
   ;; set other ways to bring up M-x the "extended command"
   ;;(global-set-key "\C-x\C-m" 'execute-extended-command)
@@ -297,14 +330,6 @@
   (require 'scala-mode-auto)
   (add-hook 'scala-mode-hook
             '(lambda () (yas/minor-mode-on))))
-
-;;(defun gnuplot-mode-setup()
-;;  (interactive)
-;;  (autoload 'gnuplot-mode "gnuplot" "gnuplot major mode" t)
-;;  (autoload 'gnuplot-make-buffer "gnuplot" "open a buffer in gnuplot mode" t)
-;;  (setq auto-mode-alist (append '(("\\.gp$" . gnuplot-mode)) auto-mode-alist))
-;;  (global-set-key [(f9)] 'gnuplot-make-buffer)
-;;  )
 
 ;;(defun org-mode-setup ()
 ;;  (interactive)
@@ -453,19 +478,7 @@
 ;;     ad-do-it
 ;;     (select-window remember-window)
 ;;     (goto-char remember-point)))
-;;
 
-
-;; Keyboard macros:
-;;  1. start-kbd-macro
-;;  2. end-kbd-macro
-;;  3. name-last-kbd-macro
-;; (fset 'latex-compile-and-open
-;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p
-;;     backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace
-;;     backspace backspace backspace backspace backspace backspace
-;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
-;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; My LaTeX stuff
@@ -565,14 +578,6 @@
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 
-; I want a buffer killer sniffer
-;(add-hook 'kill-buffer-hook
-;          '(lambda () (if (string-equal (buffer-name (current-buffer)) "dot-emacs.el")
-;                          (y-or-n-p "kill buffer? "))))
+(font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
-
-
-(font-lock-add-keywords
- nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):"
-        1 font-lock-warning-face t)))
 
