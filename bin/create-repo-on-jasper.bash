@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 
-PWD=`pwd`
+PWD=`pwd -P`
+cd "$PWD" # avoid symlinks
 xxx=`basename $PWD`
 echo "send $xxx to jasper"
 
