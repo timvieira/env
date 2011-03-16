@@ -49,6 +49,11 @@ function pkill9 () {
   kill -9 `pgrep $@`
 }
 
+# reverse scp .. XXX: this doesn't work very well.
+function reverse-scp () {
+  RIP=${SSH_CLIENT%% *}
+  scp $@ $RIP:
+}
 
 # ls aliases
 alias ll='ls -lAh'
@@ -61,9 +66,6 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-
-# other aliases
-alias ipy='ipython'
 
 ############################################################
 # If not running interactively, don't do anything
@@ -93,6 +95,10 @@ shopt -s histappend
 export HISTSIZE=10000000000
 export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear"
+export HISTTIMEFORMAT='%F %T '
+
+#______________________________________________________________________________
+# 
 
 shopt -s cmdhist
 
@@ -103,8 +109,6 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-#______________________________________________________________________________
-# 
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
@@ -182,9 +186,8 @@ alias vinci8='ssh timv@vinci8.cs.umass.edu'
 alias dali='ssh timv@dalisrv.cs.umass.edu'
 
 # misc aliases
-alias difflr="diff -B --expand-tabs --side-by-side"
-alias poweroff-display='sleep 1 && xset dpms force off'
-
+#alias difflr="diff -B --expand-tabs --side-by-side"
+#alias poweroff-display='sleep 1 && xset dpms force off'
 
 #______________________________________________________________________________
 # bash functions
@@ -213,9 +216,9 @@ function print-loki() {
   PFROM="loki.cs.umass.edu"
   PNAME="woper-dbl"
   for f in $@; do
-    BASENAME=$(basename $f)
-    scp $f $PFROM:~/tmp/$BASENAME
-    ssh $PFROM "lpr -P$PNAME ~/tmp/$BASENAME"
+    BASENAME=$(basename "$f")
+    scp "$f" "$PFROM:~/tmp/$BASENAME"
+    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
     echo
   done
 }
@@ -291,3 +294,4 @@ function m4a2mp3 () {
 #______________________________________________________________
 #
 
+alias py='python -m dev'
