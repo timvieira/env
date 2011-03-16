@@ -20,13 +20,12 @@ cd Python-2.7
 ./configure --prefix=$MYPYINSTALL                    # this will print a ton of stuff and generate a Makefile
                                                      # the Makefile will install things to the directory $MYPYINSTALL
 make install
+cd ..
 
 export PATH="$MYPYINSTALL/bin:$PATH"                 # put python 2.7 at the begining of your PATH
 
-
 # install easy_install
-cd ..
-cd distribute-0.6.10 && python setup.py install
+cd distribute-0.6.15 && python setup.py install
 cd ..
 
 # now install pip because it's better than easy_install (haha)
@@ -41,8 +40,8 @@ pip install numpy
 #pip install pyopenssl
 pip install ipython
 
-
 echo "make sure that you put $MYPYINSTALL/bin at the begining of your PATH environment variable in ~/.bashrc"
 echo ""
-echo export PATH="$MYPYINSTALL/bin:$PATH"
+echo -e "\033[33m****************************************************************\033[0m"
+echo -e "\033[31mexport PATH=\"$MYPYINSTALL/bin:\$PATH\"\033[0m"
 
