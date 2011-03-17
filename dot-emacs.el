@@ -31,7 +31,6 @@
   (add-path "site-lisp") ;; stuff found elsewhere
   (add-path "site-lisp/scala-mode")
   (add-path "site-lisp/protobuf-mode.el")
-  (add-path "site-lisp/nxml-mode-20041004")
   (add-path "site-lisp/cc-mode")
   (add-path "site-lisp/cedet-1.0pre4/common")
   (add-path "site-lisp/elib-1.0")
