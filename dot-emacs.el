@@ -26,9 +26,9 @@
 
 (defun setup-paths ()
   (interactive)
+  (add-path "")
   (add-path "site-lisp/pylint.el")
-  (add-path "lisp")      ;; my elisp code
-  (add-path "site-lisp") ;; stuff found elsewhere
+  (add-path "site-lisp")
   (add-path "site-lisp/scala-mode")
   (add-path "site-lisp/protobuf-mode.el"))
 
@@ -485,8 +485,8 @@
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
 ;; CSS
-(setq cssm-indent-level 2)
-(setq cssm-newline-before-closing-bracket t)
-(setq cssm-indent-function #'cssm-c-style-indenter)
-(setq cssm-mirror-mode nil)
+;(setq cssm-indent-level 2)
+;(setq cssm-newline-before-closing-bracket t)
+;(setq cssm-indent-function #'cssm-c-style-indenter)
+;(setq cssm-mirror-mode nil)
 

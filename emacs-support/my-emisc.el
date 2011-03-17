@@ -52,7 +52,8 @@ as point as well."
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "")
+    (while (re-search-forward "
+")
       (replace-match ""))))
 
 (defun make-one-liner ()
@@ -101,18 +102,6 @@ as point as well."
 (defun insert-datestamp ()
   (interactive)
   (insert (format-time-string "[%D]")))
-
-(defun journal-section-header ()
-  (interactive)
-  (insert "* ==== ")
-  (org-time-stamp-inactive)
-  (insert " ===="))
-
-(defun journal-subsection-header ()
-  (interactive)
-  (insert "*** == ")
-  (org-time-stamp-inactive t)
-  (insert " =="))
 
 (defun bracket-text (left right)
   (interactive "sLeft delim:\nsRight delim:")
