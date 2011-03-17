@@ -30,11 +30,7 @@
   (add-path "lisp")      ;; my elisp code
   (add-path "site-lisp") ;; stuff found elsewhere
   (add-path "site-lisp/scala-mode")
-  (add-path "site-lisp/protobuf-mode.el")
-  (add-path "site-lisp/cc-mode")
-  (add-path "site-lisp/cedet-1.0pre4/common")
-  (add-path "site-lisp/elib-1.0")
-)
+  (add-path "site-lisp/protobuf-mode.el"))
 
 (setup-paths)
 
@@ -45,9 +41,6 @@
 (require 'parenface)
 (require 'dired+)
 (require 'filecache)
-;(require 'smooth-scrolling)   ; this is a little annoying
-(require 'cedet)
-(require 'ecmascript-mode)
 (require 'protobuf-mode)
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
 
@@ -58,6 +51,7 @@
 (menu-bar-mode -1)     ; hide menu-bar
 (line-number-mode 1)   ; show line number near mode=line
 ;(linum-mode 0)         ; show line numbers on the side
+(column-number-mode 1) ; show column number near mode-line
 
 (defun my-window-placement ()
   (interactive)
@@ -139,37 +133,30 @@
   (my-window-placement)
 )
 
-
-(partial-completion-mode)
-
 ;; XXX: add this to my-python-config
 ;(font-lock-add-keywords
 ; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(column-number-mode 1) ; show column number near mode-line
 
 (defvar c-tab-always-indent nil)
 
-(setq-default indent-tabs-mode nil) ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
+(setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 
-(setq
- tab-width 4                   ; XXX: might want to consider changing this back to 2...
- default-major-mode 'text-mode ; Make text-mode the default mode for new buffers.
-
-; case-fold-search t            ; case-insensitive search
- case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
-; read-file-name-completion-ignore-case t
-; completion-ignore-case t
- cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
- mouse-yank-at-point t               ; mouse yank at point, not click!
+(setq tab-width 4                    ; XXX: might want to consider changing this back to 2...
+      default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
+      ;; case-fold-search t            ; case-insensitive search
+      case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
+      ;; read-file-name-completion-ignore-case t
+      ;; completion-ignore-case t
+      cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
+      mouse-yank-at-point t               ; mouse yank at point, not click!
 )
 
-(setq-default
- ;; Column width (used in longlines-mode)
- auto-fill-mode 1
- fill-column 80
+;; Column width (used in longlines-mode)
+(setq-default auto-fill-mode 1
+              fill-column 80
 )
 
 ;; Note: I think the smooth-scrolling cannot be on for these settings to take effect
@@ -181,17 +168,19 @@
       scroll-preserve-screen-position 1
 )
 
-
-(setq ido-case-fold  t                    ; be case-insensitive
-      ido-enable-last-directory-history t ; remember last used dirs
-      ido-use-filename-at-point nil       ; don't use filename at point (annoying)
-      ido-use-url-at-point nil            ; don't use url at point (annoying)
-      ido-enable-flex-matching nil        ; don't try to be too smart
-      ido-confirm-unique-completion t     ; wait for RET, even with unique completion
+;; ido settings
+(setq ido-case-fold  t                     ; be case-insensitive
+      ido-enable-last-directory-history  t ; remember last used dirs
+      ido-use-filename-at-point nil        ; don't use filename at point (annoying)
+      ido-use-url-at-point nil             ; don't use url at point (annoying)
+      ido-enable-flex-matching nil         ; don't try to be too smart
+      ido-confirm-unique-completion t      ; wait for RET, even with unique completion
       confirm-nonexistent-file-or-buffer t
 )
 
 (ido-mode t)
+
+;;(partial-completion-mode)
 
 ;; typed text replaces a selection, rather than append
 (pending-delete-mode nil)
@@ -344,7 +333,6 @@
 
   (server-start)
   (set-mouse-color "black")
-  (add-to-list 'auto-mode-alist '("\\.[aj]s$" . ecmascript-mode))
   (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
 )
@@ -379,12 +367,6 @@
 (defun flip-to-last-buffer (&optional n)
   (interactive "p")
   (switch-to-buffer (car (cdr (buffer-list)))))
-
-;; Load the default-dir.el package which installs fancy handling of
-;; the initial contents in the minibuffer when reading file names.
-;(condition-case nil
-;    (require 'default-dir)
-;  (error nil))
 
 ;; Enable some default-disabled commands
 (put 'narrow-to-region 'disabled nil)
