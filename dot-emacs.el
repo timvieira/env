@@ -19,8 +19,39 @@
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
+(defconst *emacs-root* (expand-file-name "~/emacs-support/"))
+
+(defun add-path (p) 
+  (add-to-list 'load-path (concat *emacs-root* p)))
+
+(defun setup-paths ()
+  (interactive)
+  (add-path "site-lisp/pylint.el")
+  (add-path "lisp")      ;; my elisp code
+  (add-path "site-lisp") ;; stuff found elsewhere
+  (add-path "site-lisp/scala-mode")
+  (add-path "site-lisp/protobuf-mode.el")
+  (add-path "site-lisp/nxml-mode-20041004")
+  (add-path "site-lisp/cc-mode")
+  (add-path "site-lisp/cedet-1.0pre4/common")
+  (add-path "site-lisp/elib-1.0")
+)
+
+(setup-paths)
+
 ;; Common lisp
 (require 'cl)
+(require 'ido)
+(require 'scala-mode-auto)
+(require 'parenface)
+(require 'dired+)
+(require 'filecache)
+;(require 'smooth-scrolling)   ; this is a little annoying
+(require 'cedet)
+(require 'ecmascript-mode)
+(require 'protobuf-mode)
+;;(require 'cython-mode)    ; we also have a simple cython-mode
+
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -46,7 +77,7 @@
  '(current-language-environment "Latin-1")
  '(default-input-method "latin-1-prefix")
  '(global-font-lock-mode t nil (font-lock))
- '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
+; '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icomplete-mode nil nil (icomplete))
@@ -146,27 +177,22 @@
 ; scroll-margin: line where scrolling should start;
 ; scroll-conservatively: how far the cursor is allowed to be center when scrolling starts
 ; scroll-preserve-screen-position: maintain screen position when you hit Page(Up|Down)
-(setq
- scroll-margin 0
- scroll-conservatively 100000
- scroll-preserve-screen-position 1
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1
 )
 
 
-(require 'ido)
-(setq
-  ido-case-fold  t                    ; be case-insensitive
-  ido-enable-last-directory-history t ; remember last used dirs
-  ido-use-filename-at-point nil       ; don't use filename at point (annoying)
-  ido-use-url-at-point nil            ; don't use url at point (annoying)
-  ido-enable-flex-matching nil        ; don't try to be too smart
-  ido-confirm-unique-completion t     ; wait for RET, even with unique completion
-  confirm-nonexistent-file-or-buffer t
+(setq ido-case-fold  t                    ; be case-insensitive
+      ido-enable-last-directory-history t ; remember last used dirs
+      ido-use-filename-at-point nil       ; don't use filename at point (annoying)
+      ido-use-url-at-point nil            ; don't use url at point (annoying)
+      ido-enable-flex-matching nil        ; don't try to be too smart
+      ido-confirm-unique-completion t     ; wait for RET, even with unique completion
+      confirm-nonexistent-file-or-buffer t
 )
+
 (ido-mode t)
-;(ido-mode nil)
-
-
 
 ;; typed text replaces a selection, rather than append
 (pending-delete-mode nil)
@@ -177,11 +203,20 @@
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
-;; Emacs-related stuff under ~/emacs
-(setq
- semantic-load-turn-useful-things-on t
- semanticdb-default-save-directory "~/.emacs.d/semantic/" ; put semantic.cache files somewhere far away.
+
+;; put semantic.cache files somewhere far away.
+(setq semantic-load-turn-useful-things-on t
+      semanticdb-default-save-directory "~/.emacs.d/semantic/"
 )
+
+;; put emacs backup files into their own directory
+(setq backup-by-copying t
+      backup-directory-alist '(("." . "~/.emacs.d/autosaves/"))
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -281,66 +316,10 @@
         (t
          (indent-region (point-marker) (mark-marker)))))
 
-
-;; I either want to load up a heavyweight emacs if I am on my local machine
-;;   and my slag heap o' elisp is available, or, if I am launching from
-;;   a remote machine via terminal, I just want a useful subset
-(defconst *home-emacs-support* (expand-file-name "~/emacs-support/"))
-(defconst *emacs-root*
-  (cond
-;   ((file-directory-p *sendak-emacs-support*) *sendak-emacs-support*)
-   ((file-directory-p *home-emacs-support*) *home-emacs-support*)
-   (t nil)))
-
-(defconst *full-elisp-available* (not (null *emacs-root*)))
-
-
-(defun setup-paths ()
-  (interactive)
-  (cond
-   (*full-elisp-available*
-    (labels ((add-path (p) (add-to-list 'load-path (concat *emacs-root* p))))
-      ;;(add-path "site-lisp/python")
-      (add-path "site-lisp/pylint.el")
-      ;(add-path "site-lisp/pymacs.el")
-      (add-path "lisp")      ;; my elisp code
-      (add-path "site-lisp") ;; stuff found elsewhere
-      ;; org-mode stuff
-      (add-path "site-lisp/org-mode")
-      (add-path "site-lisp/org-mode-contrib/lisp")
-      (add-path "site-lisp/org-mode-contrib/packages/org-export-freemind-0.1.0")
-      (add-path "site-lisp/remember")
-      ;;(add-path "site-lisp/slime-2.0")
-      (add-path "site-lisp/scala-mode")
-      (add-path "site-lisp/protobuf-mode.el")
-      (add-path "site-lisp/nxml-mode-20041004")
-      ;;(add-path "site-lisp/ruby")
-      (add-path "site-lisp/color-theme-6.6.0")
-      (add-path "site-lisp/cc-mode")
-      (add-path "site-lisp/cedet-1.0pre4/common")
-      ;;(add-path "site-lisp/ecb-2.32")
-      (add-path "site-lisp/elib-1.0")
-      (add-path "site-lisp/jde-2.3.5.1/lisp") ;; Java IDE support
-      ))
-   (t nil)))
-
-
 (defun scala-mode-setup ()
   (interactive)
-  (require 'scala-mode-auto)
   (add-hook 'scala-mode-hook
             '(lambda () (yas/minor-mode-on))))
-
-;;(defun org-mode-setup ()
-;;  (interactive)
-;;  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-;;  (global-set-key "\C-cl" 'org-store-link)
-;;  (global-set-key "\C-ca" 'org-agenda)
-;;  (setq org-agenda-include-diary t)
-;;  (require 'remember)
-;;  (setq remember-annotation-functions '(org-remember-annotation))
-;;  (setq remember-handler-functions '(org-remember-handler))
-;;  (add-hook 'remember-mode-hook 'org-remember-apply-template))
 
 
 (defun common-setup()
@@ -351,54 +330,27 @@
   (setenv "PYTHONPATH"
           (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras"))
 
-  ;(require 'python-mode)
-  (require 'parenface)
-  (require 'dired+)
-  (require 'filecache)
-  ;(require 'smooth-scrolling)   ; this is a little annoying
 
   (global-font-lock-mode t)
-  (cond
-   (*full-elisp-available*
-    (scala-mode-setup)
-    ;;(org-mode-setup)
-    ;;(load "ani-fcsh.el")
-    ;;(setup-actionscript)
-    ;;(load-library "perl-config") ;; extra support for perl coding
-    (load-library "my-emisc")
-    ;(autoload 'nxml-mode "nxml-mode" "Edit XML documents" t)
-    ;(setq auto-mode-alist (cons '("\\.\\(xml\\|xsl\\|mxml\\|rng\\|xhtml\\)\\'" . nxml-mode) auto-mode-alist))
-    )
-   (t nil)))
+  (scala-mode-setup)
+  ;;(load "ani-fcsh.el")
+  ;;(setup-actionscript)
+  ;;(load-library "perl-config") ;; extra support for perl coding
+  (load-library "my-emisc")
 
-(defun x-setup ()
-  (interactive)
-  (common-setup)
-  (require 'cedet)
-  (require 'yaml-mode)
-  (require 'ecmascript-mode)
-  (require 'protobuf-mode)
-  ;;(require 'cython-mode)    ; we also have a simple cython-mode
-  ;;(require 'ecb)
   ;;(defalias 'perl-mode 'cperl-mode)
-  ; (setup-slime)  ;; uncomment for gnuserv
-  ;(load-library "my-color-theme")
-  ;(require 'color-theme-autoloads)
-  ;(color-theme-initialize)
   ;;(setq cperl-mode-hook 'my-cperl-customizations)
   ;;(load-library "my-java-config")
   (load-library "my-python-config")
 
-  ;; Load saved keyboard macros:
-  (load-file (concat *emacs-root* "kbd-macros.el"))
   (server-start)
   (set-mouse-color "black")
-  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
   (add-to-list 'auto-mode-alist '("\\.[aj]s$" . ecmascript-mode))
   (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
-;  (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 )
+
+(common-setup)
 
 ;; Simple cython-mode:
 (define-derived-mode cython-mode python-mode "Cython"
@@ -413,15 +365,14 @@
                "\\)\\>")
       1 font-lock-keyword-face t))))
 
-(defun nox-setup ()
-  (common-setup))
 
-(defvar *init*)
-(setq *init*
-      (cond ((eq window-system nil)        ;; Running in a terminal:
-             #'(lambda () (nox-setup)))
-            (t #'(lambda () (x-setup)))))  ;; Running under X
-(funcall *init*)
+;(defvar *init*)
+;(setq *init*
+;      (cond ((eq window-system nil)        ;; Running in a terminal:
+;             #'(lambda () (nox-setup)))
+;            (t #'(lambda () (x-setup)))))  ;; Running under X
+;(funcall *init*)
+
 
 (setq dired-use-ls-dired nil)
 (setq c-basic-offset 2)
@@ -432,52 +383,32 @@
 
 ;; Load the default-dir.el package which installs fancy handling of
 ;; the initial contents in the minibuffer when reading file names.
-(condition-case nil
-    (require 'default-dir)
-  (error nil))
+;(condition-case nil
+;    (require 'default-dir)
+;  (error nil))
 
 ;; Enable some default-disabled commands
 (put 'narrow-to-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
+;; set the webbrowser to use when we click on a link.
+;(setq browse-url-browser-function '(("." . browse-url-firefox)))
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+
+;; ---------------------------------------------------------------------------------------
+;; timv: not sure what these things do...
 
 (setq find-file-compare-truenames t
       minibuffer-confirm-incomplete t
       minibuffer-max-depth nil)
 
-;(setq browse-url-browser-function '(("." . browse-url-firefox)))
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
-
 (setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load move print
                                       shell symlink uncompress recursive-delete kill-file-buffer
                                       kill-dired-buffer patch create-top-dir revert-subdirs))
 
-(setq backup-by-copying t
-      backup-directory-alist '(("." . "~/.emacs.d/autosaves/"))
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
-
-
-;(autoload 'pymacs-apply "pymacs")
-;(autoload 'pymacs-call "pymacs")
-;(autoload 'pymacs-eval "pymacs" nil t)
-;(autoload 'pymacs-exec "pymacs" nil t)
-;(autoload 'pymacs-load "pymacs" nil t)
-;;(eval-after-load "pymacs"
-;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))
-
-
-;; (defadvice py-execute-buffer (around python-keep-focus activate)
-;;   "Thie advice to make focus python source code after execute command py-execute-buffer."
-;;   (let ((remember-window (selected-window))
-;;         (remember-point (point)))
-;;     ad-do-it
-;;     (select-window remember-window)
-;;     (goto-char remember-point)))
+;; ---------------------------------------------------------------------------------------
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -511,10 +442,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun find-kbd-macro-file ()
-  (interactive)
-  (set-buffer (find-file (concat *emacs-root* "kbd-macros.el"))))
-
 (defun fullscreen ()
   "make the emacs window fullscreen"
   (interactive)
@@ -535,7 +462,6 @@
 (defun change-indent (w)
   (interactive "nWidth: ")
   (set-variable 'c-basic-offset w))
-
 
 
 ;; Word count!
@@ -561,7 +487,6 @@
       (message (concat "Word Count: " result))
       )))
 
-
 ;(defun my-add-path (path-element)
 ;  "Add the specified path element to the Emacs PATH"
 ;  (interactive "DEnter directory to be added to path: ")
@@ -570,20 +495,15 @@
 ;              (concat (expand-file-name path-element)
 ;                      path-separator (getenv "PATH")))))
 
-
 (defun sudo-edit (&optional arg)
   (interactive "p")
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
-
-
-
-;; css
+;; CSS
 (setq cssm-indent-level 2)
 (setq cssm-newline-before-closing-bracket t)
 (setq cssm-indent-function #'cssm-c-style-indenter)
