@@ -7,10 +7,6 @@ PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/java-extras
 export SCALA_HOME=~/projects/scala
 
-# Java
-export JAVA_HOME="/usr/lib/jvm/java-6-sun"
-export JDK_HOME=$JAVA_HOME
-
 # The Path
 export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
 export PATH=$PATH:~/projects/bin
@@ -49,12 +45,6 @@ function pkill9 () {
   kill -9 `pgrep $@`
 }
 
-# reverse scp .. XXX: this doesn't work very well.
-function reverse-scp () {
-  RIP=${SSH_CLIENT%% *}
-  scp $@ $RIP:
-}
-
 # ls aliases
 alias ll='ls -lAh'
 alias la='ls -A'
@@ -77,7 +67,7 @@ alias .....='cd ../../../..'
 
 # appends "2>&1 |less" to the end of current line
 bind "'\C-o': '\C-e 2>&1 |less'"
-
+bind "'\C-f': '\C-ustty sane\n\r\C-l'"
 
 #______________________________________________________________________________
 # Bash History
@@ -178,16 +168,24 @@ if [ -x /usr/bin/dircolors ]; then
     alias ack='ack --color --group'
 fi
 
+alias less='less -RSimw'
+export PAGER='less -RSimw'
+
 # ssh aliases
 alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
 alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
 alias jasper='ssh timv@jasper.cs.umass.edu'
 alias vinci8='ssh timv@vinci8.cs.umass.edu'
 alias dali='ssh timv@dalisrv.cs.umass.edu'
+alias loki='ssh timv@loki.cs.umass.edu'
 
 # misc aliases
 #alias difflr="diff -B --expand-tabs --side-by-side"
 #alias poweroff-display='sleep 1 && xset dpms force off'
+
+alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
+alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
+alias gittree-when='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %ci"'
 
 #______________________________________________________________________________
 # bash functions
@@ -197,7 +195,10 @@ function find-files-by-size () {
   find -size "$1" -exec ls -lh {} \;
 }
 
-function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
+alias findbig="find . -type f -exec ls -s {} \; | sort -n -r | head -5"
+
+
+#function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
 
 function idea () {
   $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
@@ -293,5 +294,3 @@ function m4a2mp3 () {
 
 #______________________________________________________________
 #
-
-alias py='python -m dev'
