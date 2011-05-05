@@ -1,10 +1,10 @@
 ;; Notes
 ;; =======
 ;;
-;; Bookmarks 
+;; Bookmarks
 ;; ---------
-;;  `C-x r m <somekey>` adds a bookmark, 
-;;  `C-x r b <somekey>` visits that bookmark, 
+;;  `C-x r m <somekey>` adds a bookmark,
+;;  `C-x r b <somekey>` visits that bookmark,
 ;;  `C-x r l` lists bookmarks.
 ;;
 ;; Keyboard macros
@@ -19,20 +19,21 @@
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
+
+;; F3 opens .emacs file
+(global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
+
+
 (defconst *emacs-root* (expand-file-name "~/emacs-support/"))
 
-(defun add-path (p) 
+
+(defun add-path (p)
   (add-to-list 'load-path (concat *emacs-root* p)))
-
-(defun setup-paths ()
-  (interactive)
-  (add-path "")
-  (add-path "site-lisp/pylint.el")
-  (add-path "site-lisp")
-  (add-path "site-lisp/scala-mode")
-  (add-path "site-lisp/protobuf-mode.el"))
-
-(setup-paths)
+(add-path "")
+(add-path "site-lisp/pylint.el")
+(add-path "site-lisp")
+(add-path "site-lisp/scala-mode")
+(add-path "site-lisp/protobuf-mode.el")
 
 ;; Common lisp
 (require 'cl)
@@ -50,27 +51,22 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)     ; hide menu-bar
 (line-number-mode 1)   ; show line number near mode=line
-;(linum-mode 0)         ; show line numbers on the side
 (column-number-mode 1) ; show column number near mode-line
 
 (defun my-window-placement ()
   (interactive)
   (if (window-system)
     (progn
-      (set-frame-height (selected-frame) 82)
-      (set-frame-width (selected-frame) 120)
+      (add-to-list 'default-frame-alist '(height . 72))
+      (add-to-list 'default-frame-alist '(width . 120))
+      ;(set-frame-height (selected-frame) 82)
+      ;(set-frame-width (selected-frame) 120)
       (set-frame-position (selected-frame) 420 0))))
-(my-window-placement)
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
  '(current-language-environment "Latin-1")
  '(default-input-method "latin-1-prefix")
  '(global-font-lock-mode t nil (font-lock))
-; '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(ibuffer-saved-filter-groups nil)
  '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icomplete-mode nil nil (icomplete))
@@ -78,20 +74,24 @@
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
+ '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially
+                                            try-complete-file-name
+                                            try-expand-all-abbrevs
+                                            try-expand-list
+                                            try-expand-line
+                                            try-expand-dabbrev
+                                            try-expand-dabbrev-all-buffers
+                                            try-expand-dabbrev-from-kill
+                                            try-complete-lisp-symbol-partially
+                                            try-complete-lisp-symbol)))
  '(truncate-lines t)
  '(visible-cursor nil)
  '(cursor-in-nonselected-windows nil)
 )
 
-(mouse-avoidance-mode)
-
 (defun dark-colors ()
   (interactive)
   (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
    '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil
                   :box nil :strike-through nil :overline nil :underline nil :slant normal
                   :weight normal :height 80 :width normal :foundry "bitstream"
@@ -102,10 +102,10 @@
    '(flymake-errline ((((class color)) (:underline "red"))))
    '(flymake-warnline ((((class color)) (:underline "yellow4"))))
    '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
-   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))  ; red3
-   '(font-lock-function-name-face ((t (:foreground "blue1"))))
+   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
+   '(font-lock-function-name-face ((t (:foreground "blue"))))
    '(font-lock-keyword-face ((t (:foreground "orange"))))
-   '(font-lock-string-face ((t (:foreground "forest green"))))  ; green4
+   '(font-lock-string-face ((t (:foreground "forest green"))))
    '(font-lock-type-face ((t (:foreground "blue"))))
    '(italic ((t (:foreground "Yellow1" :slant italic))))
    '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
@@ -114,7 +114,6 @@
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
   )
-  (my-window-placement)
 )
 
 (dark-colors)
@@ -130,12 +129,7 @@
    '(font-lock-function-name-face ((t (:foreground "royalblue"))))
    '(font-lock-type-face ((t (:foreground "royalblue"))))
   )
-  (my-window-placement)
 )
-
-;; XXX: add this to my-python-config
-;(font-lock-add-keywords
-; 'python-mode '(("\\([\\+\\-]\\)?\\b\\([0-9]*\\.?[0-9]+\\)\\(e[0-9]+\\)?" . 'font-lock-constant-face)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -156,8 +150,7 @@
 
 ;; Column width (used in longlines-mode)
 (setq-default auto-fill-mode 1
-              fill-column 80
-)
+              fill-column 80)
 
 ;; Note: I think the smooth-scrolling cannot be on for these settings to take effect
 ; scroll-margin: line where scrolling should start;
@@ -209,18 +202,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defun revert-buffer-and-refind-position ()
-  (interactive)
-  (let ((p (point-marker)))
-    (revert-buffer t t t)
-    (goto-char p)))
+;(defun revert-buffer-and-refind-position ()
+;  (interactive)
+;  (let ((p (point-marker)))
+;    (revert-buffer t t t)
+;    (goto-char p)))
 
 (defun my-keys ()
-  ;; trying to define an alternate prefix keychord
-  ;; (global-set-key (kbd "C-#")
-  ;;                 (lookup-key
-  ;;                  (lookup-key global-map (kbd "C-x"))
-  ;;                  (kbd "r")))
 
   (global-unset-key [mouse-2])  ; no more accidental pastes from middle-click
   ;(global-set-key [mouse-2] '(lambda () (interactive) (message "Middle-click pasting disabled!")))
@@ -230,15 +218,14 @@
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
 
-  (global-set-key [f12] 'revert-buffer-and-refind-position)
+  ;(global-set-key [f12] 'revert-buffer-and-refind-position)
   (global-set-key "\C-x\C-k" 'kill-region)
   (global-set-key "\C-c\C-k" 'clipboard-kill-region)
   (global-set-key "\C-b" 'goto-matching-paren)
 
-
   (defun custom-kill-current-buffer ()
     (interactive)
-    ;; get around the annoying "Active processes exist" query 
+    ;; get around the annoying "Active processes exist" query
     (if (get-buffer-process (current-buffer))
         (process-kill-without-query (get-buffer-process (current-buffer))))
     ;; the usual behavior
@@ -246,12 +233,6 @@
 
   (global-unset-key "\M-k")
   (global-set-key "\M-k" 'custom-kill-current-buffer)
-
-  ;; set other ways to bring up M-x the "extended command"
-  ;;(global-set-key "\C-x\C-m" 'execute-extended-command)
-  ;;(global-set-key "\C-c\C-m" 'execute-extended-command)
-  ;;(global-set-key "\C-cm"    'execute-extended-command)
-  ;;(global-set-key "\C-xm"    'execute-extended-command)
 
   ;; weird function to indent to where the parser think things should go...
   (global-set-key [(control ?i)] 'my-indent-function)
@@ -268,27 +249,27 @@
 
   (global-unset-key [(control ?x) (control ?z)])
 
-  (global-set-key [(kp-subtract)] 'kill-current-buffer)
-  (global-set-key [(shift kp-subtract)] 'kill-current-buffer-and-window)
-  (global-set-key [(control kp-subtract)] 'delete-window)
-  ; (define-key help-mode-map [(kp-subtract)] 'kill-current-buffer)
-  ; (define-key help-mode-map [(shift kp-subtract)] 'kill-current-buffer-and-window)
   ;; splitting and deleting windows
   (global-set-key [(control ?1)] 'delete-window)
   (global-set-key [(control ?2)] 'split-window-horizontally)
   (global-set-key [(control ?3)] 'split-window-vertically)
   (global-set-key [(control ?!)] 'delete-other-windows)
+
   ;; looking at diffs
   (global-set-key [(control ?4)] 'ediff-buffers)
+
   ;; toggle between interaction and non-interactive modes
   (global-set-key [(control ?\))] '(lambda() (interactive) (other-window 1)))
   (global-set-key [(control ?\()] '(lambda() (interactive) (other-window -1)))
+
   ;; ido...
   (global-set-key [(control ?7)] 'ido-switch-buffer)
+
   ;; cycle thru buffers
   (global-set-key [(control ?8)] 'ibuffer)
   (global-set-key [(control ?9)] 'bs-cycle-previous)
   (global-set-key [(control ?0)] 'bs-cycle-next)
+
   ;; reinstate the older space-completion for files
   (cond
    ((boundp 'minibuffer-local-filename-completion-map)
@@ -304,36 +285,30 @@
         (t
          (indent-region (point-marker) (mark-marker)))))
 
-(defun scala-mode-setup ()
-  (interactive)
-  (add-hook 'scala-mode-hook
-            '(lambda () (yas/minor-mode-on))))
-
 
 (defun common-setup()
   (interactive)
-  (setup-paths)
 
   ;; Append to python path just-in-case env is not initialize by ~/.bashrc
   (setenv "PYTHONPATH"
           (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras"))
 
-
   (global-font-lock-mode t)
-  (scala-mode-setup)
-  ;;(load "ani-fcsh.el")
-  ;;(setup-actionscript)
-  ;;(load-library "perl-config") ;; extra support for perl coding
   (load-library "my-emisc")
-
-  ;;(defalias 'perl-mode 'cperl-mode)
-  ;;(setq cperl-mode-hook 'my-cperl-customizations)
-  ;;(load-library "my-java-config")
   (load-library "my-python-config")
 
-  (server-start)
-  (set-mouse-color "black")
-  (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
+  (defun no-X-setup () nil)
+
+  (defun X-setup ()
+    (server-start)
+    (set-mouse-color "black")
+    (my-window-placement)
+    (mouse-avoidance-mode)
+  )
+
+  (if (window-system) (X-setup) (no-X-setup))
+
+  ;(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
 )
 
@@ -351,14 +326,6 @@
                "\\|object\\|public\\|struct\\|type\\|union\\|void"
                "\\)\\>")
       1 font-lock-keyword-face t))))
-
-
-;(defvar *init*)
-;(setq *init*
-;      (cond ((eq window-system nil)        ;; Running in a terminal:
-;             #'(lambda () (nox-setup)))
-;            (t #'(lambda () (x-setup)))))  ;; Running under X
-;(funcall *init*)
 
 
 (setq dired-use-ls-dired nil)
@@ -401,7 +368,7 @@
         (delete-file pdf-file))
     ;(tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
     (shell-command (concat "pdflatex " (buffer-file-name)))
-    ;; TODO 
+    ;; TODO
     ;; * if "Fatal error occurred, no output PDF file produced!" don't open evince
     ;;   possible solutions might check if pdf-file was create via (find-file pdf-file)
     ;; * i don't like that i get an y/n question if envince is still running
@@ -445,6 +412,13 @@
   (set-variable 'c-basic-offset w))
 
 
+;(defun open-shell ()
+;  "open a gnome-terminal in cwd"
+;  (interactive)
+;  (shell-command (concat "gnome-terminal --working-directory " (shell-command-to-string "pwd") " &"))
+;)
+
+
 ;; Word count!
 (defun word-count (&optional filename)
   "Returns the word count of the current buffer.  If `filename' is not nil, returns the word count of that file."
@@ -484,9 +458,10 @@
 
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
-;; CSS
-;(setq cssm-indent-level 2)
-;(setq cssm-newline-before-closing-bracket t)
-;(setq cssm-indent-function #'cssm-c-style-indenter)
-;(setq cssm-mirror-mode nil)
+
+;; org-mode link abbreviations
+(setq org-link-abbrev-alist
+      '(("bugzilla" . "http://10.1.2.9/bugzilla/show_bug.cgi?id=")
+        ("factorie" . "file:///home/timv/project/factorie/incoming/")
+        ("project"  . "file:///home/timv/project")))
 
