@@ -48,12 +48,11 @@ as point as well."
       (setq  charcount (1- charcount))
       )))
 
-(defun kill-Ms ()
+(defun dos2unix ()
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "
-")
+    (while (re-search-forward " ")
       (replace-match ""))))
 
 (defun make-one-liner ()
@@ -124,3 +123,41 @@ as point as well."
         (setq linecount (1- linecount))
         ))))
 
+
+
+;; Word count!
+(defun word-count (&optional filename)
+  "Returns the word count of the current buffer.  If `filename' is not nil, returns the word count of that file."
+  (interactive)
+  (save-some-buffers) ;; Make sure the current buffer is saved
+  (let ((tempfile nil))
+    (if (null filename)
+        (progn
+          (let ((buffer-file (buffer-file-name))
+                (lcase-file (downcase (buffer-file-name))))
+            (if (and (>= (length lcase-file) 4) (string= (substring lcase-file -4 nil) ".tex"))
+                ;; This is a LaTeX document, so DeTeX it!
+                (progn
+                  (setq filename (make-temp-file "wordcount"))
+                  (shell-command-to-string (concat "detex < " buffer-file " > " filename))
+                  (setq tempfile t))
+              (setq filename buffer-file)))))
+    (let ((result (car (split-string (shell-command-to-string (concat "wc -w " filename)) " "))))
+      (if tempfile
+          (delete-file filename))
+      (message (concat "Word Count: " result))
+      )))
+
+(defun goto-matching-paren ()
+  "If point is sitting on a parenthetic character, jump to its match."
+  (interactive)
+  (cond ((looking-at "\\s\(") (forward-list 1))
+        ((progn
+           (backward-char 1)
+           (looking-at "\\s\)")) (forward-char 1) (backward-list 1))))
+
+(defun fullscreen ()
+  "make the emacs window fullscreen"
+  (interactive)
+  (set-frame-parameter nil 'fullscreen
+                       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))

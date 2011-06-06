@@ -34,6 +34,11 @@
 (add-path "site-lisp")
 (add-path "site-lisp/scala-mode")
 (add-path "site-lisp/protobuf-mode.el")
+(add-path "site-lisp/writegood-mode.el")
+
+
+;;   (global-set-key "\C-cg" 'writegood-mode)
+
 
 ;; Common lisp
 (require 'cl)
@@ -43,8 +48,8 @@
 (require 'dired+)
 (require 'filecache)
 (require 'protobuf-mode)
+(require 'writegood-mode)
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
-
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -56,11 +61,14 @@
 (defun my-window-placement ()
   (interactive)
   (if (window-system)
+    ;; this function is a bit quirky; hence you'll see some seemingly redundant code below
     (progn
+      ;; the following lines work *after* initialization
+      (set-frame-height (selected-frame) 82)
+      (set-frame-width (selected-frame) 120)
+      ;; works during initialization
       (add-to-list 'default-frame-alist '(height . 72))
       (add-to-list 'default-frame-alist '(width . 120))
-      ;(set-frame-height (selected-frame) 82)
-      ;(set-frame-width (selected-frame) 120)
       (set-frame-position (selected-frame) 420 0))))
 
 (custom-set-variables
@@ -103,10 +111,12 @@
    '(flymake-warnline ((((class color)) (:underline "yellow4"))))
    '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
    '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
-   '(font-lock-function-name-face ((t (:foreground "blue"))))
    '(font-lock-keyword-face ((t (:foreground "orange"))))
    '(font-lock-string-face ((t (:foreground "forest green"))))
+
+   '(font-lock-function-name-face ((t (:foreground "blue"))))
    '(font-lock-type-face ((t (:foreground "blue"))))
+   
    '(italic ((t (:foreground "Yellow1" :slant italic))))
    '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
    '(minibuffer-prompt ((t (:foreground "white"))))
@@ -147,6 +157,9 @@
       cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
       mouse-yank-at-point t               ; mouse yank at point, not click!
 )
+
+; require newline at end of file
+;(setq require-final-newline t)
 
 ;; Column width (used in longlines-mode)
 (setq-default auto-fill-mode 1
@@ -295,7 +308,7 @@
 
   (global-font-lock-mode t)
   (load-library "my-emisc")
-  (load-library "my-python-config")
+  ;(load-library "my-python-config")
 
   (defun no-X-setup () nil)
 
@@ -310,6 +323,9 @@
 
   ;(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
+  
+  (load-library "matlab")
+
 )
 
 (common-setup)
@@ -390,20 +406,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun fullscreen ()
-  "make the emacs window fullscreen"
-  (interactive)
-  (set-frame-parameter nil 'fullscreen
-                       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
-
-(defun goto-matching-paren ()
-  "If point is sitting on a parenthetic character, jump to its match."
-  (interactive)
-  (cond ((looking-at "\\s\(") (forward-list 1))
-        ((progn
-           (backward-char 1)
-           (looking-at "\\s\)")) (forward-char 1) (backward-list 1))))
-
 ;; When turning on flyspell-mode, automatically check the entire buffer.
 ;(defadvice flyspell-mode (after advice-flyspell-check-buffer-on-start activate) (flyspell-buffer))
 
@@ -418,30 +420,6 @@
 ;  (shell-command (concat "gnome-terminal --working-directory " (shell-command-to-string "pwd") " &"))
 ;)
 
-
-;; Word count!
-(defun word-count (&optional filename)
-  "Returns the word count of the current buffer.  If `filename' is not nil, returns the word count of that file."
-  (interactive)
-  (save-some-buffers) ;; Make sure the current buffer is saved
-  (let ((tempfile nil))
-    (if (null filename)
-        (progn
-          (let ((buffer-file (buffer-file-name))
-                (lcase-file (downcase (buffer-file-name))))
-            (if (and (>= (length lcase-file) 4) (string= (substring lcase-file -4 nil) ".tex"))
-                ;; This is a LaTeX document, so DeTeX it!
-                (progn
-                  (setq filename (make-temp-file "wordcount"))
-                  (shell-command-to-string (concat "detex < " buffer-file " > " filename))
-                  (setq tempfile t))
-              (setq filename buffer-file)))))
-    (let ((result (car (split-string (shell-command-to-string (concat "wc -w " filename)) " "))))
-      (if tempfile
-          (delete-file filename))
-      (message (concat "Word Count: " result))
-      )))
-
 ;(defun my-add-path (path-element)
 ;  "Add the specified path element to the Emacs PATH"
 ;  (interactive "DEnter directory to be added to path: ")
@@ -450,11 +428,11 @@
 ;              (concat (expand-file-name path-element)
 ;                      path-separator (getenv "PATH")))))
 
-(defun sudo-edit (&optional arg)
-  (interactive "p")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+(defun sudo-edit ()
+  (interactive)
+  (let ((p (point)))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
+    (goto-char p)))
 
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
