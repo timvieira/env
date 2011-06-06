@@ -11,7 +11,7 @@ except (IndexError, OSError):
 def read_block():
     block = []
     for line in input_file.xreadlines():
-        x = line.strip().split()
+        x = line.strip().split('\t')
         if len(x) == 0:
             if len(block) == 0:
                 continue
@@ -32,5 +32,6 @@ while len(block):
         print
     except TypeError: # idk why they picked this to be the exception class
         print 'THIS BLOCK IS JAGGED'
+        print 'PATTERN:', pattern
         print block
         raise
