@@ -87,6 +87,19 @@ export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear"
 export HISTTIMEFORMAT='%F %T '
 
+
+# History
+alias h="history|grep "
+function h() {
+  if [ -z "$1" ]
+  then
+    history | grep -v "  h" | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
+  else
+    history | grep -v "  h" | grep $1 | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
+  fi
+}
+
+
 #______________________________________________________________________________
 # 
 
@@ -150,6 +163,7 @@ esac
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
+    bind "set completion-ignore-case on"
 fi
 
 
@@ -167,6 +181,16 @@ if [ -x /usr/bin/dircolors ]; then
     alias less='less -R'
     alias ack='ack --color --group'
 fi
+
+# Compress the cd, ls -l series of commands.
+alias lc="cl"
+function cl () {
+ if [ $# = 0 ]; then
+  cd && l
+ else
+  cd "$*" && ll
+ fi
+}
 
 alias less='less -RSimw'
 export PAGER='less -RSimw'
