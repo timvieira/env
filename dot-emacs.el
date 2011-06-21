@@ -23,12 +23,11 @@
 ;; F3 opens .emacs file
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
 
-
-(defconst *emacs-root* (expand-file-name "~/emacs-support/"))
-
+; What to do if visiting a symbolic link to a file under version control.
+(setq vc-follow-symlinks t)
 
 (defun add-path (p)
-  (add-to-list 'load-path (concat *emacs-root* p)))
+  (add-to-list 'load-path (concat (expand-file-name "~/emacs-support/") p)))
 (add-path "")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
@@ -36,9 +35,10 @@
 (add-path "site-lisp/protobuf-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 
-
-;;   (global-set-key "\C-cg" 'writegood-mode)
-
+;; recent files list
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
 
 ;; Common lisp
 (require 'cl)
@@ -194,10 +194,6 @@
 ;; get rid of yes-or-no questions - y or n is enough
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-; What to do if visiting a symbolic link to a file under version control.
-(setq vc-follow-symlinks t)
-
-
 ;; put semantic.cache files somewhere far away.
 (setq semantic-load-turn-useful-things-on t
       semanticdb-default-save-directory "~/.emacs.d/semantic/"
@@ -308,7 +304,7 @@
 
   (global-font-lock-mode t)
   (load-library "my-emisc")
-  ;(load-library "my-python-config")
+  (load-library "my-python-config")
 
   (defun no-X-setup () nil)
 
