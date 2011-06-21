@@ -57,6 +57,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+alias open=gnome-open
+
 ############################################################
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -180,6 +182,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
     alias less='less -R'
     alias ack='ack --color --group'
+    alias tree='tree -C'
 fi
 
 # Compress the cd, ls -l series of commands.
