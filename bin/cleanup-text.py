@@ -3,7 +3,7 @@
 Clean-up text file:
  - remove nasty control characters
  - remove xml-entities
-     + maybe we should replace them when a suitable replacement exists, e.g. "&mdash;" -> "---"
+ + TODO: use replacement when possible, e.g. "&amp" -> "&" "&mdash;" -> "---"
 """
 
 import re
