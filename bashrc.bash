@@ -58,6 +58,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
 alias open=gnome-open
+alias v='visit'
 
 ############################################################
 # If not running interactively, don't do anything
@@ -103,7 +104,7 @@ function h() {
 
 
 #______________________________________________________________________________
-# 
+#
 
 shopt -s cmdhist
 
@@ -133,13 +134,20 @@ force_color_prompt=yes
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
         # We have color support; assume it's compliant with Ecma-48
-	      # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	      # a case would tend to support setf rather than setaf.)
-	      color_prompt=yes
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
         color_prompt=
     fi
 fi
+
+##
+#function get_git_branch {
+#    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\ \[\1\]/'
+#}
+#PS1="\h:\W \u\[\033[0;32m\]\$(get_git_branch) \[\033[0m\]\$ "
+##
 
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
@@ -186,7 +194,6 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # Compress the cd, ls -l series of commands.
-alias lc="cl"
 function cl () {
  if [ $# = 0 ]; then
   cd && l
@@ -210,6 +217,25 @@ alias loki='ssh timv@loki.cs.umass.edu'
 #alias difflr="diff -B --expand-tabs --side-by-side"
 #alias poweroff-display='sleep 1 && xset dpms force off'
 
+## hg for sandboxed repos
+#alias hg="sudo -u vc hg"
+#alias hg-chown-vc="sudo chown -R vc .hg; sudo chgrp -R vc .hg"
+#alias hg-chown-me="sudo chown -R timv .hg; sudo chgrp -R timv .hg"
+
+# more on log formatting http://hgbook.red-bean.com/read/customizing-the-output-of-mercurial.html
+alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
+alias hgchangelog="hg log --style changelog"
+
+# run pop open kdiff3 and open editor
+function hg-diff-ci () {
+  files=$(hg st -m -n $@)
+  echo $files
+  for f in $files
+  do
+    hg kdiff3 $f 2>/dev/null &
+    hg ci $f
+  done
+}
 alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
 alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
 alias gittree-when='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %ci"'
@@ -236,6 +262,8 @@ function pyclean() {
   rm -f `find . -name "*.pyc"`
   rm -f `find . -name "*$py.class"`
 }
+
+alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
 
 alias gcal='python -m gcal.quickadd'
 
@@ -272,31 +300,6 @@ function extract () {
   fi
 }
 
-
-#______________________________________________
-#
-
-NO_COLOUR="\[\033[0m\]"
-LIGHT_WHITE="\[\033[1;37m\]"
-WHITE="\[\033[0;37m\]"
-GRAY="\[\033[1;30m\]"
-BLACK="\[\033[0;30m\]"
-
-RED="\[\033[0;31m\]"
-LIGHT_RED="\[\033[1;31m\]"
-GREEN="\[\033[0;32m\]"
-LIGHT_GREEN="\[\033[1;32m\]"
-YELLOW="\[\033[0;33m\]"
-LIGHT_YELLOW="\[\033[1;33m\]"
-BLUE="\[\033[0;34m\]"
-LIGHT_BLUE="\[\033[1;34m\]"
-MAGENTA="\[\033[0;35m\]"
-LIGHT_MAGENTA="\[\033[1;35m\]"
-CYAN="\[\033[0;36m\]"
-LIGHT_CYAN="\[\033[1;36m\]"
-
-function EXT_COLOR () { echo -ne "\033[38;5;$1m"; }
-
 #______________________________________________________________
 # Audio Conversion
 function m4a2wav () {
@@ -312,7 +315,7 @@ function wav2mp3 () {
 }
 
 function m4a2mp3 () {
-  m4a2wav 
+  m4a2wav
   wav2mp3
   #rm *.wav
   echo "There are probably some temporary wav files you can delete."
@@ -321,3 +324,7 @@ function m4a2mp3 () {
 
 #______________________________________________________________
 #
+
+function TODOS () {
+  ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+}
