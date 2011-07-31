@@ -19,9 +19,10 @@
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
-
 ;; F3 opens .emacs file
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
+(global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Desktop/todo/todo.org"))))
+
 
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
@@ -116,7 +117,7 @@
 
    '(font-lock-function-name-face ((t (:foreground "blue"))))
    '(font-lock-type-face ((t (:foreground "blue"))))
-   
+
    '(italic ((t (:foreground "Yellow1" :slant italic))))
    '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
    '(minibuffer-prompt ((t (:foreground "white"))))
@@ -144,12 +145,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defvar c-tab-always-indent nil)
+;(defvar c-tab-always-indent nil)
+(setq c-tab-always-indent t)
 
 (setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 
-(setq tab-width 4                    ; XXX: might want to consider changing this back to 2...
-      default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
+(setq tab-width 4)                    ; XXX: might want to consider changing this back to 2...
+
+(setq default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
       ;; case-fold-search t            ; case-insensitive search
       case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
       ;; read-file-name-completion-ignore-case t
@@ -219,18 +222,18 @@
 
 (defun my-keys ()
 
-  (global-unset-key [mouse-2])  ; no more accidental pastes from middle-click
-  ;(global-set-key [mouse-2] '(lambda () (interactive) (message "Middle-click pasting disabled!")))
+  (global-unset-key [mouse-2])  ; disable middle-click paste
 
-  ;; Copy-Cut-Paste from clipboard with Super-C Super-X Super-V
+  ;; Copy-Cut-Paste from clipboard
   (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
 
   ;(global-set-key [f12] 'revert-buffer-and-refind-position)
-  (global-set-key "\C-x\C-k" 'kill-region)
-  (global-set-key "\C-c\C-k" 'clipboard-kill-region)
+  ;(global-set-key "\C-x\C-k" 'kill-region)
+  ;(global-set-key "\C-c\C-k" 'clipboard-kill-region)
   (global-set-key "\C-b" 'goto-matching-paren)
+  (global-set-key (kbd "s-w") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
 
   (defun custom-kill-current-buffer ()
     (interactive)
@@ -300,7 +303,7 @@
 
   ;; Append to python path just-in-case env is not initialize by ~/.bashrc
   (setenv "PYTHONPATH"
-          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras"))
+          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras:~/projects/incubator"))
 
   (global-font-lock-mode t)
   (load-library "my-emisc")
@@ -319,7 +322,7 @@
 
   ;(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
-  
+
   (load-library "matlab")
 
 )
@@ -439,3 +442,10 @@
         ("factorie" . "file:///home/timv/project/factorie/incoming/")
         ("project"  . "file:///home/timv/project")))
 
+
+; (org-indent-mode)
+
+
+(defun ascii-fy ()
+  (interactive)
+  (replace-string "’" "'"))
