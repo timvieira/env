@@ -12,7 +12,7 @@ export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
 export PATH=$PATH:~/projects/bin
 
 # Python
-export PYTHONPATH=$PROJECTS/python-extras:$PROJECTS/incubator:$PROJECTS:$PYTHONPATH
+export PYTHONPATH=$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS:$PYTHONPATH
 
 # Classpath
 export CLASSPATH=.:$CLASSPATH
@@ -50,6 +50,7 @@ alias ll='ls -lAh'
 alias la='ls -A'
 alias l='ls -CF'
 alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.o --ignore=*.class' # --ignore-backup
+alias ls-recent='ls -lAt'
 
 # cd aliases
 alias ..='cd ..'
@@ -248,7 +249,7 @@ function find-files-by-size () {
   find -size "$1" -exec ls -lh {} \;
 }
 
-alias findbig="find . -type f -exec ls -s {} \; | sort -n -r | head -5"
+alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 
 #function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
@@ -328,3 +329,9 @@ function m4a2mp3 () {
 function TODOS () {
   ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
 }
+
+function find-repos () {
+  find ~/ -name ".hg" -type d -execdir pwd \;
+  find ~/ -name ".git" -type d -execdir pwd \;
+}
+
