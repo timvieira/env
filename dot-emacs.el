@@ -21,7 +21,7 @@
 
 ;; F3 opens .emacs file
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
-(global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Desktop/todo/todo.org"))))
+(global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
 
 
 ; What to do if visiting a symbolic link to a file under version control.
@@ -65,7 +65,7 @@
     ;; this function is a bit quirky; hence you'll see some seemingly redundant code below
     (progn
       ;; the following lines work *after* initialization
-      (set-frame-height (selected-frame) 82)
+      (set-frame-height (selected-frame) 52)
       (set-frame-width (selected-frame) 120)
       ;; works during initialization
       (add-to-list 'default-frame-alist '(height . 72))
@@ -127,8 +127,6 @@
   )
 )
 
-(dark-colors)
-
 (defun light-colors ()
   (interactive)
   (custom-set-faces
@@ -141,6 +139,9 @@
    '(font-lock-type-face ((t (:foreground "royalblue"))))
   )
 )
+
+(dark-colors)
+;(light-colors)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -303,7 +304,7 @@
 
   ;; Append to python path just-in-case env is not initialize by ~/.bashrc
   (setenv "PYTHONPATH"
-          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/python-extras:~/projects/incubator"))
+          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/extras/python:~/projects/incubator"))
 
   (global-font-lock-mode t)
   (load-library "my-emisc")
@@ -376,20 +377,33 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; My LaTeX stuff
+
+
+;; Borrowed from Hanna's LaTeX Makefile template
+;; echo "Running latex...."
+;; pdflatex -halt-on-error $(FILENAME).tex
+;; echo "Running bibtex...."
+;; bibtex $(FILENAME)
+;; echo "Rerunning latex...."
+;; pdflatex -halt-on-error $(FILENAME).tex
+;; pdflatex -halt-on-error $(FILENAME).tex  # run twice so that we get refs
+
 (defun latex-thing ()
   (interactive)
   (let ((pdf-file (concat (substring (buffer-file-name) 0 -4) ".pdf")))
     (if (file-exists-p pdf-file)
         (delete-file pdf-file))
     ;(tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
-    (shell-command (concat "pdflatex " (buffer-file-name)))
-    ;; TODO
-    ;; * if "Fatal error occurred, no output PDF file produced!" don't open evince
-    ;;   possible solutions might check if pdf-file was create via (find-file pdf-file)
-    ;; * i don't like that i get an y/n question if envince is still running
-    (shell-command (concat "evince " pdf-file " &"))
+    (if (= 1 (shell-command (concat "pdflatex -halt-on-error " (buffer-file-name))))
+        (message "failed")
+      (progn 
+        (message "passed")
+        (delete-other-windows)))
+    ;; TODO: i don't like that i get an y/n question if envince is still running
+    ;(shell-command (concat "evince " pdf-file " &"))
     ;(set-buffer (find-file pdf-file))   ; to open in emacs use this line
-    (delete-other-windows)))
+    ;(delete-other-windows)
+    ))
 
 ;(setq tex-command "pdftex")
 ;(set-variable (quote tex-dvi-view-command) "evince")
@@ -445,7 +459,29 @@
 
 ; (org-indent-mode)
 
-
 (defun ascii-fy ()
   (interactive)
-  (replace-string "’" "'"))
+  (replace-string "’" "'") 
+  (replace-string "“" "\"")
+  (replace-string "”" "\"")
+  (replace-string "—" "-")
+  (replace-string "ﬂ" "fl")
+  (replace-string "ﬁ" "fi")
+  (replace-string "•" "*")
+  (replace-string "…" "...")
+  (replace-string "à" "a")      ; lossy
+  (replace-string "α" "\\alpha")      ; tex-fy
+  (replace-string "→" "->"))
+
+
+(defun flyspell-start ()
+  (interactive)
+  (flyspell-mode t)
+  (flyspell-buffer))
+
+
+(defun get-shell ()
+  "Spawn a gnome-terminal in CWD."
+  (interactive)
+  (shell-command "nohup gnome-terminal >& /dev/null &" )
+  (delete-other-windows))
