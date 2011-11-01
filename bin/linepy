@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# wc -l" replacement: 
+#  $ cat file | linepy 'c=0' 'c+=1' 'print c'
+#
+# grep replacement: 
+#  $ cat file | linepy 'import re' 'if re.search("\d+", line): print line'
+#
+# adding all numbers:
+#  $ seq 1 10 | linepy 's=0' 's+=int(line)' 'print s'
+#
+# prepending lines with it's length: 
+#  $ cat file | linepy 'print len(line), line'
+#
+# longest file name: 
+#  $ ls -1 | linepy 'longest=""' 'if len(line) > len(longest): longest=line' 'print longest'
+#
+# number of unique words in a document: 
+#  $ linepy 'words=[]' 'words.extend(line.split())' 'print "All words: {}, unique: {}".format(len(words), len(set(words))'
+
+if [ "$#" -eq "0" ]; then
+    echo "Args: <INIT> <LOOP> <END>. <LOOP> code can use 'line' variable"
+    echo "If -d is given as a first arg, code to be executed is printed"
+    exit 1
+fi
+
+if [ "$1" = "-d" ]; then
+    DEBUG=1
+    shift
+fi
+
+[ "$#" -eq "1" ] && LOOP="$1"
+[ "$#" -eq "2" ] && INIT="$1" && LOOP="$2"
+[ "$#" -eq "3" ] && INIT="$1" && LOOP="$2" && END="$3"
+
+CODE="
+import re, sys, os
+
+$INIT
+
+for line in sys.stdin:
+    line = line.strip()
+    $LOOP
+
+$END
+"
+
+if [ "$DEBUG" = "1" ]; then
+    echo $CODE
+fi
+
+exec python -c "$CODE"
