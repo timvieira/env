@@ -323,7 +323,7 @@ function m4a2mp3 () {
   echo "Currenly, m4a2mp3 will *not* delete these for you."
 }
 
-#______________________________________________________________
+#______________________________________________________________________________
 #
 
 function TODOS () {
@@ -335,3 +335,12 @@ function find-repos () {
   find ~/ -name ".git" -type d -execdir pwd \;
 }
 
+
+#______________________________________________________________________________
+#
+
+function push-public-key() {
+   publickey=`cat ~/.ssh/id_rsa.pub`
+   # make sure you set the appropriate permissions!
+   ssh "$1" "echo $publickey >> .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && cat .ssh/authorized_keys"
+}
