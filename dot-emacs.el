@@ -125,6 +125,7 @@
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
   )
+  (my-window-placement)
 )
 
 (defun light-colors ()
@@ -138,6 +139,7 @@
    '(font-lock-function-name-face ((t (:foreground "royalblue"))))
    '(font-lock-type-face ((t (:foreground "royalblue"))))
   )
+  (my-window-placement)
 )
 
 (dark-colors)
@@ -378,49 +380,58 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; My LaTeX stuff
 
+(defun flyspell-start ()
+  (interactive)
+  (flyspell-mode t)
+  (flyspell-buffer))
 
-;; Borrowed from Hanna's LaTeX Makefile template
-;; echo "Running latex...."
-;; pdflatex -halt-on-error $(FILENAME).tex
-;; echo "Running bibtex...."
-;; bibtex $(FILENAME)
-;; echo "Rerunning latex...."
-;; pdflatex -halt-on-error $(FILENAME).tex
-;; pdflatex -halt-on-error $(FILENAME).tex  # run twice so that we get refs
+(defun run-pdflatex (file-name)
+  (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
+      (message "pdflatex failed")
+    (progn
+      (message "pdflatex succeeded")
+      (delete-other-windows))))
+
+(defun run-bibtex (f)
+  (if (= 1 (shell-command (concat "bibtex " f)))
+      (message "bibtex failed")
+    (progn
+      (message "bibtex succeeded")
+      (delete-other-windows))))
+
+;; Hanna's LaTeX Makefile template:
+;;   echo "Running latex...."
+;;   pdflatex -halt-on-error $(FILENAME).tex
+;;   echo "Running bibtex...."
+;;   bibtex $(FILENAME)
+;;   echo "Rerunning latex...."
+;;   pdflatex -halt-on-error $(FILENAME).tex
+;;   pdflatex -halt-on-error $(FILENAME).tex  # run twice so that we get refs
 
 (defun latex-thing ()
   (interactive)
-  (let ((pdf-file (concat (substring (buffer-file-name) 0 -4) ".pdf")))
-    (if (file-exists-p pdf-file)
-        (delete-file pdf-file))
-    ;(tex-validate-buffer) ; check buffer for paragraphs containing mismatched $'s or braces.
-    (if (= 1 (shell-command (concat "pdflatex -halt-on-error " (buffer-file-name))))
-        (message "failed")
-      (progn 
-        (message "passed")
-        (delete-other-windows)))
-    ;; TODO: i don't like that i get an y/n question if envince is still running
-    ;(shell-command (concat "evince " pdf-file " &"))
-    ;(set-buffer (find-file pdf-file))   ; to open in emacs use this line
-    ;(delete-other-windows)
-    ))
-
-;(setq tex-command "pdftex")
-;(set-variable (quote tex-dvi-view-command) "evince")
-;(setq latex-run-command "pdflatex")
+  (let ((tex (buffer-file-name)))
+    (let ((base (substring tex 0 -4)))  ; filename with out extension
+      (let ((pdf (concat base ".pdf")))
+        (let ((bib (concat base ".bib")))
+          (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
+          (run-pdflatex tex)        
+          (if (file-exists-p bib) 
+              (progn
+                (run-bibtex base)
+                ;; rerun latex twice -- bibtex is weird like that
+                (run-pdflatex tex)
+                (run-pdflatex tex)))
+   )))))
 
 (add-hook 'latex-mode-hook
           '(lambda ()
              (local-unset-key "\C-c\C-c")
              (local-set-key "\C-c\C-c" 'latex-thing)
-             (flyspell-mode t)
-             (flyspell-buffer)
+             (flyspell-start)
              (longlines-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; When turning on flyspell-mode, automatically check the entire buffer.
-;(defadvice flyspell-mode (after advice-flyspell-check-buffer-on-start activate) (flyspell-buffer))
 
 (defun change-indent (w)
   (interactive "nWidth: ")
@@ -461,7 +472,7 @@
 
 (defun ascii-fy ()
   (interactive)
-  (replace-string "’" "'") 
+  (replace-string "’" "'")
   (replace-string "“" "\"")
   (replace-string "”" "\"")
   (replace-string "—" "-")
@@ -472,12 +483,6 @@
   (replace-string "à" "a")      ; lossy
   (replace-string "α" "\\alpha")      ; tex-fy
   (replace-string "→" "->"))
-
-
-(defun flyspell-start ()
-  (interactive)
-  (flyspell-mode t)
-  (flyspell-buffer))
 
 
 (defun get-shell ()
