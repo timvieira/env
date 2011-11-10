@@ -3,13 +3,16 @@
 #______________________________________________________________________________
 # Environment variables
 
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+export PATH=$JAVA_HOME/bin:$PATH
+
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/java-extras
 export SCALA_HOME=~/projects/scala
 
 # The Path
 export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
-export PATH=$PATH:~/projects/bin
+export PATH=$PATH:~/projects/env/bin
 
 # Python
 export PYTHONPATH=$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS:$PYTHONPATH
@@ -59,7 +62,13 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
 alias open=gnome-open
+alias open=xdg-open    # unity equivalent of gnome-open
+
 alias v='visit'
+
+function emacs-plain () {
+    emacs --no-init-file --no-splash $@ 2>/dev/null &
+}
 
 ############################################################
 # If not running interactively, don't do anything
@@ -265,8 +274,6 @@ function pyclean() {
 }
 
 alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
-
-alias gcal='python -m gcal.quickadd'
 
 # print one file on remove server "loki.cs.umass.edu"
 function print-loki() {
