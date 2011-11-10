@@ -28,7 +28,7 @@
 (setq vc-follow-symlinks t)
 
 (defun add-path (p)
-  (add-to-list 'load-path (concat (expand-file-name "~/emacs-support/") p)))
+  (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs-support/") p)))
 (add-path "")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
@@ -65,12 +65,12 @@
     ;; this function is a bit quirky; hence you'll see some seemingly redundant code below
     (progn
       ;; the following lines work *after* initialization
-      (set-frame-height (selected-frame) 52)
+      (set-frame-height (selected-frame) 50)
       (set-frame-width (selected-frame) 120)
       ;; works during initialization
-      (add-to-list 'default-frame-alist '(height . 72))
+      (add-to-list 'default-frame-alist '(height . 50))
       (add-to-list 'default-frame-alist '(width . 120))
-      (set-frame-position (selected-frame) 420 0))))
+      (set-frame-position (selected-frame) 615 0))))
 
 (custom-set-variables
  '(current-language-environment "Latin-1")
@@ -103,8 +103,10 @@
   (custom-set-faces
    '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil
                   :box nil :strike-through nil :overline nil :underline nil :slant normal
-                  :weight normal :height 80 :width normal :foundry "bitstream"
-                  :family "Bitstream Vera Sans Mono"))))
+                  :weight normal  :width normal :foundry "bitstream"
+                  :family "Bitstream Vera Sans Mono"
+                  ;:family "Courier"
+                  ))))
    '(bold ((t (:weight extra-bold))))
    '(comint-highlight-prompt ((t (:foreground "light blue"))))
    '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
@@ -131,7 +133,14 @@
 (defun light-colors ()
   (interactive)
   (custom-set-faces
-   '(default ((t (:stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 80 :width normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
+
+   '(default ((t (:stipple
+                  nil :background "white" :foreground "black" :inverse-video
+                  nil :box nil :strike-through nil :overline nil :underline
+                  nil :slant normal :weight normal :width
+                  normal :foundry "bitstream" :family "Bitstream Vera Sans
+   Mono"))))
+
    '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(minibuffer-prompt ((t (:foreground "black"))))
@@ -236,7 +245,7 @@
   ;(global-set-key "\C-x\C-k" 'kill-region)
   ;(global-set-key "\C-c\C-k" 'clipboard-kill-region)
   (global-set-key "\C-b" 'goto-matching-paren)
-  (global-set-key (kbd "s-w") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
+  (global-set-key (kbd "s-a") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
 
   (defun custom-kill-current-buffer ()
     (interactive)
@@ -468,7 +477,14 @@
         ("project"  . "file:///home/timv/project")))
 
 
-; (org-indent-mode)
+(add-hook 'org-mode-hook
+          '(lambda ()
+             (org-indent-mode t)   ;; #+STARTUP: indent
+             ;(flyspell-start)
+             ;(longlines-mode t)
+             ))
+
+
 
 (defun ascii-fy ()
   (interactive)
@@ -490,3 +506,15 @@
   (interactive)
   (shell-command "nohup gnome-terminal >& /dev/null &" )
   (delete-other-windows))
+
+
+(defun insert-current-date-time ()
+  "insert the current date and time into current buffer.
+Uses `current-date-time-format' for the formatting the date/time."
+  (interactive)
+  (insert "=======================\n")
+  (insert (format-time-string "%a %b %d %I:%M%p %Y" (current-time)))
+  (insert "\n"))
+
+(global-set-key "\C-c\C-d" 'insert-current-date-time)
+
