@@ -7,7 +7,7 @@ export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
 
 PROJECTS=~/projects
-JAVAEXTRAS=$PROJECTS/java-extras
+JAVAEXTRAS=$PROJECTS/extras/java
 export SCALA_HOME=~/projects/scala
 
 # The Path
@@ -20,25 +20,10 @@ export PYTHONPATH=$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS:$PYTHONP
 # Classpath
 export CLASSPATH=.:$CLASSPATH
 
-# Learning-Based Java (LBJ)
-LBJDIR=$JAVAEXTRAS/lbj
-export CLASSPATH=$CLASSPATH:$LBJDIR/LBJPOS.jar:$LBJDIR/LBJ2.jar:$LBJDIR/LBJ2Library.jar
-
 # Jython
 export JYTHON_HOME=$JAVAEXTRAS/jython
 export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
-
-# Redstone xml-rpc
-R=$JAVAEXTRAS/redstone-xmlrpc
-export CLASSPATH=$CLASSPATH:$R/simple-4.0.1.jar:$R/simple-xmlrpc-1.0.jar:$R/xmlrpc-1.1.1.jar
-
-# Apache xml-rpc
-A=$JAVAEXTRAS/apache-xmlrpc-3.1.2/lib/
-export CLASSPATH=$A/commons-logging-1.1.jar:$A/ws-commons-util-1.0.2.jar:$CLASSPATH
-export CLASSPATH=$A/xmlrpc-common-3.1.2.jar:$A/xmlrpc-client-3.1.2.jar:$A/xmlrpc-server-3.1.2.jar:$CLASSPATH
-
-# Ubigraph-Java Client
-export CLASSPATH=$JAVAEXTRAS/ubigraph.jar:$CLASSPATH
+alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
 
 # Emacs is my preferred editor, dammit!
 export EDITOR=emacs
@@ -66,8 +51,40 @@ alias open=xdg-open    # unity equivalent of gnome-open
 
 alias v='visit'
 
-function emacs-plain () {
-    emacs --no-init-file --no-splash $@ 2>/dev/null &
+#-------------
+# Shortcuts for annoying deep directories (like Java source code).
+#
+# TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
+
+# find files LIKE $1 and open them in emacs
+function fv () {
+    v `find src/ -name "*$1*" `;
+}
+
+# find file LIKE $1 and then call $2
+function find-and-apply () {
+    $2 `find src/ -name "*$1*" `;
+}
+
+#-------------
+
+function find-with-ignores () {
+    find . \( -name '*.class' -o -name '*.jar' -o -name '.hg' \) -prune -o -type f
+}
+
+
+function o {
+    open $@ 2>/dev/null
+}
+
+# vanilla emacs
+alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
+
+# like nohup
+function shutup-and-disown () {
+    CMD="$@"
+    $CMD 2>/dev/null &
+    disown $! 2>/dev/null   # $! is most recent PID
 }
 
 ############################################################
@@ -222,6 +239,7 @@ alias jasper='ssh timv@jasper.cs.umass.edu'
 alias vinci8='ssh timv@vinci8.cs.umass.edu'
 alias dali='ssh timv@dalisrv.cs.umass.edu'
 alias loki='ssh timv@loki.cs.umass.edu'
+alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 
 # misc aliases
 #alias difflr="diff -B --expand-tabs --side-by-side"
@@ -261,13 +279,6 @@ function find-files-by-size () {
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 
-#function say { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$1"; }
-
-function idea () {
-  $JAVAEXTRAS/idea-IC-95.66/bin/idea.sh &
-  disown `pgrep -f "com\.intellij\.idea\.Main"`
-}
-
 function pyclean() {
   rm -f `find . -name "*.pyc"`
   rm -f `find . -name "*$py.class"`
@@ -276,16 +287,16 @@ function pyclean() {
 alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
 
 # print one file on remove server "loki.cs.umass.edu"
-function print-loki() {
-  PFROM="loki.cs.umass.edu"
-  PNAME="woper-dbl"
-  for f in $@; do
-    BASENAME=$(basename "$f")
-    scp "$f" "$PFROM:~/tmp/$BASENAME"
-    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
-    echo
-  done
-}
+#function print-loki() {
+#  PFROM="loki.cs.umass.edu"
+#  PNAME="woper-dbl"
+#  for f in $@; do
+#    BASENAME=$(basename "$f")
+#    scp "$f" "$PFROM:~/tmp/$BASENAME"
+#    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
+#    echo
+#  done
+#}
 
 function extract () {
   if [ -f $1 ] ; then
@@ -341,7 +352,6 @@ function find-repos () {
   find ~/ -name ".hg" -type d -execdir pwd \;
   find ~/ -name ".git" -type d -execdir pwd \;
 }
-
 
 #______________________________________________________________________________
 #
