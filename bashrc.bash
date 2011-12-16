@@ -20,6 +20,14 @@ export PYTHONPATH=$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS:$PYTHONP
 # Classpath
 export CLASSPATH=.:$CLASSPATH
 
+# Classpath's are annoying...
+function classpath-hack () {
+    jars=`find -name '*.jar'`    
+    cp=${jars//[[:space:]]/:}
+    echo $cp:$CLASSPATH
+    export CLASSPATH=$cp:$CLASSPATH
+}
+
 # Jython
 export JYTHON_HOME=$JAVAEXTRAS/jython
 export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
@@ -240,6 +248,7 @@ alias vinci8='ssh timv@vinci8.cs.umass.edu'
 alias dali='ssh timv@dalisrv.cs.umass.edu'
 alias loki='ssh timv@loki.cs.umass.edu'
 alias ugradx='ssh timv@ugradx.cs.jhu.edu'
+alias clsp='ssh timv@login.clsp.jhu.edu'
 
 # misc aliases
 #alias difflr="diff -B --expand-tabs --side-by-side"
