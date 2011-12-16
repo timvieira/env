@@ -83,16 +83,16 @@
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
- '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially
-                                            try-complete-file-name
-                                            try-expand-all-abbrevs
-                                            try-expand-list
-                                            try-expand-line
-                                            try-expand-dabbrev
-                                            try-expand-dabbrev-all-buffers
-                                            try-expand-dabbrev-from-kill
-                                            try-complete-lisp-symbol-partially
-                                            try-complete-lisp-symbol)))
+;; '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially
+;;                                            try-complete-file-name
+;;                                            try-expand-all-abbrevs
+;;                                            try-expand-list
+;;                                            try-expand-line
+;;                                            try-expand-dabbrev
+;;                                            try-expand-dabbrev-all-buffers
+;;                                            try-expand-dabbrev-from-kill
+;;                                            try-complete-lisp-symbol-partially
+;;                                            try-complete-lisp-symbol)))
  '(truncate-lines t)
  '(visible-cursor nil)
  '(cursor-in-nonselected-windows nil)
@@ -138,8 +138,7 @@
                   nil :background "white" :foreground "black" :inverse-video
                   nil :box nil :strike-through nil :overline nil :underline
                   nil :slant normal :weight normal :width
-                  normal :foundry "bitstream" :family "Bitstream Vera Sans
-   Mono"))))
+                  normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
 
    '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
@@ -160,7 +159,7 @@
 ;(defvar c-tab-always-indent nil)
 (setq c-tab-always-indent t)
 
-(setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
+;(setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 
 (setq tab-width 4)                    ; XXX: might want to consider changing this back to 2...
 
@@ -259,7 +258,7 @@
   (global-set-key "\M-k" 'custom-kill-current-buffer)
 
   ;; weird function to indent to where the parser think things should go...
-  (global-set-key [(control ?i)] 'my-indent-function)
+  ;(global-set-key [(control ?i)] 'my-indent-function)
 
   ;; F3 opens .emacs file
   (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
@@ -302,12 +301,12 @@
 (my-keys)
 
 
-(defun my-indent-function ()
-  (interactive)
-  (cond ((not mark-active)
-         (indent-according-to-mode))
-        (t
-         (indent-region (point-marker) (mark-marker)))))
+;(defun my-indent-function ()
+;  (interactive)
+;  (cond ((not mark-active)
+;         (indent-according-to-mode))
+;        (t
+;         (indent-region (point-marker) (mark-marker)))))
 
 
 (defun common-setup()
@@ -433,12 +432,16 @@
                 (run-pdflatex tex)))
    )))))
 
+
+(defun latex-setup ()
+  (interactive)
+  (local-unset-key "\C-c\C-c")
+  (local-set-key "\C-c\C-c" 'latex-thing)
+  (flyspell-start)
+  (longlines-mode t))
+
 (add-hook 'latex-mode-hook
-          '(lambda ()
-             (local-unset-key "\C-c\C-c")
-             (local-set-key "\C-c\C-c" 'latex-thing)
-             (flyspell-start)
-             (longlines-mode t)))
+          'latex-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
