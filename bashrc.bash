@@ -4,7 +4,7 @@
 # Environment variables
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
-export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$JAVA_HOME/bin:~/python2.7/bin:$PATH
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
