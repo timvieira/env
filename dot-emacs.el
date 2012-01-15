@@ -105,7 +105,6 @@
                   :box nil :strike-through nil :overline nil :underline nil :slant normal
                   :weight normal  :width normal :foundry "bitstream"
                   :family "Bitstream Vera Sans Mono"
-                  ;:family "Courier"
                   ))))
    '(bold ((t (:weight extra-bold))))
    '(comint-highlight-prompt ((t (:foreground "light blue"))))
@@ -159,7 +158,7 @@
 ;(defvar c-tab-always-indent nil)
 (setq c-tab-always-indent t)
 
-;(setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
+(setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 
 (setq tab-width 4)                    ; XXX: might want to consider changing this back to 2...
 
@@ -432,11 +431,28 @@
                 (run-pdflatex tex)))
    )))))
 
+(defun latex-open-this-pdf ()
+  (interactive)
+  (let ((tex (buffer-file-name)))
+    (let ((base (substring tex 0 -4)))  ; filename with out extension
+      (let ((pdf (concat base ".pdf")))
+
+	(if (= 1 (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &")))
+	    (message "failed to open pdf")
+	  (progn
+	    (message "sucessfully opened pdf")
+	    (delete-other-windows)))
+
+	))))
 
 (defun latex-setup ()
   (interactive)
   (local-unset-key "\C-c\C-c")
   (local-set-key "\C-c\C-c" 'latex-thing)
+
+  (local-unset-key "\C-e\C-e")
+  (local-set-key "\C-e\C-e" 'latex-open-this-pdf)
+
   (flyspell-start)
   (longlines-mode t))
 
@@ -491,6 +507,7 @@
 
 (defun ascii-fy ()
   (interactive)
+  (replace-string " " " ")
   (replace-string "’" "'")
   (replace-string "“" "\"")
   (replace-string "”" "\"")
