@@ -4,7 +4,7 @@
 # Environment variables
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
-export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$JAVA_HOME/bin:~/software/visualvm_133/bin:$PATH
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
@@ -66,12 +66,13 @@ alias v='visit'
 
 # find files LIKE $1 and open them in emacs
 function fv () {
-    v `find src/ -name "*$1*" `;
+    #v `find src/ -name "*$1*" `;
+    find-and-apply $1 visit
 }
 
 # find file LIKE $1 and then call $2
 function find-and-apply () {
-    $2 `find src/ -name "*$1*" `;
+    find src/ -name "*$1*" -exec $2 {} \;
 }
 
 #-------------
@@ -288,6 +289,10 @@ function find-files-by-size () {
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 
+function tmpfiles () {
+  find -name '*~'
+}
+
 function pyclean() {
   rm -f `find . -name "*.pyc"`
   rm -f `find . -name "*$py.class"`
@@ -370,3 +375,6 @@ function push-public-key() {
    # make sure you set the appropriate permissions!
    ssh "$1" "echo $publickey >> .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && cat .ssh/authorized_keys"
 }
+
+
+alias tetris='google-chrome /home/timv/Desktop/ahh/public_html/tetris.swf 2>/dev/null'
