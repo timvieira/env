@@ -454,7 +454,9 @@
   (local-set-key "\C-e\C-e" 'latex-open-this-pdf)
 
   (flyspell-start)
-  (longlines-mode t))
+  ;(longlines-mode t)
+
+  )
 
 (add-hook 'latex-mode-hook
           'latex-setup)
