@@ -22,7 +22,7 @@ export CLASSPATH=.:$CLASSPATH
 
 # Classpath's are annoying...
 function classpath-hack () {
-    jars=`find -name '*.jar'`    
+    jars=`find -name '*.jar'`
     cp=${jars//[[:space:]]/:}
     echo $cp:$CLASSPATH
     export CLASSPATH=$cp:$CLASSPATH
@@ -72,7 +72,7 @@ function fv () {
 
 # find file LIKE $1 and then call $2
 function find-and-apply () {
-    find src/ -name "*$1*" -exec $2 {} \;
+    $2 `find src/ -name "*$1*"`
 }
 
 #-------------
@@ -95,6 +95,8 @@ function shutup-and-disown () {
     $CMD 2>/dev/null &
     disown $! 2>/dev/null   # $! is most recent PID
 }
+
+alias visualvm='shutup-and-disown visualvm'
 
 ############################################################
 # If not running interactively, don't do anything
@@ -363,8 +365,22 @@ function TODOS () {
 }
 
 function find-repos () {
-  find ~/ -name ".hg" -type d -execdir pwd \;
-  find ~/ -name ".git" -type d -execdir pwd \;
+    find ~/ -name ".hg" -type d -exec dirname {} \;
+    find ~/ -name ".git" -type d -exec dirname {} \;
+}
+
+function hg-changed-repos () {
+    cd
+    repos=`find -name '.hg' -exec dirname {} \;`
+    for line in $repos; do
+        cd $line
+        if [[ `hg st -m` ]]; then
+            #echo
+            echo $line
+            #hg st -m
+        fi;
+        cd ~
+    done
 }
 
 #______________________________________________________________________________
