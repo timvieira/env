@@ -499,12 +499,11 @@
         ("factorie" . "file:///home/timv/project/factorie/incoming/")
         ("project"  . "file:///home/timv/project")))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages '((python . t)))
 
 (add-hook 'org-mode-hook
           '(lambda ()
              (org-indent-mode t)   ;; #+STARTUP: indent
+             (org-babel-do-load-languages 'org-babel-load-languages '((python . t)))
              ;(flyspell-start)
              ;(longlines-mode t)
              ))

@@ -1,16 +1,15 @@
 ;;; -*-Emacs-Lisp-*-
 ;;; scala-mode-indent.el - 
 
-;; Copyright (C) 2009 Scala Dev Team at EPFL
+;; Copyright (C) 2009-2011 Scala Dev Team at EPFL
 ;; Authors: See AUTHORS file
 ;; Keywords: scala languages oop
-;; $Id: scala-mode-indent.el 17339 2009-03-20 09:15:21Z nielsen $
 
 ;;; License
 
 ;; SCALA LICENSE
 ;;  
-;; Copyright (c) 2002-2009 EPFL, Lausanne, unless otherwise specified.
+;; Copyright (c) 2002-2011 EPFL, Lausanne, unless otherwise specified.
 ;; All rights reserved.
 ;;  
 ;; This software was developed by the Programming Methods Laboratory of the
