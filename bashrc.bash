@@ -15,7 +15,7 @@ export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
 export PATH=$PATH:~/projects/env/bin
 
 # Python
-export PYTHONPATH=$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS:$PYTHONPATH
+export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
 
 # Classpath
 export CLASSPATH=.:$CLASSPATH
@@ -73,6 +73,15 @@ function fv () {
 # find file LIKE $1 and then call $2
 function find-and-apply () {
     $2 `find src/ -name "*$1*"`
+}
+
+# cd to the directory containing specified python module
+function cdpy () {
+    cd `python -c "import os; import $1; print os.path.dirname($1.__file__)"`
+}
+
+function vpy () {
+    python -m debug.edit $@
 }
 
 #-------------

@@ -29,12 +29,14 @@
 
 (defun add-path (p)
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs-support/") p)))
+
 (add-path "")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
 (add-path "site-lisp/scala-mode")
 (add-path "site-lisp/protobuf-mode.el")
 (add-path "site-lisp/writegood-mode.el")
+(add-path "site-lisp/org-7.8.03/lisp")
 
 ;; recent files list
 (require 'recentf)
@@ -497,6 +499,8 @@
         ("factorie" . "file:///home/timv/project/factorie/incoming/")
         ("project"  . "file:///home/timv/project")))
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((python . t)))
 
 (add-hook 'org-mode-hook
           '(lambda ()
@@ -506,7 +510,6 @@
              ))
 
 
-
 (defun ascii-fy ()
   (interactive)
   (replace-string " " " ")
@@ -514,6 +517,7 @@
   (replace-string "“" "\"")
   (replace-string "”" "\"")
   (replace-string "—" "-")
+  (replace-string "–" "-")
   (replace-string "ﬂ" "fl")
   (replace-string "ﬁ" "fi")
   (replace-string "•" "*")
