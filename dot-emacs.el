@@ -20,9 +20,9 @@
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
 ;; F3 opens .emacs file
-(global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
-(global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
 
+(global-unset-key [f3])
+(global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
 
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
@@ -46,13 +46,19 @@
 ;; Common lisp
 (require 'cl)
 (require 'ido)
-(require 'scala-mode-auto)
 (require 'parenface)
 (require 'dired+)
 (require 'filecache)
 (require 'protobuf-mode)
 (require 'writegood-mode)
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
+
+(require 'scala-mode-auto)
+(add-hook 'scala-mode-hook
+            '(lambda ()
+               (scala-mode-feature-electric-mode)
+               ))
+
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -234,6 +240,10 @@
 
 (defun my-keys ()
 
+  ;; disable things which often confuse me
+  (global-unset-key [(control next)])
+  (global-unset-key [(control ?z)])
+  (global-unset-key [(control ?x) (control ?z)])
   (global-unset-key [mouse-2])  ; disable middle-click paste
 
   ;; Copy-Cut-Paste from clipboard
@@ -241,11 +251,16 @@
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
 
-  ;(global-set-key [f12] 'revert-buffer-and-refind-position)
-  ;(global-set-key "\C-x\C-k" 'kill-region)
-  ;(global-set-key "\C-c\C-k" 'clipboard-kill-region)
+  (global-unset-key [f2])
+  (global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
+
+  (global-unset-key [f4])
+  (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
+
   (global-set-key "\C-b" 'goto-matching-paren)
-  (global-set-key (kbd "s-a") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
+  (global-set-key (kbd "s-q") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
+
+  (global-set-key [f7] 'flyspell-start)
 
   (defun custom-kill-current-buffer ()
     (interactive)
@@ -258,20 +273,9 @@
   (global-unset-key "\M-k")
   (global-set-key "\M-k" 'custom-kill-current-buffer)
 
-  ;; weird function to indent to where the parser think things should go...
-  ;(global-set-key [(control ?i)] 'my-indent-function)
-
-  ;; F3 opens .emacs file
-  (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
-
   ;; hippie-expand M-/
   (global-unset-key [(meta ?/)])
   (global-set-key [(meta ?/)] 'hippie-expand)
-
-  (global-unset-key [(control next)])
-  (global-unset-key [(control ?z)])
-
-  (global-unset-key [(control ?x) (control ?z)])
 
   ;; splitting and deleting windows
   (global-set-key [(control ?1)] 'delete-window)
@@ -295,19 +299,12 @@
   (global-set-key [(control ?0)] 'bs-cycle-next)
 
   ;; reinstate the older space-completion for files
-  (cond
-   ((boundp 'minibuffer-local-filename-completion-map)
-    (define-key minibuffer-local-filename-completion-map [(?\ )] 'minibuffer-complete))))
+;  (cond
+;   ((boundp 'minibuffer-local-filename-completion-map)
+;    (define-key minibuffer-local-filename-completion-map [(?\ )] 'minibuffer-complete)))
+)
 
 (my-keys)
-
-
-;(defun my-indent-function ()
-;  (interactive)
-;  (cond ((not mark-active)
-;         (indent-according-to-mode))
-;        (t
-;         (indent-region (point-marker) (mark-marker)))))
 
 
 (defun common-setup()
@@ -358,9 +355,9 @@
 (setq dired-use-ls-dired nil)
 (setq c-basic-offset 2)
 
-(defun flip-to-last-buffer (&optional n)
-  (interactive "p")
-  (switch-to-buffer (car (cdr (buffer-list)))))
+;(defun flip-to-last-buffer (&optional n)
+;  (interactive "p")
+;  (switch-to-buffer (car (cdr (buffer-list)))))
 
 ;; Enable some default-disabled commands
 (put 'narrow-to-region 'disabled nil)
@@ -391,8 +388,8 @@
 
 (defun flyspell-start ()
   (interactive)
-  (flyspell-mode t)
-  (flyspell-buffer))
+  (flyspell-buffer)
+  (flyspell-mode))
 
 (defun run-pdflatex (file-name)
   (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
@@ -424,8 +421,8 @@
       (let ((pdf (concat base ".pdf")))
         (let ((bib (concat base ".bib")))
           (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
-          (run-pdflatex tex)        
-          (if (file-exists-p bib) 
+          (run-pdflatex tex)
+          (if (file-exists-p bib)
               (progn
                 (run-bibtex base)
                 ;; rerun latex twice -- bibtex is weird like that
@@ -439,13 +436,13 @@
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (let ((pdf (concat base ".pdf")))
 
-	(if (= 1 (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &")))
-	    (message "failed to open pdf")
-	  (progn
-	    (message "sucessfully opened pdf")
-	    (delete-other-windows)))
+        (if (= 1 (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &")))
+            (message "failed to open pdf")
+          (progn
+            (message "sucessfully opened pdf")
+            (delete-other-windows)))
 
-	))))
+        ))))
 
 (defun latex-setup ()
   (interactive)
@@ -493,13 +490,6 @@
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
 
-;; org-mode link abbreviations
-(setq org-link-abbrev-alist
-      '(("bugzilla" . "http://10.1.2.9/bugzilla/show_bug.cgi?id=")
-        ("factorie" . "file:///home/timv/project/factorie/incoming/")
-        ("project"  . "file:///home/timv/project")))
-
-
 (add-hook 'org-mode-hook
           '(lambda ()
              (org-indent-mode t)   ;; #+STARTUP: indent
@@ -521,8 +511,8 @@
   (replace-string "ﬁ" "fi")
   (replace-string "•" "*")
   (replace-string "…" "...")
-  (replace-string "à" "a")      ; lossy
-  (replace-string "α" "\\alpha")      ; tex-fy
+  (replace-string "à" "a")         ; lossy
+  (replace-string "α" "\\alpha")   ; tex-fy
   (replace-string "→" "->"))
 
 
@@ -531,15 +521,3 @@
   (interactive)
   (shell-command "nohup gnome-terminal >& /dev/null &" )
   (delete-other-windows))
-
-
-(defun insert-current-date-time ()
-  "insert the current date and time into current buffer.
-Uses `current-date-time-format' for the formatting the date/time."
-  (interactive)
-  (insert "=======================\n")
-  (insert (format-time-string "%a %b %d %I:%M%p %Y" (current-time)))
-  (insert "\n"))
-
-(global-set-key "\C-c\C-d" 'insert-current-date-time)
-
