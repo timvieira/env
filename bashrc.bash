@@ -139,15 +139,15 @@ export HISTTIMEFORMAT='%F %T '
 
 
 # History
-alias h="history|grep "
-function h() {
-  if [ -z "$1" ]
-  then
-    history | grep -v "  h" | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
-  else
-    history | grep -v "  h" | grep $1 | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
-  fi
-}
+#alias h="history|grep "
+#function h() {
+#  if [ -z "$1" ]
+#  then
+#    history | grep -v "  h" | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
+#  else
+#    history | grep -v "  h" | grep $1 | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
+#  fi
+#}
 
 
 #______________________________________________________________________________
@@ -199,7 +199,6 @@ fi
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
     #PS1='\[\033[01;32m\]\u@\h\[\033[00m\]\$ '
-#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]\n\$ '
     PS1='${debian_chroot:+($debian_chroot)}\[\033[03;32m\]\u@\h\[\033[00m\] \[\033[03;34m\]\w\[\033[00m\]\n\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
