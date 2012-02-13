@@ -19,10 +19,13 @@
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
-;; F3 opens .emacs file
-
+;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
+(global-unset-key [f2])
+(global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
+(global-unset-key [f4])
+(global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
@@ -250,12 +253,6 @@
   (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
-
-  (global-unset-key [f2])
-  (global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
-
-  (global-unset-key [f4])
-  (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
   (global-set-key "\C-b" 'goto-matching-paren)
   (global-set-key (kbd "s-q") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))

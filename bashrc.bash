@@ -1,5 +1,7 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
+# use alacarte to make launchers
+
 #______________________________________________________________________________
 # Environment variables
 
@@ -102,7 +104,7 @@ alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 function shutup-and-disown () {
     CMD="$@"
     $CMD 2>/dev/null &
-    disown $! 2>/dev/null   # $! is most recent PID
+    disown $! 2>/dev/null >/dev/null   # $! is most recent PID
 }
 
 alias visualvm='shutup-and-disown visualvm'
@@ -382,7 +384,7 @@ function hg-changed-repos () {
     repos=`find -name '.hg' -exec dirname {} \;`
     for line in $repos; do
         cd $line
-        if [[ `hg st -m` ]]; then
+        if [[ `hg st || hg outgoing` ]]; then
             #echo
             echo $line
             #hg st -m
