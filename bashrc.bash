@@ -6,14 +6,12 @@
 # Environment variables
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
-export PATH=$JAVA_HOME/bin:~/software/visualvm_133/bin:$PATH
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
 
 # The Path
-export PATH=$JAVA_HOME/bin:$PATH
-export PATH=$PROJECTS/env/bin:$PATH
+export PATH=$JAVA_HOME/bin:~/inst/bin:$PROJECTS/env/bin:~/software/visualvm_133/bin:$PATH
 
 # Python
 export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
