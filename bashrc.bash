@@ -23,7 +23,7 @@ export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECT
 export CLASSPATH=.:$CLASSPATH
 
 # Classpath's are annoying...
-function classpath-hack () {
+function classpath-hack {
     jars=`find -name '*.jar'`
     cp=${jars//[[:space:]]/:}
     echo $cp:$CLASSPATH
@@ -39,7 +39,7 @@ alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
 export EDITOR=emacs
 export HGEDITOR='emacs -nw'
 
-function pkill9 () {
+function pkill9 {
   kill -9 `pgrep $@`
 }
 
@@ -67,28 +67,28 @@ alias v='visit'
 # TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
 
 # find files LIKE $1 and open them in emacs
-function fv () {
+function fv {
     #v `find src/ -name "*$1*" `;
     find-and-apply $1 visit
 }
 
 # find file LIKE $1 and then call $2
-function find-and-apply () {
+function find-and-apply {
     $2 `find src/ -name "*$1*"`
 }
 
 # cd to the directory containing specified python module
-function cdpy () {
+function cdpy {
     cd `python -c "import os; import $1; print os.path.dirname($1.__file__)"`
 }
 
-function vpy () {
+function vpy {
     python -m debug.edit $@
 }
 
 #-------------
 
-function find-with-ignores () {
+function find-with-ignores {
     find . \( -name '*.class' -o -name '*.jar' -o -name '.hg' \) -prune -o -type f
 }
 
@@ -101,7 +101,7 @@ function o {
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 
 # like nohup
-function shutup-and-disown () {
+function shutup-and-disown {
     CMD="$@"
     $CMD 2>/dev/null &
     disown $! 2>/dev/null >/dev/null   # $! is most recent PID
@@ -142,7 +142,7 @@ export HISTTIMEFORMAT='%F %T '
 
 # History
 #alias h="history|grep "
-#function h() {
+#function h {
 #  if [ -z "$1" ]
 #  then
 #    history | grep -v "  h" | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
@@ -242,7 +242,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # Compress the cd, ls -l series of commands.
-function cl () {
+function cl {
  if [ $# = 0 ]; then
   cd && l
  else
@@ -277,7 +277,7 @@ alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date
 alias hgchangelog="hg log --style changelog"
 
 # run pop open kdiff3 and open editor
-function hg-diff-ci () {
+function hg-diff-ci {
   files=$(hg st -m -n $@)
   echo $files
   for f in $files
@@ -294,18 +294,18 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 # bash functions
 
 # use +1GB for file larger than 1 gig.
-function find-files-by-size () {
+function find-files-by-size {
   find -size "$1" -exec ls -lh {} \;
 }
 
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 
-function tmpfiles () {
+function tmpfiles {
   find -name '*~'
 }
 
-function pyclean() {
+function pyclean {
   rm -f `find . -name "*.pyc"`
   rm -f `find . -name "*$py.class"`
 }
@@ -313,18 +313,18 @@ function pyclean() {
 alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
 
 # print one file on remove server "loki.cs.umass.edu"
-#function print-loki() {
-#  PFROM="loki.cs.umass.edu"
-#  PNAME="woper-dbl"
-#  for f in $@; do
-#    BASENAME=$(basename "$f")
-#    scp "$f" "$PFROM:~/tmp/$BASENAME"
-#    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
-#    echo
-#  done
-#}
+function print-loki {
+  PFROM="loki.cs.umass.edu"
+  PNAME="woper-dbl"
+  for f in $@; do
+    BASENAME=$(basename "$f")
+    scp "$f" "$PFROM:~/tmp/$BASENAME"
+    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
+    echo
+  done
+}
 
-function extract () {
+function extract {
   if [ -f $1 ] ; then
     case $1 in
       *.tar.bz2)   tar xvjf $1   ;;
@@ -347,19 +347,19 @@ function extract () {
 
 #______________________________________________________________
 # Audio Conversion
-function m4a2wav () {
+function m4a2wav {
   for i in *.m4a; do
     mplayer -ao pcm "$i" -ao pcm:file="${i%.m4a}.wav"
   done
 }
 
-function wav2mp3 () {
+function wav2mp3 {
   for i in *.wav; do
     lame -h -b 192 "$i" "${i%.wav}.mp3"
   done
 }
 
-function m4a2mp3 () {
+function m4a2mp3 {
   m4a2wav
   wav2mp3
   #rm *.wav
@@ -370,25 +370,45 @@ function m4a2mp3 () {
 #______________________________________________________________________________
 #
 
-function TODOS () {
+function TODOS {
   ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
 }
 
-function find-repos () {
-    find ~/ -name ".hg" -type d -exec dirname {} \;
-    find ~/ -name ".git" -type d -exec dirname {} \;
+function find-repos {
+  find ~/ -name ".hg" -type d -exec dirname {} \;
+  find ~/ -name ".git" -type d -exec dirname {} \;
 }
 
-function hg-changed-repos () {
+function red    { echo -e "\e[31m$@\e[0m"; }
+function yellow { echo -e "\e[33m$@\e[0m"; }
+function green  { echo -e "\e[32m$@\e[0m"; }
+function blue   { echo -e "\e[34m$@\e[0m"; }
+function purple { echo -e "\e[35m$@\e[0m"; }
+function cyan   { echo -e "\e[36m$@\e[0m"; }
+
+# kill a process after a number of seconds
+# usage:
+#    doalarm <seconds to wait> program arg arg ...
+function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
+
+function hg-changed-repos {
     cd
-    repos=`find -name '.hg' -exec dirname {} \;`
+    repos=`find -name '.hg' -type d -exec dirname {} \;`
     for line in $repos; do
         cd $line
-        if [[ `hg st || hg outgoing` ]]; then
-            #echo
-            echo $line
-            #hg st -m
-        fi;
+        echo -n "$line -- "
+
+        MODIFIED=$(hg st -m)
+        if [ "$MODIFIED" != "" ]; then
+            red modified
+        else
+            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
+            if [[ $outgoing != "no changes found" ]]; then
+                cyan outgoing
+            else
+                yellow ok
+            fi
+        fi
         cd ~
     done
 }
@@ -396,10 +416,10 @@ function hg-changed-repos () {
 #______________________________________________________________________________
 #
 
-function push-public-key() {
-   publickey=`cat ~/.ssh/id_rsa.pub`
-   # make sure you set the appropriate permissions!
-   ssh "$1" "echo $publickey >> .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && cat .ssh/authorized_keys"
+function push-public-key {
+  publickey=`cat ~/.ssh/id_rsa.pub`
+  # make sure you set the appropriate permissions!
+  ssh "$1" "echo $publickey >> .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && cat .ssh/authorized_keys"
 }
 
 
