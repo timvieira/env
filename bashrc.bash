@@ -10,11 +10,10 @@ export PATH=$JAVA_HOME/bin:~/software/visualvm_133/bin:$PATH
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
-export SCALA_HOME=~/projects/scala
 
 # The Path
-export PATH=$PATH:$JAVA_HOME/bin:$SCALA_HOME/bin
-export PATH=$PATH:~/projects/env/bin
+export PATH=$JAVA_HOME/bin:$PATH
+export PATH=$PROJECTS/env/bin:$PATH
 
 # Python
 export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
