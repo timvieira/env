@@ -57,11 +57,6 @@
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
 
 (require 'scala-mode-auto)
-(add-hook 'scala-mode-hook
-            '(lambda ()
-               (scala-mode-feature-electric-mode)
-               ))
-
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
