@@ -115,7 +115,7 @@ alias visualvm='shutup-and-disown visualvm'
 # Keybindings
 
 # appends "2>&1 |less" to the end of current line
-bind "'\C-o': '\C-e 2>&1 |less'"
+bind "'\C-o': '\C-e 2>&1 |less -R'"
 bind "'\C-f': '\C-ustty sane\n\r\C-l'"
 
 #______________________________________________________________________________
@@ -408,6 +408,26 @@ function hg-changed-repos {
         fi
         cd ~
     done
+}
+
+function p {
+    allmatches=`find $PROJECTS -path '*'$1'*' -type d`
+    for proj in $allmatches; do
+        for repo in `find $proj -type d -path '*/working/.hg'`; do
+            cd $repo; cd ..
+            return
+        done
+        for repo in `find $proj -type d -name '.hg'`; do
+            cd $repo; cd ..
+            return
+        done
+    done
+    # second attempt
+    for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
+        cd $proj
+        return
+    done
+    red "failed to find match for project $1"
 }
 
 #______________________________________________________________________________
