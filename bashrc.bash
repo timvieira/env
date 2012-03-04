@@ -5,7 +5,15 @@
 #______________________________________________________________________________
 # Environment variables
 
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+
+
+if [ -e "~/jdk1.6.0_31/bin" ]; then
+    export PATH=$PATH:~/jdk1.6.0_31/bin   # local install
+    export JAVA_HOME=~/jdk1.6.0_31/
+else
+    export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+fi
+
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
