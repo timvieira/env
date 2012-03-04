@@ -5,9 +5,7 @@
 #______________________________________________________________________________
 # Environment variables
 
-
-
-if [ -e "~/jdk1.6.0_31/bin" ]; then
+if [ -e ~/jdk1.6.0_31/bin ]; then
     export PATH=$PATH:~/jdk1.6.0_31/bin   # local install
     export JAVA_HOME=~/jdk1.6.0_31/
 else
