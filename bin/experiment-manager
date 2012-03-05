@@ -1,1 +1,206 @@
-../../experiment-manager/experiment-manager.py
+#!/usr/bin/env python
+"""
+Experiment Manager
+ * daemonization: You no longer need to start experiments from in gnu-screen.
+ * Don't forget to check in modified code so you can remember what you did.
+ * web interface to check-in on your process and even kill it.
+ * email alerts on completion or failure.
+"""
+
+# TODO:
+#  * use bottle for web page
+#  * polling mechanism to check if process is still alive?
+#  * What about an exception hook
+#    - maybe this can be used in the event that the process fails to start
+#  * Processes are killed in a "Unix only" fashion,
+#     requiring the use of the `signal` module and `os.kilpg` (kill process group)
+#  * add more info:
+#     - times (start, end, elapsed)
+#     - processor and memory usage
+#  * The implementation of are you sure is pretty hacked, should use POST instead of GET
+#  * finalizers: commands which can do things like create a tar-ball and rsync it
+#    somewhere.
+
+# IDEAS:
+#  * alerts if memory usage or time-elapsed exceeds a threshold
+#  * centralized management server
+#  * config file for default email and other options
+
+import re, os, sys, shlex
+from subprocess import Popen, PIPE
+from optparse import OptionParser
+
+# sending emails
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import formatdate
+
+from daemon import daemonize
+
+
+# TODO: create a config file for stuff like this.
+DEFAULTEMAIL = 'tim.f.vieira@gmail.com'
+
+
+HTMLTEMPLATE = """
+<html><body>
+<h2 style="border-bottom: 1px solid black; margin-bottom: 0;">Info <a style="font-size:8px" href="kill">kill</a></h2>
+<pre style="background-color: #f6f6f6; margin:4px; padding: 4px; border: 1px solid #ddd;">
+cmd: {cmd}
+pid: {pid}; childpid: {childpid}; groupid: {groupid}
+log: "{log}"
+mercurial:
+<div style="padding-left:10px">{hgtip}</div>
+</pre>
+
+<h2 style="border-bottom: 1px solid black; margin-bottom: 0;">Log <a style="font-size:8px" href="refresh">refresh</a></h2>
+<pre style="background-color: #f6f6f6; margin:4px; padding: 4px; border: 1px solid #ddd;">
+{logcontents}
+</pre>
+
+</body></html>
+"""
+
+RELOAD = """
+<script>
+function reloader() {{
+  setTimeout("window.location.reload()", 60000);
+}}
+window.onload=reloader
+</script>
+"""
+
+
+HGMODERR = 'ERROR: Uncommitted changes in mercurial repository use the --force option to ignore this check.'
+
+def format_html(**kw):
+    return HTMLTEMPLATE.format(**kw)
+
+# TODO: use something like ansi2html.sh so we can get colorful output!
+def remove_ansi(x):
+    """ Remove ansi escape codes. """
+    return re.sub('((?:\\033|\033)\[\d+m)', '', x)
+
+def fix_carriage_returns(x):
+    """
+    Take the last line in a sequence of carriage-returned lines; useful for
+    cleaning up terminal-style progress bars.
+    """
+    return re.sub('((?:\r[^\n]*)*)\r([^\n]+)', r'\2', x)
+
+def email(mailto, msg):
+    m = MIMEMultipart()
+    m['To'] = mailto
+    m['From'] = 'timv@cs.umass.edu'
+    m['Date'] = formatdate(localtime=True)
+    m['Subject'] = 'Experiment'
+    m.attach(MIMEText(msg, 'html'))
+
+    s = smtplib.SMTP('loki.cs.umass.edu')
+    s.sendmail(m['From'], m['To'], m.as_string())
+    s.quit()
+
+def main():
+    parser = OptionParser()
+    parser.add_option('--log', dest='log')
+    parser.add_option('-f', '--force', action="store_true", default=False, dest='force')
+    parser.add_option('--email', default=DEFAULTEMAIL, dest='email')
+    parser.add_option('--port', default=9009, type="int", dest='port')
+    parser.add_option('--no-web', action="store_false", default=True, dest='web')
+    parser.add_option('--no-html', action="store_false", default=True, dest='html')
+    parser.add_option('--no-daemon', action="store_false", default=True, dest='daemonize')
+
+    (options, args) = parser.parse_args()
+
+    if not args:
+        print 'Specify a job.'
+        sys.exit(1)
+
+    if len(args) != 1:
+        print "You might need to put command in quotes."
+        sys.exit(1)
+
+    cmd = shlex.split(args[0])
+
+    # get information about mercurial repo
+    hgtip = Popen(['hg', 'tip'], stdout=PIPE).communicate()[0].strip() or None
+    hgmod = Popen(['hg', 'st', '-m'], stdout=PIPE).communicate()[0].strip() or None
+
+    if hgmod and not options.force:
+        print HGMODERR
+        sys.exit(1)
+
+    # try to name the log file after the changeset otherwise use pid
+    if hgtip:
+        changeset = re.findall('changeset:\s*(.*)\n', hgtip)
+        assert len(changeset) == 1
+        log = 'train-%s.log' % changeset[0].replace(':','-')
+    else:
+        if not options.log:
+            print 'please specify a log file.'
+            sys.exit(1)
+        log = options.log
+
+    if options.daemonize:
+        daemonize(workdir=None)
+
+    pid = os.getpid()
+
+    # we create two log files because the system call gets it's own stdin/out/err
+    logfile = file(log, 'wb', 0)
+    p = Popen(cmd, bufsize=0, stdout=logfile, stderr=logfile)
+
+    childpid = p.pid
+    groupid = os.getgid()
+
+    info = locals()
+
+    def generate_html():
+        sys.stdout.flush()
+        sys.stderr.flush()
+        with file(log, 'r') as f:
+            logcontents = f.read()
+        return fix_carriage_returns(remove_ansi(format_html(logcontents=logcontents, **info)))
+
+    if options.web:
+
+        # TODO: this solution needs work.. especially in the way we kill the process
+        import BaseHTTPServer, thread, socket
+        class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+            areyousure = False
+            def do_GET(self):
+                if RequestHandler.areyousure and 'yes' in self.path:
+                    # TODO: process groups are Unix-only..
+                    import signal
+                    os.killpg(os.getpgid(p.pid), signal.SIGKILL)
+                if RequestHandler.areyousure and 'no' in self.path:
+                    RequestHandler.areyousure = False
+                if 'kill' in self.path:
+                    html = '<html>Kill process: are you sure? <a href="yes">yes</a> <a href="no">no</a><html>'
+                    RequestHandler.areyousure = True
+                else:
+                    html = generate_html()
+                    RequestHandler.areyousure = False
+                bufferSize = 1024*1024
+                for i in xrange(0, len(html), bufferSize):
+                    self.wfile.write(html[i:i+bufferSize])
+
+        try:
+            server = BaseHTTPServer.HTTPServer(('', options.port), RequestHandler)
+            thread.start_new_thread(server.serve_forever, ())
+        except socket.error as e:
+            print 'Webserver failed:', e
+
+    p.wait()
+
+    if options.html:
+        with file(log + '.html', 'wb') as f:
+            f.write(generate_html())
+
+    if options.email:
+        email(options.email, generate_html())
+
+
+if __name__ == '__main__':
+    main()
