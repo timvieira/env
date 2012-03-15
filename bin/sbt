@@ -1,2 +1,2 @@
 #!/bin/bash
-java -ea -Xmx6G -jar `dirname $0`/sbt-launch.jar "$@"
+java -ea -Xmx7G -jar `dirname $0`/sbt-launch.jar "$@"
