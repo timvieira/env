@@ -442,8 +442,12 @@ function p {
 function push-public-key {
   publickey=`cat ~/.ssh/id_rsa.pub`
   # make sure you set the appropriate permissions!
-  ssh "$1" "echo $publickey >> .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && cat .ssh/authorized_keys"
+  ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
 }
 
 
 alias tetris='google-chrome /home/timv/Desktop/ahh/public_html/tetris.swf 2>/dev/null'
+
+function jhu-library {
+    o "http://proxy.library.jhu.edu/login?url=$1"
+}
