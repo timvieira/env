@@ -7,7 +7,7 @@
 
 if [ -e ~/jdk1.6.0_31/bin ]; then
     export PATH=$PATH:~/jdk1.6.0_31/bin   # local install
-    export JAVA_HOME=~/jdk1.6.0_31/
+    export JAVA_HOME=~/jdk1.6.0_31
 else
     export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
 fi
@@ -18,6 +18,9 @@ JAVAEXTRAS=$PROJECTS/extras/java
 
 # The Path
 export PATH=$JAVA_HOME/bin:~/inst/bin:$PROJECTS/env/bin:~/software/visualvm_133/bin:$PATH
+
+# ECLiPSe constraint solver
+export PATH=/home/timv/projects/courses/declarative-methods/tmppppp/bin/x86_64_linux:$PATH
 
 # Python
 export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
