@@ -4,7 +4,7 @@ Usage:
 
 Print multiple files
 
-   $ clspxerox.py file1.pdf file2.pdf ...
+   $ clspxerox.py [--submit] file1.pdf file2.pdf ...
 
 Interactively select a single file
 
@@ -36,9 +36,18 @@ def print_doc(*docs):
         b.find_element_by_css_selector('select#ColorMode').send_keys('B' + Keys.ENTER)
         b.find_element_by_css_selector('input#DuplexMode.Checkbox').click()
         b.find_element_by_css_selector('select#Sort').send_keys('S' + Keys.ENTER)
-        b.find_element_by_css_selector('input[value="Start Printing "]').click()
+        if submit:
+            b.find_element_by_css_selector('input[value="Start Printing "]').click()
 
 if __name__ == '__main__':
+
+    try:
+        argv.remove('--submit')
+    except ValueError:
+        submit = False
+    else:
+        submit = True
+
     if '-h' in argv or '--help' in argv:
         print __doc__
     else:
