@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
-# wc -l" replacement: 
+# wc -l" replacement:
 #  $ cat file | linepy 'c=0' 'c+=1' 'print c'
 #
-# grep replacement: 
+# grep replacement:
 #  $ cat file | linepy 'import re' 'if re.search("\d+", line): print line'
 #
 # adding all numbers:
 #  $ seq 1 10 | linepy 's=0' 's+=int(line)' 'print s'
 #
-# prepending lines with it's length: 
+# prepending lines with it's length:
 #  $ cat file | linepy 'print len(line), line'
 #
-# longest file name: 
+# longest file name:
 #  $ ls -1 | linepy 'longest=""' 'if len(line) > len(longest): longest=line' 'print longest'
 #
-# number of unique words in a document: 
+# number of unique words in a document:
 #  $ linepy 'words=[]' 'words.extend(line.split())' 'print "All words: {}, unique: {}".format(len(words), len(set(words))'
 
 if [ "$#" -eq "0" ]; then
@@ -35,6 +35,23 @@ fi
 
 CODE="
 import re, sys, os
+from collections import *
+from pprint import *
+try:
+    from pandas import DataFrame
+except ImportError:
+    pass
+try:
+    from numpy import *
+except ImportError:
+    pass
+try:
+    from pylab import *
+except ImportError:
+    pass
+
+def tree():
+    return defaultdict(tree)
 
 $INIT
 
