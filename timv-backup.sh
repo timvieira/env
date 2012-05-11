@@ -11,9 +11,11 @@ set -e # abort script immediately if any command fails
 #
 #   rsync -a /usr/local/ /media/disk
 #
-# copies all the stuff from /usr/local into disk but doesn't create 
+# copies all the stuff from /usr/local into disk but doesn't create
 # a parent directory -- you very rarely want to do that, so don't use
 # trailing slashes on sources
+
+# todo: write stdout/err to file in backups directory; make sure to include date
 
 TODAY=`date '+%F'`
 
@@ -35,13 +37,7 @@ then
     exit 1
 fi
 
-if [ -e "$BACKUP/$TODAY" ]
-then
-    echo "** already made a back up today **"
-    exit 1
-fi
-
-if [ -e "$BACKUP/$TODAY-last" ]
+if [ -e "$BACKUP/$TODAY-latest" ] || [ -e "$BACKUP/$TODAY" ]
 then
     echo "** already made a back up today **"
     exit 1
@@ -63,10 +59,12 @@ then
     exit 1
 fi
 
-mv "$NEW" "$BACKUP/$TODAY-latest"
-
-if [ -e "$LATEST" ]
-then
-  mv "$LATEST" ${xx:0:${#xx}-7}
+if [ -e "$BACKUP/$TODAY-latest" ]; then
+    notify-send "backup complete, but $LATEST already exists so you have to rename it."
+else
+    mv "$NEW" "$BACKUP/$TODAY-latest"
+    if [ -e "$LATEST" ]; then
+      mv "$LATEST" ${xx:0:${#xx}-7}
+    fi
+    notify-send 'backup complete!'
 fi
-
