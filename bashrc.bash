@@ -1,7 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# use alacarte to make launchers
-
 #______________________________________________________________________________
 # Environment variables
 
@@ -12,15 +10,26 @@ else
     export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
 fi
 
+# prepend to path environment variable
+function add-path () {
+  for d in `echo $@`; do
+    export PATH=$d:$PATH
+  done
+}
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
 
 # The Path
-export PATH=$JAVA_HOME/bin:~/inst/bin:$PROJECTS/env/bin:~/software/visualvm_133/bin:$PATH
+add-path $JAVA_HOME/bin
+add-path ~/inst/bin                   # locally install
+add-path $PROJECTS/env/bin            # my misc scripts
+add-path ~/software/visualvm_133/bin
+add-path ~/software/eclps/bin/x86_64_linux  # ECLiPSe constraint solver
+add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
 
-# ECLiPSe constraint solver
-export PATH=/home/timv/projects/courses/declarative-methods/tmppppp/bin/x86_64_linux:$PATH
+# CPLEX license file
+export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 
 # Python
 export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
@@ -449,8 +458,43 @@ function push-public-key {
 }
 
 
-alias tetris='google-chrome /home/timv/Desktop/ahh/public_html/tetris.swf 2>/dev/null'
+alias tetris='google-chrome /home/timv/Downloads/public_html/tetris.swf 2>/dev/null'
 
 function jhu-library {
     o "http://proxy.library.jhu.edu/login?url=$1"
+}
+
+function ghetto-refresh {
+    if [[ "$#" -ne "2" ]]; then
+        echo "ghetto-refresh <rate> <cmd>"
+        return
+    fi
+    while [ 1 ]; do
+        echo `$2`
+        sleep $1
+        clear
+    done
+}
+
+#____________________________________
+# Bash Directory Bookmarks
+#alias m1='alias g1="cd `pwd`"'
+#alias m2='alias g2="cd `pwd`"'
+#alias m3='alias g3="cd `pwd`"'
+#alias m4='alias g4="cd `pwd`"'
+#alias m5='alias g5="cd `pwd`"'
+#alias m6='alias g6="cd `pwd`"'
+#alias m7='alias g7="cd `pwd`"'
+#alias m8='alias g8="cd `pwd`"'
+#alias m9='alias g9="cd `pwd`"'
+#alias mdump='alias|grep -e "alias g[0-9]"|grep -v "alias m" > ~/.bookmarks'
+#alias lma='alias | grep -e "alias g[0-9]"|grep -v "alias m"|sed "s/alias //"'
+#touch ~/.bookmarks
+#source ~/.bookmarks
+
+alias ldp='cd projects/ldp/code/working'
+alias sso='cd projects/courses/stochastic-opt/project'
+
+function top-commands () {
+    history |linepy 'print " ".join(line.split()[3:])' | sort | uniq -c | sort -rn
 }
