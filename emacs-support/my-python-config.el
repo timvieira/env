@@ -1,7 +1,7 @@
 (add-hook 'python-mode-hook
           (lambda ()
-	    (eldoc-mode 1) 
-	    (setq outline-regexp "def\\|class ")))
+            (eldoc-mode 1)
+            (setq outline-regexp "def\\|class ")))
 
 (load-library "pylint")
 (load-library "site-lisp/flymake-cursor")
@@ -15,14 +15,14 @@
   "Launch PyDOC on the Word at Point"
   (interactive
    (list (let* ((word (thing-at-point 'word))
-                (input (read-string 
-                        (format "pydoc entry%s: " 
+                (input (read-string
+                        (format "pydoc entry%s: "
                                 (if (not word) "" (format " (default %s)" word))))))
            (if (string= input "")
-               (if (not word) 
-                   (error "No pydoc args given") 
-                 word)	                ; sinon word
-	     input))))			; sinon input
+               (if (not word)
+                   (error "No pydoc args given")
+                 word)                  ; sinon word
+             input))))			; sinon input
   (shell-command (concat py-python-command " -c \"from pydoc import help; help(\'" w "\')\"") "*PYDOCS*")
   (view-buffer-other-window "*PYDOCS*" t 'kill-buffer-and-window))
 
@@ -33,9 +33,9 @@
   (or prefix
       (setq prefix "flymake"))
   (let* ((temp-name   (concat "/tmp/" (replace-regexp-in-string "/" "_" (file-name-sans-extension file-name))
-			      "_" prefix
-			      (and (file-name-extension file-name)
-				   (concat "." (file-name-extension file-name))))))
+                              "_" prefix
+                              (and (file-name-extension file-name)
+                                   (concat "." (file-name-extension file-name))))))
     (flymake-log 3 "create-temp-inplace: file=%s temp=%s" file-name temp-name)
     temp-name))
 
@@ -56,8 +56,8 @@
 (defun my-python-hook ()
   (local-set-key [f7] 'flymake-mode)
   ;; highlight special comments
-  (font-lock-add-keywords 
-   nil 
+  (font-lock-add-keywords
+   nil
    '(("\\<\\(FIX\\|TODO\\|XXX\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 )
 
