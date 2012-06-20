@@ -1,3 +1,5 @@
+;; -*- coding: utf-8 -*-
+;;
 ;; Notes
 ;; =======
 ;;
@@ -19,6 +21,12 @@
 ;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
+
+;; Personal dictionary: ~/.aspell.en.pws
+
+;; todo: LEARN ctrl-alt-{k,f,b}
+
+
 ;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
@@ -30,6 +38,7 @@
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
+
 (defun add-path (p)
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs-support/") p)))
 
@@ -38,8 +47,15 @@
 (add-path "site-lisp")
 (add-path "site-lisp/scala-mode")
 (add-path "site-lisp/protobuf-mode.el")
+(add-path "site-lisp/zimpl-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
+
+;(add-path "site-lisp/auctex-11.86")
+;;(load-file "/home/timv/projects/env/emacs-support/site-lisp/auctex-11.86/auctex.el")
+;(load "auctex.el" nil t t)
+;(load "preview-latex.el" nil t t)
+
 
 ;; recent files list
 (require 'recentf)
@@ -57,6 +73,8 @@
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
 
 (require 'scala-mode-auto)
+(require 'zimpl-mode)
+
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -160,12 +178,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
+;; TODO: things I don't like about my tab situations
+;;  - sometimes I screw up Makefiles
+;;  - java wants to and indent width of 2, when I want 4..
+;;
 ;(defvar c-tab-always-indent nil)
-(setq c-tab-always-indent t)
-
+;(setq c-tab-always-indent t)
 (setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
-
 (setq tab-width 4)                    ; XXX: might want to consider changing this back to 2...
 
 (setq default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
@@ -265,6 +284,9 @@
   (global-unset-key "\M-k")
   (global-set-key "\M-k" 'custom-kill-current-buffer)
 
+  ;; context menu with contents of the yank ring
+  (global-set-key "\C-cy" '(lambda () (interactive) (popup-menu 'yank-menu)))
+
   ;; hippie-expand M-/
   (global-unset-key [(meta ?/)])
   (global-set-key [(meta ?/)] 'hippie-expand)
@@ -290,6 +312,13 @@
   (global-set-key [(control ?9)] 'bs-cycle-previous)
   (global-set-key [(control ?0)] 'bs-cycle-next)
 
+  ;; use super+arrow keys to move between split windows
+  (require 'windmove)
+  (windmove-default-keybindings 'super)
+
+  ;; lists functions, jump to begining of definition
+  (global-set-key (kbd "M-i") 'ido-goto-symbol)
+
   ;; reinstate the older space-completion for files
 ;  (cond
 ;   ((boundp 'minibuffer-local-filename-completion-map)
@@ -301,11 +330,6 @@
 
 (defun common-setup()
   (interactive)
-
-  ;; Append to python path just-in-case env is not initialize by ~/.bashrc
-  (setenv "PYTHONPATH"
-          (concat (getenv "PYTHONPATH") ".:~/projects:~/projects/extras/python:~/projects/incubator"))
-
   (global-font-lock-mode t)
   (load-library "my-emisc")
   (load-library "my-python-config")
@@ -323,6 +347,8 @@
 
   ;(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
   (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
+
+  (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
 
   (load-library "matlab")
 
@@ -438,6 +464,8 @@
 
 (defun latex-setup ()
   (interactive)
+  (latex-mode)
+
   (local-unset-key "\C-c\C-c")
   (local-set-key "\C-c\C-c" 'latex-thing)
 
@@ -446,11 +474,7 @@
 
   (flyspell-start)
   ;(longlines-mode t)
-
-  )
-
-(add-hook 'latex-mode-hook
-          'latex-setup)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -482,12 +506,52 @@
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
 
+;; -- Display images in org mode
+;; enable image mode first
+(iimage-mode)
+;; add the org file link format to the iimage mode regex
+(add-to-list 'iimage-mode-image-regex-alist
+             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex "\\)\\]")  1))
+
+;; I don't want to see blank lines in collapsed (contents) views. This setting
+;; hides single blank lines and exposes the rest so I can clean them up.
+(setq org-cycle-separator-lines 2)
+
+
+;; Links to emails, web pages, and other files are sprinkled all over my org
+;; files. The following setting control how org-mode handles opening the link.
+;;
+;; I like to keep links in the same window so that I don't end up with a ton of
+;; frames in my window manager. I normally work in a full-screen window and
+;; having links open in the same window just works better for
+(setq org-link-frame-setup (quote ((vm . vm-visit-folder)
+                                   (gnus . org-gnus-no-new-news)
+                                   (file . find-file))))
+
+(setq org-src-fontify-natively t)
+
+;(setq org-startup-with-inline-images t)
 (add-hook 'org-mode-hook
           '(lambda ()
              (org-indent-mode t)   ;; #+STARTUP: indent
-             (org-babel-do-load-languages 'org-babel-load-languages '((python . t)))
+
+             (org-babel-do-load-languages
+              (quote org-babel-load-languages)
+              (quote ((emacs-lisp . t)
+                      (dot . t)
+                      (ditaa . t)
+                      (python . t)
+                      (gnuplot . t)
+                      (sh . t)
+                      (ledger . t)
+                      (org . t)
+                      (plantuml . t)
+                      (latex . t))))
+
+             ; Do not prompt to confirm evaluation
+             (setq org-confirm-babel-evaluate nil)
+
              ;(flyspell-start)
-             ;(longlines-mode t)
              ))
 
 
@@ -513,3 +577,14 @@
   (interactive)
   (shell-command "nohup gnome-terminal >& /dev/null &" )
   (delete-other-windows))
+
+
+(autoload 'markdown-mode "markdown-mode.el"
+  "Major mode for editing Markdown files" t)
+
+(setq auto-mode-alist
+  (cons '("\\.text" . markdown-mode) auto-mode-alist))
+
+;; make the file executable if it is a script.
+;(add-hook 'after-save-hook
+;  'executable-make-buffer-file-executable-if-script-p)
