@@ -64,7 +64,7 @@ if [ -e "$BACKUP/$TODAY-latest" ]; then
 else
     mv "$NEW" "$BACKUP/$TODAY-latest"
     if [ -e "$LATEST" ]; then
-      mv "$LATEST" ${xx:0:${#xx}-7}
+        mv "$LATEST" ${LATEST:0:${#LATEST}-7}
     fi
     notify-send 'backup complete!'
 fi
