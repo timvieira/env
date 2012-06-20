@@ -328,16 +328,16 @@ function pyclean {
 alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
 
 # print one file on remove server "loki.cs.umass.edu"
-function print-loki {
-  PFROM="loki.cs.umass.edu"
-  PNAME="woper-dbl"
-  for f in $@; do
-    BASENAME=$(basename "$f")
-    scp "$f" "$PFROM:~/tmp/$BASENAME"
-    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
-    echo
-  done
-}
+#function print-loki {
+#  PFROM="loki.cs.umass.edu"
+#  PNAME="woper-dbl"
+#  for f in $@; do
+#    BASENAME=$(basename "$f")
+#    scp "$f" "$PFROM:~/tmp/$BASENAME"
+#    ssh "$PFROM" "lpr -P$PNAME ~/tmp/$BASENAME"
+#    echo
+#  done
+#}
 
 function extract {
   if [ -f $1 ] ; then
@@ -363,35 +363,43 @@ function extract {
 #______________________________________________________________
 # Audio Conversion
 function m4a2wav {
-  for i in *.m4a; do
-    mplayer -ao pcm "$i" -ao pcm:file="${i%.m4a}.wav"
-  done
+    for i in *.m4a; do
+        mplayer -ao pcm "$i" -ao pcm:file="${i%.m4a}.wav"
+    done
 }
 
 function wav2mp3 {
-  for i in *.wav; do
-    lame -h -b 192 "$i" "${i%.wav}.mp3"
-  done
+    for i in *.wav; do
+        lame -h -b 192 "$i" "${i%.wav}.mp3"
+    done
 }
 
 function m4a2mp3 {
-  m4a2wav
-  wav2mp3
-  #rm *.wav
-  echo "There are probably some temporary wav files you can delete."
-  echo "Currenly, m4a2mp3 will *not* delete these for you."
+    m4a2wav
+    wav2mp3
+    #rm *.wav
+    echo "There are probably some temporary wav files you can delete."
+    echo "Currenly, m4a2mp3 will *not* delete these for you."
 }
 
 #______________________________________________________________________________
 #
 
-function TODOS {
-  ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+function todos {
+    ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+}
+
+function t {
+    if [[ "$#" -ne 1 ]]; then
+        ls ~/Dropbox/todo/*
+    else
+        find ~/Dropbox/todo -type f -name "*$1*" -exec visit {} \;
+    fi
 }
 
 function find-repos {
-  find ~/ -name ".hg" -type d -exec dirname {} \;
-  find ~/ -name ".git" -type d -exec dirname {} \;
+    find ~/ -name ".hg" -type d -exec dirname {} \;
+    find ~/ -name ".git" -type d -exec dirname {} \;
 }
 
 function red    { echo -e "\e[31m$@\e[0m"; }
@@ -448,17 +456,25 @@ function p {
     red "failed to find match for project $1"
 }
 
+function write-stuff {
+    f=`find ~/projects -type f |grep '\.\(tex\|org\|md\)$' | grep -v '\.\(hg\|git\|svn\)' | grep $1`
+    echo $f
+    cd `dirname $f`
+    v $f
+    o *.pdf
+}
+
 #______________________________________________________________________________
 #
 
 function push-public-key {
-  publickey=`cat ~/.ssh/id_rsa.pub`
-  # make sure you set the appropriate permissions!
-  ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
+    publickey=`cat ~/.ssh/id_rsa.pub`
+    # make sure you set the appropriate permissions!
+    ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
 }
 
 
-alias tetris='google-chrome /home/timv/Downloads/public_html/tetris.swf 2>/dev/null'
+alias tetris='google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
 
 function jhu-library {
     o "http://proxy.library.jhu.edu/login?url=$1"
@@ -493,8 +509,13 @@ function ghetto-refresh {
 #source ~/.bookmarks
 
 alias ldp='cd projects/ldp/code/working'
+alias lpldp='cd projects/ldp/code/working/lpldp'
 alias sso='cd projects/courses/stochastic-opt/project'
 
 function top-commands () {
     history |linepy 'print " ".join(line.split()[3:])' | sort | uniq -c | sort -rn
 }
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
