@@ -12,9 +12,9 @@ fi
 
 # prepend to path environment variable
 function add-path () {
-  for d in `echo $@`; do
-    export PATH=$d:$PATH
-  done
+    for d in `echo $@`; do
+        export PATH=$d:$PATH
+    done
 }
 
 PROJECTS=~/projects
@@ -37,7 +37,7 @@ export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECT
 # Classpath
 export CLASSPATH=.:$CLASSPATH
 
-# Classpath's are annoying...
+# Temporarily add all jars in directory to classpath
 function classpath-hack {
     jars=`find -name '*.jar'`
     cp=${jars//[[:space:]]/:}
@@ -77,51 +77,9 @@ alias open=xdg-open    # unity equivalent of gnome-open
 alias v='visit'
 
 #-------------
-# Shortcuts for annoying deep directories (like Java source code).
-#
-# TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
-
-# find files LIKE $1 and open them in emacs
-function fv {
-    #v `find src/ -name "*$1*" `;
-    find-and-apply $1 visit
-}
-
-# find file LIKE $1 and then call $2
-function find-and-apply {
-    $2 `find src/ -name "*$1*"`
-}
-
-# cd to the directory containing specified python module
-function cdpy {
-    cd `python -c "import os; import $1; print os.path.dirname($1.__file__)"`
-}
-
-function vpy {
-    python -m debug.edit $@
-}
-
-#-------------
-
-function find-with-ignores {
-    find . \( -name '*.class' -o -name '*.jar' -o -name '.hg' \) -prune -o -type f
-}
-
-
-function o {
-    open $@ 2>/dev/null
-}
 
 # vanilla emacs
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
-
-# like nohup
-function shutup-and-disown {
-    CMD="$@"
-    $CMD 2>/dev/null &
-    disown $! 2>/dev/null >/dev/null   # $! is most recent PID
-}
-
 alias visualvm='shutup-and-disown visualvm'
 
 ############################################################
@@ -132,15 +90,14 @@ alias visualvm='shutup-and-disown visualvm'
 #______________________________________________________________________________
 # Keybindings
 
-# appends "2>&1 |less" to the end of current line
-bind "'\C-o': '\C-e 2>&1 |less -R'"
-bind "'\C-f': '\C-ustty sane\n\r\C-l'"
+bind "'\C-o': '\C-e 2>&1 |less -R'"      # append "2>&1 |less" to end of line
+bind "'\C-f': '\C-ustty sane\n\r\C-l'"   # some times terminal get broken...
 
 #______________________________________________________________________________
 # Bash History
 
-# don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
+# don't put duplicate lines in the history. See bash(1) for more options don't
+# overwrite. GNU Midnight Commander's setting of `ignorespace'.
 HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoreboth
@@ -154,31 +111,17 @@ export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear"
 export HISTTIMEFORMAT='%F %T '
 
-
-# History
-#alias h="history|grep "
-#function h {
-#  if [ -z "$1" ]
-#  then
-#    history | grep -v "  h" | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
-#  else
-#    history | grep -v "  h" | grep $1 | sed 's/[ \t]*$//' | sort -k 2 -r | uniq -f 1 | sort -n
-#  fi
-#}
-
+shopt -s cmdhist
 
 #______________________________________________________________________________
 #
 
-shopt -s cmdhist
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# check the window size after each command and, if necessary, update the values
+# of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# make less more friendly for non-text input files, see lesspipe(1)
+# make less friendlier for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
@@ -190,9 +133,9 @@ case "$TERM" in
     xterm-color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
+# uncomment for a colored prompt, if the terminal has the capability; turned off
+# by default to not distract the user: the focus in a terminal window should be
+# on the output of commands, not on the prompt
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
@@ -205,13 +148,6 @@ if [ -n "$force_color_prompt" ]; then
         color_prompt=
     fi
 fi
-
-##
-#function get_git_branch {
-#    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\ \[\1\]/'
-#}
-#PS1="\h:\W \u\[\033[0;32m\]\$(get_git_branch) \[\033[0m\]\$ "
-##
 
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
@@ -258,29 +194,81 @@ fi
 
 # Compress the cd, ls -l series of commands.
 function cl {
- if [ $# = 0 ]; then
-  cd && l
- else
-  cd "$*" && ll
- fi
+   if [ $# = 0 ]; then
+      cd && l
+   else
+      cd "$*" && ll
+   fi
 }
 
 alias less='less -RSimw'
 export PAGER='less -RSimw'
 
 # ssh aliases
-alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
-alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
-alias jasper='ssh timv@jasper.cs.umass.edu'
-alias vinci8='ssh timv@vinci8.cs.umass.edu'
-alias dali='ssh timv@dalisrv.cs.umass.edu'
-alias loki='ssh timv@loki.cs.umass.edu'
+#alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
+#alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
+#alias jasper='ssh timv@jasper.cs.umass.edu'
+#alias vinci8='ssh timv@vinci8.cs.umass.edu'
+#alias dali='ssh timv@dalisrv.cs.umass.edu'
+#alias loki='ssh timv@loki.cs.umass.edu'
 alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
-# misc aliases
-#alias difflr="diff -B --expand-tabs --side-by-side"
-#alias poweroff-display='sleep 1 && xset dpms force off'
+#______________________________________________________________________________
+# bash functions
+
+# use +1GB for file larger than 1 gig.
+function find-files-by-size {
+  find -size "$1" -exec ls -lh {} \;
+}
+
+function find-with-ignores {
+    find . \( -name '*.class' -o -name '*.jar' -o -name '.hg' \) -prune -o -type f
+}
+
+alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
+
+#______________________________________________________________________________
+# Clean up
+
+function tmpfiles {
+  find -name '*~'
+}
+
+function pyclean {
+  rm -f `find . -name "*.pyc"`
+  rm -f `find . -name "*$py.class"`
+}
+
+#______________________________________________________________________________
+# Version control tricks
+
+function find-repos {
+    find ~/ -name ".hg" -type d -exec dirname {} \;
+    find ~/ -name ".git" -type d -exec dirname {} \;
+}
+
+# try to find repositories which have changes which might need to be pushed
+function hg-changed-repos {
+    cd
+    repos=`find -name '.hg' -type d -exec dirname {} \;`
+    for line in $repos; do
+        cd $line
+        echo -n "$line -- "
+        MODIFIED=$(hg st -m)
+        if [ "$MODIFIED" != "" ]; then
+            red modified
+        else
+            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
+            if [[ $outgoing != "no changes found" ]]; then
+                cyan outgoing
+            else
+                yellow ok
+            fi
+        fi
+        cd ~
+    done
+}
 
 ## hg for sandboxed repos
 #alias hg="sudo -u vc hg"
@@ -293,10 +281,7 @@ alias hgchangelog="hg log --style changelog"
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
-  files=$(hg st -m -n $@)
-  echo $files
-  for f in $files
-  do
+  for f in $(hg st -m -n $(hg root)); do   # use relative paths
     hg kdiff3 $f 2>/dev/null &
     hg ci $f
   done
@@ -304,28 +289,168 @@ function hg-diff-ci {
 alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
 alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
 alias gittree-when='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %ci"'
+##
+#function get_git_branch {
+#    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\ \[\1\]/'
+#}
+#PS1="\h:\W \u\[\033[0;32m\]\$(get_git_branch) \[\033[0m\]\$ "
+##
 
 #______________________________________________________________________________
-# bash functions
+# Shortcuts for jump around
 
-# use +1GB for file larger than 1 gig.
-function find-files-by-size {
-  find -size "$1" -exec ls -lh {} \;
+function t {
+    if [[ "$#" -ne 1 ]]; then
+        ls ~/Dropbox/todo/*
+    else
+        find ~/Dropbox/todo -type f -name "*$1*" -exec visit {} \;
+    fi
 }
 
-alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
-
-
-function tmpfiles {
-  find -name '*~'
+function p {
+    allmatches=`find $PROJECTS -path '*'$1'*' -type d`
+    for proj in $allmatches; do
+        for repo in `find $proj -type d -path '*/working/.hg'`; do
+            cd $repo; cd ..
+            return
+        done
+        for repo in `find $proj -type d -name '.hg'`; do
+            cd $repo; cd ..
+            return
+        done
+    done
+    # second attempt
+    for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
+        cd $proj
+        return
+    done
+    red "failed to find match for project $1"
 }
 
-function pyclean {
-  rm -f `find . -name "*.pyc"`
-  rm -f `find . -name "*$py.class"`
+function write-stuff {
+    f=`find ~/projects -type f |grep '\.\(tex\|org\|md\)$' | grep -v '\.\(hg\|git\|svn\)' | grep $1`
+    echo $f
+    cd `dirname $f`
+    v $f
+    o *.pdf
 }
 
-alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'" # Show pythonpath
+# Bash Directory Bookmarks
+#alias m1='alias g1="cd `pwd`"'
+#alias m2='alias g2="cd `pwd`"'
+#alias m3='alias g3="cd `pwd`"'
+#alias m4='alias g4="cd `pwd`"'
+#alias m5='alias g5="cd `pwd`"'
+#alias m6='alias g6="cd `pwd`"'
+#alias m7='alias g7="cd `pwd`"'
+#alias m8='alias g8="cd `pwd`"'
+#alias m9='alias g9="cd `pwd`"'
+#alias mdump='alias|grep -e "alias g[0-9]"|grep -v "alias m" > ~/.bookmarks'
+#alias lma='alias | grep -e "alias g[0-9]"|grep -v "alias m"|sed "s/alias //"'
+#touch ~/.bookmarks
+#source ~/.bookmarks
+
+alias ldp='cd projects/ldp/code/working'
+alias lpldp='cd projects/ldp/code/working/lpldp'
+alias sso='cd projects/courses/stochastic-opt/project'
+
+#______________________________________________________________________________
+# Shortcuts for annoying deep directories (like Java source code).
+#
+# TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
+
+# find files LIKE $1 and open them in emacs
+function fv {
+    find-and-apply $1 visit
+}
+
+# find file LIKE $1 and then call $2
+function find-and-apply {
+    $2 `find src/ -name "*$1*"`
+}
+
+#______________________________________________________________________________
+# Python tricks
+
+# Show pythonpath
+alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'"
+
+# cd to the directory containing specified python module
+function cdpy {
+    cd `python -c "import os; import $1; print os.path.dirname($1.__file__)"`
+}
+
+# edit python module by name
+function vpy {
+    python -m debug.edit "$@"
+}
+
+#______________________________________________________________________________
+# Misc bash function
+
+function o {
+    open $@ 2>/dev/null
+}
+
+# like nohup
+function shutup-and-disown {
+    CMD="$@"
+    $CMD 2>/dev/null &
+    disown $! 2>/dev/null >/dev/null   # $! is most recent PID
+}
+
+function push-public-key {
+    publickey=`cat ~/.ssh/id_rsa.pub`
+    # make sure you set the appropriate permissions!
+    ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
+}
+
+alias tetris='google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
+
+function jhu-library {
+    o "http://proxy.library.jhu.edu/login?url=$1"
+}
+
+function ghetto-refresh {
+    if [[ "$#" -ne "2" ]]; then
+        echo "ghetto-refresh <rate> <cmd>"
+        return
+    fi
+    while [ 1 ]; do
+        echo `$2`
+        sleep $1
+        clear
+    done
+}
+
+function todos {
+    ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+}
+
+function red    { echo -e "\e[31m$@\e[0m"; }
+function yellow { echo -e "\e[33m$@\e[0m"; }
+function green  { echo -e "\e[32m$@\e[0m"; }
+function blue   { echo -e "\e[34m$@\e[0m"; }
+function purple { echo -e "\e[35m$@\e[0m"; }
+function cyan   { echo -e "\e[36m$@\e[0m"; }
+
+# kill a process after a number of seconds
+# usage:
+#    doalarm <seconds to wait> program arg arg ...
+function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
+
+# list top commands in bash history
+function top-commands () {
+    history |linepy 'print " ".join(line.split()[3:])' | sort | uniq -c | sort -rn
+}
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# misc aliases
+#alias difflr="diff -B --expand-tabs --side-by-side"
+#alias poweroff-display='sleep 1 && xset dpms force off'
 
 # print one file on remove server "loki.cs.umass.edu"
 #function print-loki {
@@ -384,138 +509,3 @@ function m4a2mp3 {
 
 #______________________________________________________________________________
 #
-
-function todos {
-    ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
-}
-
-function t {
-    if [[ "$#" -ne 1 ]]; then
-        ls ~/Dropbox/todo/*
-    else
-        find ~/Dropbox/todo -type f -name "*$1*" -exec visit {} \;
-    fi
-}
-
-function find-repos {
-    find ~/ -name ".hg" -type d -exec dirname {} \;
-    find ~/ -name ".git" -type d -exec dirname {} \;
-}
-
-function red    { echo -e "\e[31m$@\e[0m"; }
-function yellow { echo -e "\e[33m$@\e[0m"; }
-function green  { echo -e "\e[32m$@\e[0m"; }
-function blue   { echo -e "\e[34m$@\e[0m"; }
-function purple { echo -e "\e[35m$@\e[0m"; }
-function cyan   { echo -e "\e[36m$@\e[0m"; }
-
-# kill a process after a number of seconds
-# usage:
-#    doalarm <seconds to wait> program arg arg ...
-function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
-
-function hg-changed-repos {
-    cd
-    repos=`find -name '.hg' -type d -exec dirname {} \;`
-    for line in $repos; do
-        cd $line
-        echo -n "$line -- "
-
-        MODIFIED=$(hg st -m)
-        if [ "$MODIFIED" != "" ]; then
-            red modified
-        else
-            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
-            if [[ $outgoing != "no changes found" ]]; then
-                cyan outgoing
-            else
-                yellow ok
-            fi
-        fi
-        cd ~
-    done
-}
-
-function p {
-    allmatches=`find $PROJECTS -path '*'$1'*' -type d`
-    for proj in $allmatches; do
-        for repo in `find $proj -type d -path '*/working/.hg'`; do
-            cd $repo; cd ..
-            return
-        done
-        for repo in `find $proj -type d -name '.hg'`; do
-            cd $repo; cd ..
-            return
-        done
-    done
-    # second attempt
-    for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
-        cd $proj
-        return
-    done
-    red "failed to find match for project $1"
-}
-
-function write-stuff {
-    f=`find ~/projects -type f |grep '\.\(tex\|org\|md\)$' | grep -v '\.\(hg\|git\|svn\)' | grep $1`
-    echo $f
-    cd `dirname $f`
-    v $f
-    o *.pdf
-}
-
-#______________________________________________________________________________
-#
-
-function push-public-key {
-    publickey=`cat ~/.ssh/id_rsa.pub`
-    # make sure you set the appropriate permissions!
-    ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
-}
-
-
-alias tetris='google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
-
-function jhu-library {
-    o "http://proxy.library.jhu.edu/login?url=$1"
-}
-
-function ghetto-refresh {
-    if [[ "$#" -ne "2" ]]; then
-        echo "ghetto-refresh <rate> <cmd>"
-        return
-    fi
-    while [ 1 ]; do
-        echo `$2`
-        sleep $1
-        clear
-    done
-}
-
-#____________________________________
-# Bash Directory Bookmarks
-#alias m1='alias g1="cd `pwd`"'
-#alias m2='alias g2="cd `pwd`"'
-#alias m3='alias g3="cd `pwd`"'
-#alias m4='alias g4="cd `pwd`"'
-#alias m5='alias g5="cd `pwd`"'
-#alias m6='alias g6="cd `pwd`"'
-#alias m7='alias g7="cd `pwd`"'
-#alias m8='alias g8="cd `pwd`"'
-#alias m9='alias g9="cd `pwd`"'
-#alias mdump='alias|grep -e "alias g[0-9]"|grep -v "alias m" > ~/.bookmarks'
-#alias lma='alias | grep -e "alias g[0-9]"|grep -v "alias m"|sed "s/alias //"'
-#touch ~/.bookmarks
-#source ~/.bookmarks
-
-alias ldp='cd projects/ldp/code/working'
-alias lpldp='cd projects/ldp/code/working/lpldp'
-alias sso='cd projects/courses/stochastic-opt/project'
-
-function top-commands () {
-    history |linepy 'print " ".join(line.split()[3:])' | sort | uniq -c | sort -rn
-}
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
