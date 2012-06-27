@@ -282,8 +282,9 @@ alias hgchangelog="hg log --style changelog"
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
   for f in $(hg st -m -n $(hg root)); do   # use relative paths
-    hg kdiff3 $f 2>/dev/null &
-    hg ci $f
+      echo $f
+      hg kdiff3 $f 2>/dev/null &
+      hg ci $f
   done
 }
 alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
@@ -350,9 +351,9 @@ function write-stuff {
 #touch ~/.bookmarks
 #source ~/.bookmarks
 
-alias ldp='cd projects/ldp/code/working'
-alias lpldp='cd projects/ldp/code/working/lpldp'
-alias sso='cd projects/courses/stochastic-opt/project'
+alias ldp='cd ~/projects/ldp/code/working'
+alias lpldp='cd ~/projects/ldp/code/working/lpldp'
+alias sso='cd ~/projects/courses/stochastic-opt/project'
 
 #______________________________________________________________________________
 # Shortcuts for annoying deep directories (like Java source code).
