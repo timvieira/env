@@ -12,6 +12,7 @@ Interactively select a single file
 
 """
 
+import httplib
 from sys import argv
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
@@ -29,7 +30,10 @@ def print_doc(*docs):
 
         f = b.find_element_by_id('File')
         if d:
-            f.send_keys(abspath(d))
+            try:
+                f.send_keys(abspath(d))
+            except httplib.BadStatusLine:   # in case send keys fails
+                f.click()  # interactively pop-up the file selection menu
         else:
             f.click()  # interactively pop-up the file selection menu
 
