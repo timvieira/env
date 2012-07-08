@@ -22,7 +22,7 @@
 ;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
 
 
-;; Personal dictionary: ~/.aspell.en.pws
+;; Personal dictionary: ~/.aspell.en.pws or ~/projects/env/aspell.en.psw
 
 ;; todo: LEARN ctrl-alt-{k,f,b}
 
@@ -50,6 +50,8 @@
 (add-path "site-lisp/zimpl-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
+;(add-path "site-lisp/color-theme-6.6.0")
+
 
 ;(add-path "site-lisp/auctex-11.86")
 ;;(load-file "/home/timv/projects/env/emacs-support/site-lisp/auctex-11.86/auctex.el")
@@ -74,6 +76,8 @@
 
 (require 'scala-mode-auto)
 (require 'zimpl-mode)
+
+;(require 'color-theme)
 
 
 ;; maximize screen real estate
@@ -153,10 +157,11 @@
   (my-window-placement)
 )
 
+
+
 (defun light-colors ()
   (interactive)
   (custom-set-faces
-
    '(default ((t (:stipple
                   nil :background "white" :foreground "black" :inverse-video
                   nil :box nil :strike-through nil :overline nil :underline

@@ -22,10 +22,10 @@ JAVAEXTRAS=$PROJECTS/extras/java
 
 # The Path
 add-path $JAVA_HOME/bin
-add-path ~/inst/bin                   # locally install
+add-path ~/inst/bin                   # local install
 add-path $PROJECTS/env/bin            # my misc scripts
 add-path ~/software/visualvm_133/bin
-add-path ~/software/eclps/bin/x86_64_linux  # ECLiPSe constraint solver
+add-path ~/software/eclps/bin/x86_64_linux   # ECLiPSe constraint solver
 add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
 
 # CPLEX license file
@@ -70,9 +70,6 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-
-alias open=gnome-open
-alias open=xdg-open    # unity equivalent of gnome-open
 
 alias v='visit'
 
@@ -219,7 +216,7 @@ alias clsp='ssh timv@login.clsp.jhu.edu'
 
 # use +1GB for file larger than 1 gig.
 function find-files-by-size {
-  find -size "$1" -exec ls -lh {} \;
+    find -size "$1" -exec ls -lh {} \;
 }
 
 function find-with-ignores {
@@ -281,11 +278,11 @@ alias hgchangelog="hg log --style changelog"
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
-  for f in $(hg st -m -n $(hg root)); do   # use relative paths
-      echo $f
-      hg kdiff3 $f 2>/dev/null &
-      hg ci $f
-  done
+    for f in $(hg st -m -n $(hg root)); do   # use relative paths
+        echo $f
+        hg kdiff3 $f 2>/dev/null &
+        hg ci $f
+    done
 }
 alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
 alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
@@ -308,7 +305,26 @@ function t {
     fi
 }
 
+
+# edit configuration files with env project
+function e {
+    ENV=~/projects/env
+    if [[ "$#" -ne 1 ]]; then
+        cd $ENV
+    else
+        ls $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1
+    fi
+}
+
+
 function p {
+
+    # calling with no arguments lands you in the projects directory.
+    if [[ "$#" -eq 0 ]]; then
+        cd $PROJECTS
+        return
+    fi
+
     allmatches=`find $PROJECTS -path '*'$1'*' -type d`
     for proj in $allmatches; do
         for repo in `find $proj -type d -path '*/working/.hg'`; do
@@ -390,7 +406,8 @@ function vpy {
 # Misc bash function
 
 function o {
-    open $@ 2>/dev/null
+    # gnome-open; xdg-open    # unity equivalent of gnome-open
+    xdg-open $@ 2>/dev/null
 }
 
 # like nohup
