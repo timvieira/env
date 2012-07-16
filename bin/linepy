@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# The intent of this script is to someday replace awk and sed with
+# python. There's not need to learn so many tools!
+
 # wc -l" replacement:
 #  $ cat file | linepy 'c=0' 'c+=1' 'print c'
 #
@@ -55,8 +58,10 @@ def tree():
 
 $INIT
 
-for line in sys.stdin:
-    line = line.strip()
+for rawline in sys.stdin:
+    line = rawline.strip()       # no trailing whitespace
+    split = line.split()
+    tabsplit = line.split('\t')
     $LOOP
 
 $END
