@@ -1,31 +1,30 @@
 ;; -*- coding: utf-8 -*-
 ;;
 ;; Notes
-;; =======
+;; =====
 ;;
-;; Bookmarks
-;; ---------
+;; Bookmarks:
 ;;  `C-x r m <somekey>` adds a bookmark,
 ;;  `C-x r b <somekey>` visits that bookmark,
 ;;  `C-x r l` lists bookmarks.
 ;;
-;; Keyboard macros
-;; ---------------
+;; Keyboard macros:
 ;;  1. start-kbd-macro
 ;;  2. end-kbd-macro
 ;;  3. name-last-kbd-macro
-;; (fset 'latex-compile-and-open
-;;    [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p
-;;     backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace
-;;     backspace backspace backspace backspace backspace backspace
-;;     ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
-;;     ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
-
-
+;;     (fset 'latex-compile-and-open
+;;        [?\M-x ?s ?h ?e ?l ?l ?  ?c ?o ?m ?  return ?p
+;;         backspace ?l ?a ?t ?e ?x ?p ?d ?f backspace backspace
+;;         backspace backspace backspace backspace backspace backspace
+;;         ?p ?d ?f ?l ?a ?t ?e ?x ?  ?a ?c ?l ?- ?i ?j tab ?t tab return
+;;         ?\C-x ?1 ?\C-x ?\C-f ?a ?c ?l ?- tab ?p ?d ?f return])
+;;
 ;; Personal dictionary: ~/.aspell.en.pws or ~/projects/env/aspell.en.psw
-
-;; todo: LEARN ctrl-alt-{k,f,b}
-
+;;
+;; TODO
+;; ====
+;;  - LEARN ctrl-alt-{k,f,b} to jump around parenthesized regions
+;;
 
 ;; speed-dial
 (global-unset-key [f3])
@@ -50,12 +49,6 @@
 (add-path "site-lisp/zimpl-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
-
-;(add-path "site-lisp/auctex-11.86")
-;;(load-file "/home/timv/projects/env/emacs-support/site-lisp/auctex-11.86/auctex.el")
-;(load "auctex.el" nil t t)
-;(load "preview-latex.el" nil t t)
-
 
 ;; recent files list
 (require 'recentf)

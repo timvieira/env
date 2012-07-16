@@ -56,7 +56,7 @@ if recipient == 'desktop':
 elif str2bool(raw_input('%s %s' % (red % '>>>', yellow % 'Send message? '))):
     send_gmail(gmail_user='timsfanmail',
                recipient=recipient,
-               subject='test subject',
+#               subject='No Subject',
                body=content)
 else:
     pass  # do nothing..
