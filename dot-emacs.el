@@ -50,8 +50,6 @@
 (add-path "site-lisp/zimpl-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
-;(add-path "site-lisp/color-theme-6.6.0")
-
 
 ;(add-path "site-lisp/auctex-11.86")
 ;;(load-file "/home/timv/projects/env/emacs-support/site-lisp/auctex-11.86/auctex.el")
@@ -73,12 +71,8 @@
 (require 'protobuf-mode)
 (require 'writegood-mode)
 ;;(require 'cython-mode)    ; we also have a simple cython-mode
-
 (require 'scala-mode-auto)
 (require 'zimpl-mode)
-
-;(require 'color-theme)
-
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
