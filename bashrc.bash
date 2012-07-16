@@ -297,14 +297,17 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 #______________________________________________________________________________
 # Shortcuts for jump around
 
+function edit-exec {
+    visit `which $@`
+}
+
 function t {
-    if [[ "$#" -ne 1 ]]; then
-        ls ~/Dropbox/todo/*
+    if [[ "$#" -ne 1 ]]; then  # list files
+        ll ~/Dropbox/todo/*
     else
         find ~/Dropbox/todo -type f -name "*$1*" -exec visit {} \;
     fi
 }
-
 
 # edit configuration files with env project
 function e {
@@ -312,20 +315,18 @@ function e {
     if [[ "$#" -ne 1 ]]; then
         cd $ENV
     else
-        ls $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1
+        visit `find $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1`
     fi
 }
 
 
 function p {
-
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
         cd $PROJECTS
         return
     fi
-
-    allmatches=`find $PROJECTS -path '*'$1'*' -type d`
+    allmatches=`find $PROJECTS -path '*'$1'*' -type d `
     for proj in $allmatches; do
         for repo in `find $proj -type d -path '*/working/.hg'`; do
             cd $repo; cd ..
