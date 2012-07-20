@@ -6,4 +6,4 @@ function emacsd() {
     disown `pgrep emacs`  # get emacs PID and detach it from this shell.
 }
 
-( emacsd "$@" 2>&1 >/dev/null ) || ( emacsclient "$@" 2>&1 >/dev/null & )
+( emacsd "$@" 2>&1 >/dev/null ) || ( emacsclient -n "$@" 2>&1 >/dev/null & )
