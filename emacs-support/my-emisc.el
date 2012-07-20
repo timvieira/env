@@ -1,3 +1,60 @@
+;; -*- coding: utf-8 -*-
+
+(defun change-indent (w)
+  (interactive "nWidth: ")
+  (set-variable 'c-basic-offset w))
+
+(defun sudo-edit ()
+  (interactive)
+  (let ((p (point)))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
+    (goto-char p)))
+
+(defun ascii-fy ()
+  (interactive)
+  (replace-string " " " ")
+  (replace-string "’" "'")
+  (replace-string "“" "\"")
+  (replace-string "”" "\"")
+  (replace-string "—" "-")
+  (replace-string "–" "-")
+  (replace-string "ﬂ" "fl")
+  (replace-string "ﬁ" "fi")
+  (replace-string "•" "*")
+  (replace-string "…" "...")
+  (replace-string "à" "a")         ; lossy
+  (replace-string "α" "\\alpha")   ; tex-fy
+  (replace-string "→" "->"))
+
+;; see open-shell:
+(defun get-shell ()
+  "Spawn a gnome-terminal in CWD."
+  (interactive)
+  (shell-command "nohup gnome-terminal >& /dev/null &" )
+  (delete-other-windows))
+
+; alternative to get-shell which doesn't get killed when emacs dies.
+;(defun open-shell ()
+;  "open a gnome-terminal in cwd"
+;  (interactive)
+;  (shell-command (concat "gnome-terminal --working-directory " (shell-command-to-string "pwd") " &"))
+;)
+
+(defun goto-matching-paren ()
+  "If point is sitting on a parenthetic character, jump to its match."
+  (interactive)
+  (cond ((looking-at "\\s\(") (forward-list 1))
+        ((progn
+           (backward-char 1)
+           (looking-at "\\s\)")) (forward-char 1) (backward-list 1))))
+
+(defun fullscreen ()
+  "make the emacs window fullscreen"
+  (interactive)
+  (set-frame-parameter nil 'fullscreen
+                       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
+
+;; ------------------
 
 (defun escape-squote(str)
   (string-match "'" str)
@@ -48,13 +105,6 @@ as point as well."
       (setq  charcount (1- charcount))
       )))
 
-(defun dos2unix ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward " ")
-      (replace-match ""))))
-
 (defun make-one-liner ()
   (interactive)
   (let* ((start (min (point) (mark)))
@@ -89,7 +139,8 @@ as point as well."
   (kill-buffer (current-buffer))
   (delete-window))
 
-;; %S/%M/%H (sec/min/hour-mil) %l(hour) %p(am/pm) %d(day of month) %B (month) %Y (year) %Z (time zone) %A (day name) %j (day of year) %U (week of year)
+;; %S/%M/%H (sec/min/hour-mil) %l(hour) %p(am/pm) %d(day of month) %B (month)
+; %Y %(year) %Z (time zone) %A (day name) %j (day of year) %U (week of year)
 (defun insert-date ()
   (interactive)
   (insert (format-time-string "%A %B %d, %Y")))
@@ -98,9 +149,10 @@ as point as well."
   (interactive)
   (insert (format-time-string "%l:%M%p")))
 
+;; http://www.delorie.com/gnu/docs/elisp-manual-21/elisp_689.html
 (defun insert-datestamp ()
   (interactive)
-  (insert (format-time-string "[%D]")))
+  (insert (format-time-string "[%Y-%m-%d %a]")))
 
 (defun bracket-text (left right)
   (interactive "sLeft delim:\nsRight delim:")
@@ -122,8 +174,6 @@ as point as well."
         (forward-line)
         (setq linecount (1- linecount))
         ))))
-
-
 
 ;; Word count!
 (defun word-count (&optional filename)
@@ -147,17 +197,3 @@ as point as well."
           (delete-file filename))
       (message (concat "Word Count: " result))
       )))
-
-(defun goto-matching-paren ()
-  "If point is sitting on a parenthetic character, jump to its match."
-  (interactive)
-  (cond ((looking-at "\\s\(") (forward-list 1))
-        ((progn
-           (backward-char 1)
-           (looking-at "\\s\)")) (forward-char 1) (backward-list 1))))
-
-(defun fullscreen ()
-  "make the emacs window fullscreen"
-  (interactive)
-  (set-frame-parameter nil 'fullscreen
-                       (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
