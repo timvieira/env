@@ -37,7 +37,6 @@
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
-
 (defun add-path (p)
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs-support/") p)))
 
@@ -63,7 +62,6 @@
 (require 'filecache)
 (require 'protobuf-mode)
 (require 'writegood-mode)
-;;(require 'cython-mode)    ; we also have a simple cython-mode
 (require 'scala-mode-auto)
 (require 'zimpl-mode)
 
@@ -73,6 +71,7 @@
 (menu-bar-mode -1)     ; hide menu-bar
 (line-number-mode 1)   ; show line number near mode=line
 (column-number-mode 1) ; show column number near mode-line
+
 
 (defun my-window-placement ()
   (interactive)
@@ -92,28 +91,19 @@
  '(default-input-method "latin-1-prefix")
  '(global-font-lock-mode t nil (font-lock))
  '(ibuffer-saved-filter-groups nil)
- '(ibuffer-saved-filters (quote (("test-filters" ((or (filename . "perl") (mode . dired-mode)))) ("gnus" ((or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode)))) ("programming" ((or (mode . emacs-lisp-mode) (mode . cperl-mode) (mode . c-mode) (mode . java-mode) (mode . idl-mode) (mode . lisp-mode)))))))
  '(icomplete-mode nil nil (icomplete))
  '(inhibit-startup-screen t)
  '(mouse-wheel-mode t nil (mwheel))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
-;; '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially
-;;                                            try-complete-file-name
-;;                                            try-expand-all-abbrevs
-;;                                            try-expand-list
-;;                                            try-expand-line
-;;                                            try-expand-dabbrev
-;;                                            try-expand-dabbrev-all-buffers
-;;                                            try-expand-dabbrev-from-kill
-;;                                            try-complete-lisp-symbol-partially
-;;                                            try-complete-lisp-symbol)))
  '(truncate-lines t)
  '(visible-cursor nil)
  '(cursor-in-nonselected-windows nil)
 )
 
+
 (defun dark-colors ()
+  "Quicky change to custom dark color theme"
   (interactive)
   (custom-set-faces
    '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil
@@ -130,10 +120,8 @@
    '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
    '(font-lock-keyword-face ((t (:foreground "orange"))))
    '(font-lock-string-face ((t (:foreground "forest green"))))
-
    '(font-lock-function-name-face ((t (:foreground "blue"))))
    '(font-lock-type-face ((t (:foreground "blue"))))
-
    '(italic ((t (:foreground "Yellow1" :slant italic))))
    '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
    '(minibuffer-prompt ((t (:foreground "white"))))
@@ -141,12 +129,11 @@
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
   )
-  (my-window-placement)
 )
 
 
-
 (defun light-colors ()
+  "Switch to a light color scheme."
   (interactive)
   (custom-set-faces
    '(default ((t (:stipple
@@ -162,13 +149,20 @@
    '(font-lock-function-name-face ((t (:foreground "royalblue"))))
    '(font-lock-type-face ((t (:foreground "royalblue"))))
   )
-  (my-window-placement)
 )
+
+
+(font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
 
 (dark-colors)
 ;(light-colors)
 
+(my-window-placement)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; typed text replaces a selection, rather than append
+(pending-delete-mode nil)
 
 ;; TODO: things I don't like about my tab situations
 ;;  - sometimes I screw up Makefiles
@@ -177,7 +171,7 @@
 ;(defvar c-tab-always-indent nil)
 ;(setq c-tab-always-indent t)
 (setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
-(setq tab-width 4)                    ; XXX: might want to consider changing this back to 2...
+(setq tab-width 4)
 
 (setq default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
       ;; case-fold-search t            ; case-insensitive search
@@ -187,9 +181,6 @@
       cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
       mouse-yank-at-point t               ; mouse yank at point, not click!
 )
-
-; require newline at end of file
-;(setq require-final-newline t)
 
 ;; Column width (used in longlines-mode)
 (setq-default auto-fill-mode 1
@@ -213,23 +204,17 @@
       ido-confirm-unique-completion t      ; wait for RET, even with unique completion
       confirm-nonexistent-file-or-buffer t
 )
-
 (ido-mode t)
 
-;;(partial-completion-mode)
 
-;; typed text replaces a selection, rather than append
-(pending-delete-mode nil)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Deal with annoying temporary files...
 
-;; get rid of yes-or-no questions - y or n is enough
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; put semantic.cache files somewhere far away.
+;; Put semantic.cache files somewhere far away.
 (setq semantic-load-turn-useful-things-on t
-      semanticdb-default-save-directory "~/.emacs.d/semantic/"
-)
+      semanticdb-default-save-directory "~/.emacs.d/semantic/")
 
-;; put emacs backup files into their own directory
+;; Put emacs backup files into their own directory
 (setq backup-by-copying t
       backup-directory-alist '(("." . "~/.emacs.d/autosaves/"))
       delete-old-versions t
@@ -237,23 +222,37 @@
       kept-old-versions 2
       version-control t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Remove annoying dialogs:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; get rid of yes-or-no questions - y or n is enough
+(defalias 'yes-or-no-p 'y-or-n-p)
 
+;; Buffer `somebuffer' still has clients; kill it? (yes or no)
+(remove-hook 'kill-buffer-query-functions 'server-kill-buffer-query-function)
 
-;(defun revert-buffer-and-refind-position ()
-;  (interactive)
-;  (let ((p (point-marker)))
-;    (revert-buffer t t t)
-;    (goto-char p)))
+;; get around the annoying "Active processes exist" query
+(add-hook 'comint-exec-hook
+          (lambda () (process-kill-without-query (get-buffer-process (current-buffer)))))
+
+;; Previous method for avoiding "Active processes exist" dialog
+;;  (defun custom-kill-current-buffer ()
+;;    (interactive)
+;;    ;; get around the annoying "Active processes exist" query
+;;    (if (get-buffer-process (current-buffer))
+;;        (process-kill-without-query (get-buffer-process (current-buffer))))
+;;    ;; the usual behavior
+;;    (kill-buffer (current-buffer)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun my-keys ()
 
   ;; disable things which often confuse me
   (global-unset-key [(control next)])
-  (global-unset-key [(control ?z)])
+  (global-unset-key [(control ?z)])              ;; background the window in terminal
   (global-unset-key [(control ?x) (control ?z)])
-  (global-unset-key [mouse-2])  ; disable middle-click paste
+  (global-unset-key [mouse-2])                   ;; disable middle-click paste
 
   ;; Copy-Cut-Paste from clipboard
   (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
@@ -265,16 +264,18 @@
 
   (global-set-key [f7] 'flyspell-start)
 
-  (defun custom-kill-current-buffer ()
-    (interactive)
-    ;; get around the annoying "Active processes exist" query
-    (if (get-buffer-process (current-buffer))
-        (process-kill-without-query (get-buffer-process (current-buffer))))
-    ;; the usual behavior
-    (kill-buffer (current-buffer)))
+  ;; insert date stamp
+  ;;
+  ;; TODO: Jason has a nifty way of guessing the current file formatting (the
+  ;; structure of date logged entries) and inserting a new one
+  ;; automatically. Might also want to pay attention to any apparent sorting.
+  ;;
+  (global-set-key (kbd "\C-cd") 'insert-datestamp)
 
+  ;; shortcut for killing buffers
   (global-unset-key "\M-k")
-  (global-set-key "\M-k" 'custom-kill-current-buffer)
+;  (global-set-key "\M-k" 'custom-kill-current-buffer)
+  (global-set-key "\M-k" 'kill-current-buffer)
 
   ;; context menu with contents of the yank ring
   (global-set-key "\C-cy" '(lambda () (interactive) (popup-menu 'yank-menu)))
@@ -310,11 +311,6 @@
 
   ;; lists functions, jump to begining of definition
   (global-set-key (kbd "M-i") 'ido-goto-symbol)
-
-  ;; reinstate the older space-completion for files
-;  (cond
-;   ((boundp 'minibuffer-local-filename-completion-map)
-;    (define-key minibuffer-local-filename-completion-map [(?\ )] 'minibuffer-complete)))
 )
 
 (my-keys)
@@ -324,7 +320,8 @@
   (interactive)
   (global-font-lock-mode t)
   (load-library "my-emisc")
-  (load-library "my-python-config")
+  (load-library "my-python")
+  (load-library "my-latex")
 
   (defun no-X-setup () nil)
 
@@ -337,30 +334,15 @@
 
   (if (window-system) (X-setup) (no-X-setup))
 
-  ;(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
-  (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
-
   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
-
   (load-library "matlab")
+
+  (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+  (setq auto-mode-alist (cons '("\\.\\(text\\|md\\|markdown\\)" . markdown-mode) auto-mode-alist))
 
 )
 
 (common-setup)
-
-;; Simple cython-mode:
-(define-derived-mode cython-mode python-mode "Cython"
-  (font-lock-add-keywords
-   nil
-   `((,(concat "\\<\\(NULL"
-               "\\|c\\(def\\|import\\|har\\|typedef\\)"
-               "\\|e\\(num\\|xtern\\)"
-               "\\|float\\|double\\|unsigned"
-               "\\|in\\(clude\\|t\\|line\\)"
-               "\\|object\\|public\\|struct\\|type\\|union\\|void"
-               "\\)\\>")
-      1 font-lock-keyword-face t))))
-
 
 (setq dired-use-ls-dired nil)
 (setq c-basic-offset 2)
@@ -381,105 +363,21 @@
 
 ;; ---------------------------------------------------------------------------------------
 ;; timv: not sure what these things do...
-
 (setq find-file-compare-truenames t
       minibuffer-confirm-incomplete t
       minibuffer-max-depth nil)
-
-(setq dired-no-confirm '(byte-compile chgrp chmod chown compress copy delete hardlink load move print
-                                      shell symlink uncompress recursive-delete kill-file-buffer
-                                      kill-dired-buffer patch create-top-dir revert-subdirs))
-
+(setq dired-no-confirm '(byte-compile chgrp chmod chown compress
+                                      copy delete hardlink load
+                                      move print shell symlink
+                                      uncompress recursive-delete
+                                      kill-file-buffer
+                                      kill-dired-buffer patch
+                                      create-top-dir
+                                      revert-subdirs))
 ;; ---------------------------------------------------------------------------------------
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My LaTeX stuff
-
-(defun flyspell-start ()
-  (interactive)
-  (flyspell-buffer)
-  (flyspell-mode))
-
-(defun run-pdflatex (file-name)
-  (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
-      (message "pdflatex failed")
-    (progn
-      (message "pdflatex succeeded")
-      (delete-other-windows))))
-
-(defun run-bibtex (f)
-  (if (= 1 (shell-command (concat "bibtex " f)))
-      (message "bibtex failed")
-    (progn
-      (message "bibtex succeeded")
-      (delete-other-windows))))
-
-;; Hanna's LaTeX Makefile template:
-;;   echo "Running latex...."
-;;   pdflatex -halt-on-error $(FILENAME).tex
-;;   echo "Running bibtex...."
-;;   bibtex $(FILENAME)
-;;   echo "Rerunning latex...."
-;;   pdflatex -halt-on-error $(FILENAME).tex
-;;   pdflatex -halt-on-error $(FILENAME).tex  # run twice so that we get refs
-
-(defun latex-thing ()
-  (interactive)
-  (let ((tex (buffer-file-name)))
-    (let ((base (substring tex 0 -4)))  ; filename with out extension
-      (let ((pdf (concat base ".pdf")))
-        (let ((bib (concat base ".bib")))
-          (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
-          (run-pdflatex tex)
-          (if (file-exists-p bib)
-              (progn
-                (run-bibtex base)
-                ;; rerun latex twice -- bibtex is weird like that
-                (run-pdflatex tex)
-                (run-pdflatex tex)))
-   )))))
-
-(defun latex-open-this-pdf ()
-  (interactive)
-  (let ((tex (buffer-file-name)))
-    (let ((base (substring tex 0 -4)))  ; filename with out extension
-      (let ((pdf (concat base ".pdf")))
-
-        (if (= 1 (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &")))
-            (message "failed to open pdf")
-          (progn
-            (message "sucessfully opened pdf")
-            (delete-other-windows)))
-
-        ))))
-
-(defun latex-setup ()
-  (interactive)
-  (latex-mode)
-
-  (local-unset-key "\C-c\C-c")
-  (local-set-key "\C-c\C-c" 'latex-thing)
-
-  (local-unset-key "\C-e\C-e")
-  (local-set-key "\C-e\C-e" 'latex-open-this-pdf)
-
-  (flyspell-start)
-  ;(longlines-mode t)
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun change-indent (w)
-  (interactive "nWidth: ")
-  (set-variable 'c-basic-offset w))
-
-
-;(defun open-shell ()
-;  "open a gnome-terminal in cwd"
-;  (interactive)
-;  (shell-command (concat "gnome-terminal --working-directory " (shell-command-to-string "pwd") " &"))
-;)
 
 ;(defun my-add-path (path-element)
 ;  "Add the specified path element to the Emacs PATH"
@@ -488,94 +386,6 @@
 ;      (setenv "PATH"
 ;              (concat (expand-file-name path-element)
 ;                      path-separator (getenv "PATH")))))
-
-(defun sudo-edit ()
-  (interactive)
-  (let ((p (point)))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
-    (goto-char p)))
-
-(font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
-
-
-;; -- Display images in org mode
-;; enable image mode first
-(iimage-mode)
-;; add the org file link format to the iimage mode regex
-(add-to-list 'iimage-mode-image-regex-alist
-             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex "\\)\\]")  1))
-
-;; I don't want to see blank lines in collapsed (contents) views. This setting
-;; hides single blank lines and exposes the rest so I can clean them up.
-(setq org-cycle-separator-lines 2)
-
-
-;; Links to emails, web pages, and other files are sprinkled all over my org
-;; files. The following setting control how org-mode handles opening the link.
-;;
-;; I like to keep links in the same window so that I don't end up with a ton of
-;; frames in my window manager. I normally work in a full-screen window and
-;; having links open in the same window just works better for
-(setq org-link-frame-setup (quote ((vm . vm-visit-folder)
-                                   (gnus . org-gnus-no-new-news)
-                                   (file . find-file))))
-
-(setq org-src-fontify-natively t)
-
-;(setq org-startup-with-inline-images t)
-(add-hook 'org-mode-hook
-          '(lambda ()
-             (org-indent-mode t)   ;; #+STARTUP: indent
-
-             (org-babel-do-load-languages
-              (quote org-babel-load-languages)
-              (quote ((emacs-lisp . t)
-                      (dot . t)
-                      (ditaa . t)
-                      (python . t)
-                      (gnuplot . t)
-                      (sh . t)
-                      (ledger . t)
-                      (org . t)
-                      (plantuml . t)
-                      (latex . t))))
-
-             ; Do not prompt to confirm evaluation
-             (setq org-confirm-babel-evaluate nil)
-
-             ;(flyspell-start)
-             ))
-
-
-(defun ascii-fy ()
-  (interactive)
-  (replace-string " " " ")
-  (replace-string "’" "'")
-  (replace-string "“" "\"")
-  (replace-string "”" "\"")
-  (replace-string "—" "-")
-  (replace-string "–" "-")
-  (replace-string "ﬂ" "fl")
-  (replace-string "ﬁ" "fi")
-  (replace-string "•" "*")
-  (replace-string "…" "...")
-  (replace-string "à" "a")         ; lossy
-  (replace-string "α" "\\alpha")   ; tex-fy
-  (replace-string "→" "->"))
-
-
-(defun get-shell ()
-  "Spawn a gnome-terminal in CWD."
-  (interactive)
-  (shell-command "nohup gnome-terminal >& /dev/null &" )
-  (delete-other-windows))
-
-
-(autoload 'markdown-mode "markdown-mode.el"
-  "Major mode for editing Markdown files" t)
-
-(setq auto-mode-alist
-  (cons '("\\.text" . markdown-mode) auto-mode-alist))
 
 ;; make the file executable if it is a script.
 ;(add-hook 'after-save-hook
