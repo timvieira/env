@@ -322,6 +322,7 @@
   (load-library "my-emisc")
   (load-library "my-python")
   (load-library "my-latex")
+  (load-library "my-org")
 
   (defun no-X-setup () nil)
 
