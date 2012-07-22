@@ -63,15 +63,13 @@ alias ll='ls -lAh'
 alias la='ls -A'
 alias l='ls -CF'
 alias lll='ls -h -l --group-directories-first --ignore=*.pyc --ignore=*.o --ignore=*.class' # --ignore-backup
-alias ls-recent='ls -lAt'
+alias lt='ls -lAt'
 
 # cd aliases
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-
-alias v='visit'
 
 #-------------
 
@@ -229,7 +227,7 @@ alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 # Clean up
 
 function tmpfiles {
-  find -name '*~'
+  find $1 -name '*~'
 }
 
 function pyclean {
@@ -298,14 +296,14 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 # Shortcuts for jump around
 
 function edit-exec {
-    visit `which $@`
+    v `which $@`
 }
 
 function t {
     if [[ "$#" -ne 1 ]]; then  # list files
         ll ~/Dropbox/todo/*
     else
-        find ~/Dropbox/todo -type f -name "*$1*" -exec visit {} \;
+        find ~/Dropbox/todo -type f -name "*$1*" -exec v {} \;
     fi
 }
 
@@ -315,7 +313,7 @@ function e {
     if [[ "$#" -ne 1 ]]; then
         cd $ENV
     else
-        visit `find $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1`
+        v `find $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1`
     fi
 }
 
@@ -379,7 +377,7 @@ alias sso='cd ~/projects/courses/stochastic-opt/project'
 
 # find files LIKE $1 and open them in emacs
 function fv {
-    find-and-apply $1 visit
+    find-and-apply $1 v
 }
 
 # find file LIKE $1 and then call $2
@@ -408,7 +406,7 @@ function vpy {
 
 function o {
     # gnome-open; xdg-open    # unity equivalent of gnome-open
-    xdg-open $@ 2>/dev/null
+    xdg-open "$@" 2>/dev/null
 }
 
 # like nohup
@@ -444,6 +442,23 @@ function ghetto-refresh {
 
 function todos {
     ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+}
+
+function find-note-files {
+    find $1 -name '*TODO*' -o -name '*NOTE*' \
+      |grep -v '~'  # ignore tempfiles
+}
+
+function notes {
+    files=$(ls -tx `find-note-files ~/`)
+    if [[ "$#" -eq "0" ]]; then
+        echo "$files" | head
+    else
+        for filter in "$@"; do
+            files=`echo "$files" | grep $filter`
+        done
+        echo "$files"
+    fi
 }
 
 function red    { echo -e "\e[31m$@\e[0m"; }
@@ -528,3 +543,5 @@ function m4a2mp3 {
 
 #______________________________________________________________________________
 #
+
+alias freq='sort | uniq -c |sort -nr'
