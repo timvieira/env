@@ -27,26 +27,43 @@
 
 (setq org-src-fontify-natively t)
 
+
+(defun org-init ()
+  (interactive)
+  (org-indent-mode t)   ;; alternative to "#+STARTUP: indent"
+
+  (org-babel-do-load-languages
+   (quote org-babel-load-languages)
+   (quote ((emacs-lisp . t)
+           (dot . t)
+           (ditaa . t)
+           (python . t)
+           (gnuplot . t)
+           (sh . t)
+           (ledger . t)
+           (org . t)
+           (plantuml . t)
+           (latex . t))))
+
+  ;; Do not prompt to confirm evaluation
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; highlight certain keywords
+  (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|todo\\|FIXME\\|CHECK\\|check\\|Check\\):" 1
+                                 '(:foreground "red") t)))
+  ;; highlight ascii hlines
+  (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "yellow") t)))
+
+  ;; highlight bullet stuff colon. E.g. "1. Something interesting: elaboration"
+;  (font-lock-add-keywords nil '(("[\\-\\*] \\(.*?\\):" 1 '(:foreground "yellow") t)))
+
+  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):" 1 '(:foreground "yellow") t)))
+;  (font-lock-add-keywords nil '(("- \\(.*?\\):" 1 '(:foreground "yellow") t)))
+  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):" 1 '(:foreground "yellow") t)))
+
+  ;(flyspell-start)
+)
+
 ;(setq org-startup-with-inline-images t)
 (add-hook 'org-mode-hook
-          '(lambda ()
-             (org-indent-mode t)   ;; #+STARTUP: indent
-
-             (org-babel-do-load-languages
-              (quote org-babel-load-languages)
-              (quote ((emacs-lisp . t)
-                      (dot . t)
-                      (ditaa . t)
-                      (python . t)
-                      (gnuplot . t)
-                      (sh . t)
-                      (ledger . t)
-                      (org . t)
-                      (plantuml . t)
-                      (latex . t))))
-
-             ; Do not prompt to confirm evaluation
-             (setq org-confirm-babel-evaluate nil)
-
-             ;(flyspell-start)
-             ))
+          'org-init)
