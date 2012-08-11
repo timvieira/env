@@ -3,19 +3,30 @@
 #______________________________________________________________________________
 # Environment variables
 
-if [ -e ~/jdk1.6.0_31/bin ]; then
-    export PATH=$PATH:~/jdk1.6.0_31/bin   # local install
-    export JAVA_HOME=~/jdk1.6.0_31
-else
-    export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
-fi
-
 # prepend to path environment variable
 function add-path () {
     for d in `echo $@`; do
         export PATH=$d:$PATH
     done
 }
+function add-pypath () {
+    for d in `echo $@`; do
+        export PYTHONPATH=$d:$PYTHONPATH
+    done
+}
+function add-classpath () {
+    for d in `echo $@`; do
+        export CLASSPATH=$d:$CLASSPATH
+    done
+}
+
+if [ -e ~/jdk1.6.0_31/bin ]; then
+    add-path ~/jdk1.6.0_31/bin   # local install
+    export JAVA_HOME=~/jdk1.6.0_31
+else
+    export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+fi
+
 
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
@@ -32,22 +43,25 @@ add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
 export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 
 # Python
-export PYTHONPATH=$PROJECTS:$PROJECTS/extras/python:$PROJECTS/incubator:$PROJECTS/shelf:$PYTHONPATH
+add-pypath \
+    $PROJECTS \
+    $PROJECTS/extras/python \
+    $PROJECTS/incubator \
+    $PROJECTS/shelf
 
 # Classpath
-export CLASSPATH=.:$CLASSPATH
+add-classpath .
 
-# Temporarily add all jars in directory to classpath
-function classpath-hack {
+# add all jars in directory to classpath
+function add-jars-to-classpath {
     jars=`find -name '*.jar'`
-    cp=${jars//[[:space:]]/:}
-    echo $cp:$CLASSPATH
-    export CLASSPATH=$cp:$CLASSPATH
+    add-classpath $jars
+    echo "$CLASSPATH"
 }
 
 # Jython
 export JYTHON_HOME=$JAVAEXTRAS/jython
-export CLASSPATH=$JYTHON_HOME/jython.jar:$CLASSPATH
+add-classpath $JYTHON_HOME/jython.jar
 alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
 
 # Emacs is my preferred editor, dammit!
@@ -103,10 +117,50 @@ shopt -s histappend
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=10000000000
 export HISTFILESIZE=100000000000
-export HISTIGNORE="&:ls:[bf]g:exit:clear"
+export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
 export HISTTIMEFORMAT='%F %T '
 
 shopt -s cmdhist
+
+
+# TOOD: last_command function
+
+#######
+# Augmented bash history with metadta (~/.bash_history_meta), such as working
+# directory to command.
+#
+# TODO:
+#
+#  * PROMPT_COMMAND is only called after the command executes. What we actually
+#    need is a pre-execute hook.
+#
+#  * some commands don't get written in history (e.g. ls, pwd
+#
+#  * might "break" if there are two shells writting to history
+#
+function prompt_command {
+
+  # timv: I think this writes bash history
+  history -a
+
+  # pull command number out of history file; $HISTCMD didn't work inside a function...
+  HISTNUM=`history |tail -n1 |cut -f1 -d' '`
+
+  if [[ "PREV_HISTNUM" -ne "$HISTNUM" ]]; then
+      if [ ! -z $PREV_DIRECTORY ]; then
+          CMD=`history |tail -n1`
+          DIR="$PREV_DIRECTORY"
+          #yellow "$DIR $CMD"
+          echo "$DIR $CMD" >> ~/.bash_history_metadata
+      fi
+  fi
+
+  export PREV_DIRECTORY="$PWD"
+  export PREV_HISTNUM="$HISTNUM"
+}
+
+PROMPT_COMMAND="prompt_command"
+
 
 #______________________________________________________________________________
 #
@@ -144,6 +198,12 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+
+# Awesome prompt ideas: http://maketecheasier.com/8-useful-and-interesting-bash-prompts/2009/09/04
+#PROMPT_COMMAND='PS1="\[\033[0;33m\][\!]\`if [[ \$? = "0" ]]; then echo "\\[\\033[32m\\]"; else echo "\\[\\033[31m\\]"; fi\`[\u.\h: \`if [[ `pwd|wc -c|tr -d " "` > 18 ]]; then echo "\\W"; else echo "\\w"; fi\`]\$\[\033[0m\] "; echo -ne "\033]0;`hostname -s`:`pwd`\007"'
+
+
+# http://www.gnu.org/software/bash/manual/bashref.html
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
     #PS1='\[\033[01;32m\]\u@\h\[\033[00m\]\$ '
@@ -162,12 +222,10 @@ xterm*|rxvt*)
     ;;
 esac
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# Enable bash completion.
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
-    bind "set completion-ignore-case on"
+    bind "set completion-ignore-case on"   # case insensitive
 fi
 
 
@@ -222,6 +280,11 @@ function find-with-ignores {
 }
 
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
+
+# grep filenames recursive file listing
+function f {
+    find "$2" |grep -i "$1"
+}
 
 #______________________________________________________________________________
 # Clean up
@@ -422,7 +485,7 @@ function push-public-key {
     ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
 }
 
-alias tetris='google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
+alias tetris='shutup-and-disown google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
 
 function jhu-library {
     o "http://proxy.library.jhu.edu/login?url=$1"
@@ -445,7 +508,7 @@ function todos {
 }
 
 function find-note-files {
-    find $1 -name '*TODO*' -o -name '*NOTE*' \
+    find $1 -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' \
       |grep -v '~'  # ignore tempfiles
 }
 
@@ -455,7 +518,7 @@ function notes {
         echo "$files" | head
     else
         for filter in "$@"; do
-            files=`echo "$files" | grep $filter`
+            files=`echo "$files" | grep -i $filter |head`
         done
         echo "$files"
     fi
