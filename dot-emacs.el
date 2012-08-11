@@ -23,7 +23,9 @@
 ;;
 ;; TODO
 ;; ====
-;;  - LEARN ctrl-alt-{k,f,b} to jump around parenthesized regions
+;;
+;;  - LEARN ctrl-alt-{k,f,b} to jump around parenthesized regions (these are
+;;    alternatives to ctrl-alt-{left and right arrows})
 ;;
 
 ;; speed-dial
@@ -49,6 +51,7 @@
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
 
+
 ;; recent files list
 (require 'recentf)
 (recentf-mode 1)
@@ -63,7 +66,14 @@
 (require 'protobuf-mode)
 (require 'writegood-mode)
 (require 'scala-mode-auto)
-(require 'zimpl-mode)
+;(require 'zimpl-mode)
+
+
+;; TODO: evaluation period. Not sure how useful this is.
+(add-path "site-lisp/expand-region/")
+(require 'expand-region)  ; https://github.com/magnars/expand-region.el/
+(global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
+
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -152,7 +162,7 @@
 )
 
 
-(font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
+(font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 '(:foreground "yellow") t)))
 
 (dark-colors)
 ;(light-colors)
@@ -161,8 +171,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; typed text replaces a selection, rather than append
-(pending-delete-mode nil)
+(pending-delete-mode nil)  ;; crucial! typed text replaces a selection, rather than append
 
 ;; TODO: things I don't like about my tab situations
 ;;  - sometimes I screw up Makefiles
@@ -173,6 +182,12 @@
 (setq-default indent-tabs-mode nil)  ; No tabs! XXX: why does this need to be set with `setq-default` not `setq`
 (setq tab-width 4)
 
+(setq c-basic-offset 2)  ;; timv: do I need this?
+
+;; Column width (used in longlines-mode)
+(setq-default auto-fill-mode 1
+              fill-column 80)
+
 (setq default-major-mode 'text-mode  ; Make text-mode the default mode for new buffers.
       ;; case-fold-search t            ; case-insensitive search
       case-fold-search nil           ; (!) if this is non-nil hippie-expand will be busted.
@@ -181,10 +196,6 @@
       cursor-in-non-selected-windows nil  ; Don't show a cursor in other windows
       mouse-yank-at-point t               ; mouse yank at point, not click!
 )
-
-;; Column width (used in longlines-mode)
-(setq-default auto-fill-mode 1
-              fill-column 80)
 
 ;; Note: I think the smooth-scrolling cannot be on for these settings to take effect
 ; scroll-margin: line where scrolling should start;
@@ -346,7 +357,6 @@
 (common-setup)
 
 (setq dired-use-ls-dired nil)
-(setq c-basic-offset 2)
 
 ;(defun flip-to-last-buffer (&optional n)
 ;  (interactive "p")
