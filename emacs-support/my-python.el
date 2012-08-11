@@ -58,7 +58,7 @@
   ;; highlight special comments
   (font-lock-add-keywords
    nil
-   '(("\\<\\(FIX\\|TODO\\|XXX\\|FIXME\\|HACK\\|REFACTOR\\):" 1 font-lock-warning-face t)))
+   '(("\\<\\(FIX\\|TODO\\|XXX\\|FIXME\\|HACK\\|REFACTOR\\):" 1 '(:foreground "yellow") t)))
 )
 
 (add-hook 'python-mode-hook 'my-python-hook)
