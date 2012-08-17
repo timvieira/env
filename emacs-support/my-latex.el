@@ -22,10 +22,13 @@
 
 (defun latex-thing ()
   (interactive)
+
   (let ((tex (buffer-file-name)))
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (let ((pdf (concat base ".pdf")))
-        (let ((bib (concat base ".bib")))
+;;        (let ((bib (concat base ".bib")))
+        (let ((bib (car (directory-files "." nil ".*\\.bib"))))
+
           (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
           (run-pdflatex tex)
           (if (file-exists-p bib)
