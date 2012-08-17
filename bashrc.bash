@@ -143,14 +143,14 @@ function prompt_command {
   # timv: I think this writes bash history
   history -a
 
+  CMD=`history 1`  # faster than `history |tail -n1`
+
   # pull command number out of history file; $HISTCMD didn't work inside a function...
-  HISTNUM=`history |tail -n1 |cut -f1 -d' '`
+  HISTNUM=`echo $CMD |cut -f1 -d' '`
 
   if [[ "PREV_HISTNUM" -ne "$HISTNUM" ]]; then
       if [ ! -z $PREV_DIRECTORY ]; then
-          CMD=`history |tail -n1`
           DIR="$PREV_DIRECTORY"
-          #yellow "$DIR $CMD"
           echo "$DIR $CMD" >> ~/.bash_history_metadata
       fi
   fi
@@ -283,7 +283,7 @@ alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 # grep filenames recursive file listing
 function f {
-    find "$2" |grep -i "$1"
+    find "$2" |grep -v '\.hg' |grep -i "$1"
 }
 
 #______________________________________________________________________________
