@@ -26,9 +26,7 @@
   (let ((tex (buffer-file-name)))
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (let ((pdf (concat base ".pdf")))
-;;        (let ((bib (concat base ".bib")))
-        (let ((bib (car (directory-files "." nil ".*\\.bib"))))
-
+        (let ((bib (car (directory-files "." nil ".*\\.bib"))))  ; todo: what if there's no bib
           (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
           (run-pdflatex tex)
           (if (file-exists-p bib)
@@ -57,8 +55,11 @@
   (interactive)
   (latex-mode)
 
+  (fset 'my-org-export-pdf
+        [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
+
   (local-unset-key "\C-c\C-c")
-  (local-set-key "\C-c\C-c" 'latex-thing)
+  (local-set-key "\C-c\C-c" 'my-org-export-pdf)
 
   (local-unset-key "\C-e\C-e")
   (local-set-key "\C-e\C-e" 'latex-open-this-pdf)
