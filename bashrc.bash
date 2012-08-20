@@ -161,6 +161,11 @@ function prompt_command {
 
 PROMPT_COMMAND="prompt_command"
 
+# view bash history for this directory
+function dir_history {
+    cat ~/.bash_history_metadata |grep "^$PWD "
+}
+
 
 #______________________________________________________________________________
 #
@@ -376,7 +381,10 @@ function e {
     if [[ "$#" -ne 1 ]]; then
         cd $ENV
     else
-        v `find $ENV |grep -iv '.hg\|emacs-support\|bin' |grep $1`
+        files="$(find $ENV |grep -iv '.hg\|emacs-support\|bin')
+`ls -x $ENV/emacs-support/*.el`"
+        echo "$files" |grep $1
+        v $(echo "$files" |grep $1)
     fi
 }
 
@@ -388,6 +396,12 @@ function p {
         return
     fi
     allmatches=`find $PROJECTS -path '*'$1'*' -type d `
+
+    # try just '.*$1.*/.hg$'
+
+    # todo: this function is not so great... we should just filter out
+    # 'incoming/.hg'
+
     for proj in $allmatches; do
         for repo in `find $proj -type d -path '*/working/.hg'`; do
             cd $repo; cd ..
@@ -508,12 +522,12 @@ function todos {
 }
 
 function find-note-files {
-    find $1 -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' \
+    find $1 -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~'  # ignore tempfiles
 }
 
 function notes {
-    files=$(ls -tx `find-note-files ~/`)
+    files="$(ls -tx `find-note-files ~/projects`) $(ls -tx `find-note-files ~/Dropbox`)"
     if [[ "$#" -eq "0" ]]; then
         echo "$files" | head
     else
