@@ -1,4 +1,4 @@
-personal_ws-1.1 en 172 
+personal_ws-1.1 en 173 
 runtime
 Prefuse
 API
@@ -8,8 +8,8 @@ JHU
 simulative
 decomposability
 CGI
-dataset
 sbt
+dataset
 preterminal
 README
 subgraphs
@@ -150,6 +150,7 @@ backtrace
 argmin
 HMMs
 subproblem
+vertices
 backprop
 github
 SEARN
