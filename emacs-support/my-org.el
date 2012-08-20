@@ -28,9 +28,29 @@
 (setq org-src-fontify-natively t)
 
 
+(require 'org-latex)
+(unless (boundp 'org-export-latex-classes)
+  (setq org-export-latex-classes nil))
+(add-to-list 'org-export-latex-classes
+             '("article"
+               "\\documentclass{article}
+               \\newcommand{\\parents}[1]{\\textsc{Pa}(#1)}"
+               ("\\section{%s}" . "\\section*{%s}")))
+
+
 (defun org-init ()
   (interactive)
   (org-indent-mode t)   ;; alternative to "#+STARTUP: indent"
+
+  ;; export to pdf
+  (defun my-org-export-pdf ()
+    (interactive)
+    ;; play keyboard macro
+    [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p]
+  )
+  (local-unset-key "\C-c\C-c")
+  (local-set-key "\C-c\C-c" 'my-org-export-pdf)
+
 
   (org-babel-do-load-languages
    (quote org-babel-load-languages)
