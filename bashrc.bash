@@ -162,7 +162,7 @@ function prompt_command {
 PROMPT_COMMAND="prompt_command"
 
 # view bash history for this directory
-function dir_history {
+function dir-history {
     cat ~/.bash_history_metadata |grep "^$PWD "
 }
 
@@ -274,6 +274,10 @@ alias clsp='ssh timv@login.clsp.jhu.edu'
 
 #______________________________________________________________________________
 # bash functions
+
+function pysearch {
+    locate -0 '*.py' |xargs -0 ack "$@"
+}
 
 # use +1GB for file larger than 1 gig.
 function find-files-by-size {
@@ -445,6 +449,7 @@ function write-stuff {
 
 alias ldp='cd ~/projects/ldp/code/working'
 alias lpldp='cd ~/projects/ldp/code/working/lpldp'
+alias extras='cd ~/projects/extras/python'
 alias sso='cd ~/projects/courses/stochastic-opt/project'
 
 #______________________________________________________________________________
@@ -522,20 +527,26 @@ function todos {
 }
 
 function find-note-files {
-    find $1 -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
+    find $1 -type f -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~'  # ignore tempfiles
 }
 
-function notes {
-    files="$(ls -tx `find-note-files ~/projects`) $(ls -tx `find-note-files ~/Dropbox`)"
+function note {
+    files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
     if [[ "$#" -eq "0" ]]; then
+        green "Ten most recent files:"
         echo "$files" | head
     else
         for filter in "$@"; do
-            files=`echo "$files" | grep -i $filter |head`
+            files=`echo "$files" | grep -i $filter`
         done
         echo "$files"
+        # todo: if one match open file; otherwise ask user to be more specific
     fi
+}
+
+function note-dir {
+    cd $(dirname $(note "$@"))
 }
 
 function red    { echo -e "\e[31m$@\e[0m"; }
