@@ -34,6 +34,7 @@
 (add-to-list 'org-export-latex-classes
              '("article"
                "\\documentclass{article}
+               \\setlength\\parindent{0pt}   % no paragraph indentation
                \\newcommand{\\parents}[1]{\\textsc{Pa}(#1)}"
                ("\\section{%s}" . "\\section*{%s}")))
 
@@ -43,11 +44,8 @@
   (org-indent-mode t)   ;; alternative to "#+STARTUP: indent"
 
   ;; export to pdf
-  (defun my-org-export-pdf ()
-    (interactive)
-    ;; play keyboard macro
-    [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p]
-  )
+  (fset 'my-org-export-pdf
+        [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
   (local-unset-key "\C-c\C-c")
   (local-set-key "\C-c\C-c" 'my-org-export-pdf)
 
