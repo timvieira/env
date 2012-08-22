@@ -531,7 +531,7 @@ function find-note-files {
       |grep -v '~'  # ignore tempfiles
 }
 
-function note {
+function find-notes {
     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
     if [[ "$#" -eq "0" ]]; then
         green "Ten most recent files:"
@@ -545,8 +545,20 @@ function note {
     fi
 }
 
+function note {
+    notes="$(find-notes "$@")"
+    if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
+        cd $(dirname $notes)
+        v "$notes"
+    else
+        echo "$notes"
+    fi
+}
+
+alias notes='note'
+
 function note-dir {
-    cd $(dirname $(note "$@"))
+    cd $(dirname $(find-notes "$@"))
 }
 
 function red    { echo -e "\e[31m$@\e[0m"; }
