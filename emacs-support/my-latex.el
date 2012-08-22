@@ -22,7 +22,6 @@
 
 (defun latex-thing ()
   (interactive)
-
   (let ((tex (buffer-file-name)))
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (let ((pdf (concat base ".pdf")))
@@ -32,7 +31,7 @@
           (if (file-exists-p bib)
               (progn
                 (run-bibtex base)
-                ;; rerun latex twice -- bibtex is weird like that
+                ;; run latex twice -- bibtex is weird like that
                 (run-pdflatex tex)
                 (run-pdflatex tex)))
    )))))
@@ -42,27 +41,20 @@
   (let ((tex (buffer-file-name)))
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (let ((pdf (concat base ".pdf")))
-
-        (if (= 1 (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &")))
-            (message "failed to open pdf")
-          (progn
-            (message "sucessfully opened pdf")
-            (delete-other-windows)))
-
-        ))))
+        (call-process-shell-command "nohup" nil 0 nil "evince" pdf "2>/dev/null" "&")
+;        (shell-command (concat "nohup evince " pdf " 2>/dev/null >/dev/null &"))
+        (delete-other-windows))
+      )))
 
 (defun latex-setup ()
   (interactive)
   (latex-mode)
 
-  (fset 'my-org-export-pdf
-        [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
-
   (local-unset-key "\C-c\C-c")
-  (local-set-key "\C-c\C-c" 'my-org-export-pdf)
+  (local-set-key "\C-c\C-c" 'latex-thing)
 
-  (local-unset-key "\C-e\C-e")
-  (local-set-key "\C-e\C-e" 'latex-open-this-pdf)
+  (local-unset-key "\C-c\C-v")
+  (local-set-key "\C-c\C-v" 'latex-open-this-pdf)
 
   (flyspell-start)
   ;(longlines-mode t)
