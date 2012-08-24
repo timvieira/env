@@ -1,4 +1,4 @@
-personal_ws-1.1 en 173 
+personal_ws-1.1 en 175 
 runtime
 Prefuse
 API
@@ -37,6 +37,7 @@ timv
 subsumptive
 RPC
 elisp
+dualdecomp
 Dykstra's
 munge
 semirings
@@ -114,6 +115,7 @@ Hollingshead
 CLSP
 mentorship
 todo
+neuralnets
 rsync
 perceptron
 semiring

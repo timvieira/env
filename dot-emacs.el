@@ -39,6 +39,9 @@
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
+;; highlight URLs in comments/strings
+;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
+
 (defun add-path (p)
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs-support/") p)))
 
@@ -81,7 +84,6 @@
 (menu-bar-mode -1)     ; hide menu-bar
 (line-number-mode 1)   ; show line number near mode=line
 (column-number-mode 1) ; show column number near mode-line
-
 
 (defun my-window-placement ()
   (interactive)
