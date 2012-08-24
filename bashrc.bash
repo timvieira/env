@@ -272,11 +272,13 @@ export PAGER='less -RSimw'
 alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
+alias skid='python -m skid'
+
 #______________________________________________________________________________
 # bash functions
 
 function pysearch {
-    locate -0 '*.py' |xargs -0 ack "$@"
+    locate -0 '*.py' |xargs -0 ack --color --group "$@"
 }
 
 # use +1GB for file larger than 1 gig.
