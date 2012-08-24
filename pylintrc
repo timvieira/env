@@ -1,0 +1,23 @@
+[BASIC]
+bad-functions=
+
+
+[MESSAGES CONTROL]
+# Disable the following PyLint messages:
+# W0105 - String statement has no effect # often used for after-line doc
+# W0142 - Used * or ** magic
+# W0232 - Class has no __init__ method
+# W0212 - Access to a protected member ... of a client class
+# W0613 - Unused argument
+# E1101 - Has no member
+disable-msg=W0142,W0232,W0212
+
+
+[MISCELLANEOUS]
+
+# List of note tags to take in consideration, separated by a comma.
+# FIXME -- something which needs fixing
+# TODO  -- future plan
+# XXX   -- some concern
+# YYY   -- comment/answer to above mentioned concern
+notes=
