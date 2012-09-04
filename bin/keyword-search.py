@@ -21,6 +21,7 @@ def matcher(query):
     q = bagofwords(query)
 
     def kw(filename):
+
         with file(filename, 'r') as f:
             contents = f.read()
             words = bagofwords(contents)
