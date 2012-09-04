@@ -91,12 +91,14 @@
     ;; this function is a bit quirky; hence you'll see some seemingly redundant code below
     (progn
       ;; the following lines work *after* initialization
+      (set-frame-position (selected-frame) 615 0)
       (set-frame-height (selected-frame) 50)
       (set-frame-width (selected-frame) 120)
       ;; works during initialization
-      (add-to-list 'default-frame-alist '(height . 50))
-      (add-to-list 'default-frame-alist '(width . 120))
-      (set-frame-position (selected-frame) 615 0))))
+      ;(add-to-list 'default-frame-alist '(height . 160))
+      ;(add-to-list 'default-frame-alist '(width . 120))
+)))
+
 
 (custom-set-variables
  '(current-language-environment "Latin-1")
@@ -169,7 +171,8 @@
 (dark-colors)
 ;(light-colors)
 
-(my-window-placement)
+(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
+;(my-window-placement)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -248,15 +251,6 @@
 (add-hook 'comint-exec-hook
           (lambda () (process-kill-without-query (get-buffer-process (current-buffer)))))
 
-;; Previous method for avoiding "Active processes exist" dialog
-;;  (defun custom-kill-current-buffer ()
-;;    (interactive)
-;;    ;; get around the annoying "Active processes exist" query
-;;    (if (get-buffer-process (current-buffer))
-;;        (process-kill-without-query (get-buffer-process (current-buffer))))
-;;    ;; the usual behavior
-;;    (kill-buffer (current-buffer)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun my-keys ()
@@ -271,6 +265,8 @@
   (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
+
+  (global-set-key (kbd "s-r") 'recentf-open-files)       ; recent files
 
   (global-set-key "\C-b" 'goto-matching-paren)
   (global-set-key (kbd "s-q") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
@@ -287,7 +283,6 @@
 
   ;; shortcut for killing buffers
   (global-unset-key "\M-k")
-;  (global-set-key "\M-k" 'custom-kill-current-buffer)
   (global-set-key "\M-k" 'kill-current-buffer)
 
   ;; context menu with contents of the yank ring
@@ -346,13 +341,13 @@
     (mouse-avoidance-mode)
   )
 
-  (if (window-system) (X-setup) (no-X-setup))
-
   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
   (load-library "matlab")
 
   (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
   (setq auto-mode-alist (cons '("\\.\\(text\\|md\\|markdown\\)" . markdown-mode) auto-mode-alist))
+
+  (if (window-system) (X-setup) (no-X-setup))
 
 )
 
