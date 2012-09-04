@@ -1,4 +1,4 @@
-personal_ws-1.1 en 175 
+personal_ws-1.1 en 182 
 runtime
 Prefuse
 API
@@ -6,9 +6,11 @@ webpages
 uninstalled
 JHU
 simulative
+Kinect
 decomposability
 CGI
 sbt
+subsumption
 dataset
 preterminal
 README
@@ -25,7 +27,7 @@ Peano
 subproblems
 Treebank
 BP
-Vieira
+vieira
 might've
 nondeterministically
 Viterbi
@@ -72,6 +74,7 @@ constituent's
 scala
 canonicalizing
 Preprocessing
+automata
 online
 canonicalize
 metadata
@@ -105,9 +108,11 @@ hypergraph
 hyperedges
 hyperedge
 indices
+neuralnet
 UMass
 tradeoff
 NLP
+pdf
 timvieira
 workflow
 advisor
@@ -145,6 +150,7 @@ subgradient
 bulleted
 rollouts
 OOV
+nonsingularity
 backend
 subtrees
 toolkits
@@ -158,6 +164,7 @@ github
 SEARN
 backpointer
 checksum
+nonprojective
 Prolog
 declaratively
 BUGFIX
