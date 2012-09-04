@@ -166,6 +166,13 @@ function dir-history {
     cat ~/.bash_history_metadata |grep "^$PWD "
 }
 
+function dir-history-list {
+    dir-history | linepy 'print re.sub("^\\S+\\s+\\S+\\s+\\S+\\s+\\S+ ", "", line)'
+}
+
+function dir-history-common {
+    dir-history-list |sort |uniq -c |sort -nr
+}
 
 #______________________________________________________________________________
 #
@@ -202,7 +209,6 @@ if [ -n "$force_color_prompt" ]; then
         color_prompt=
     fi
 fi
-
 
 # Awesome prompt ideas: http://maketecheasier.com/8-useful-and-interesting-bash-prompts/2009/09/04
 #PROMPT_COMMAND='PS1="\[\033[0;33m\][\!]\`if [[ \$? = "0" ]]; then echo "\\[\\033[32m\\]"; else echo "\\[\\033[31m\\]"; fi\`[\u.\h: \`if [[ `pwd|wc -c|tr -d " "` > 18 ]]; then echo "\\W"; else echo "\\w"; fi\`]\$\[\033[0m\] "; echo -ne "\033]0;`hostname -s`:`pwd`\007"'
@@ -286,27 +292,38 @@ function find-files-by-size {
     find -size "$1" -exec ls -lh {} \;
 }
 
-function find-with-ignores {
-    find . \( -name '*.class' -o -name '*.jar' -o -name '.hg' \) -prune -o -type f
-}
+#export FIND_IGNORES="-name '*.class' -o -name '*.jar' -o -name '.hg' -o -name '*.pyc'"
+#function find-with-ignores {
+#    find . \( $FIND_IGNORES \) -prune -o -type f
+#}
 
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 # grep filenames recursive file listing
 function f {
-    find "$2" |grep -v '\.hg' |grep -i "$1"
+    find $2 -type f |ignore-filter |grep -i "$1"
 }
+
+function ignore-filter {
+    grep -v '\(.class\|.pyc\)$' |grep -v '.hg\|.git'
+}
+
 
 #______________________________________________________________________________
 # Clean up
 
 function tmpfiles {
-  find $1 -name '*~'
+    find $1 -name '*~'
 }
 
 function pyclean {
-  rm -f `find . -name "*.pyc"`
-  rm -f `find . -name "*$py.class"`
+    rm -f `find . -name "*.pyc"`
+    rm -f `find . -name "*$py.class"`
+}
+
+# remove org-mode's LaTeX output files
+function orgclean {
+    rm `ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'`
 }
 
 #______________________________________________________________________________
@@ -347,6 +364,7 @@ function hg-changed-repos {
 # more on log formatting http://hgbook.red-bean.com/read/customizing-the-output-of-mercurial.html
 alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
 alias hgchangelog="hg log --style changelog"
+alias hgserve="o http://herman0:8000 && hg serve"   # serve and open
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
@@ -370,7 +388,38 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 # Shortcuts for jump around
 
 function edit-exec {
-    v `which $@`
+    # try using which.
+    wh=`which $@`
+    if [[ "$wh" ]]; then
+        v "$wh"
+    else
+        edit-bash-function "$@"
+    fi
+}
+
+
+# turn on bash's extended debugging options
+shopt -s extdebug
+
+
+# Edit file defining some bash function; we'll even jump to the line number.
+function edit-bash-function {
+
+    # we'll need to temporarily enable bash's extended debugging
+    shopt -s extdebug
+
+    out=`declare -F "$@"`
+
+    # convert output into a bash array
+    array=(`echo "$out"`)
+    lineno=${array[1]}
+    filename=${array[2]}
+
+    # open file at lineno with visit
+    visit -n +$lineno:0 "$filename"
+
+    # Turn off extended shell debugging
+#    shopt -u extdebug
 }
 
 function t {
@@ -401,28 +450,23 @@ function p {
         cd $PROJECTS
         return
     fi
-    allmatches=`find $PROJECTS -path '*'$1'*' -type d `
+    allmatches=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming `
+
+    echo `ls -t $allmatches`
 
     # try just '.*$1.*/.hg$'
 
-    # todo: this function is not so great... we should just filter out
-    # 'incoming/.hg'
-
     for proj in $allmatches; do
-        for repo in `find $proj -type d -path '*/working/.hg'`; do
-            cd $repo; cd ..
-            return
-        done
         for repo in `find $proj -type d -name '.hg'`; do
             cd $repo; cd ..
             return
         done
     done
     # second attempt
-    for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
-        cd $proj
-        return
-    done
+    #for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
+    #    cd $proj
+    #    return
+    #done
     red "failed to find match for project $1"
 }
 
@@ -524,30 +568,31 @@ function ghetto-refresh {
     done
 }
 
+# todo: sometimes I like to make a bulleted list of TODO items... how can we grab those?
 function todos {
-    ack 'TODO|XXX|FIXME|FIX|timv|TIMV|HACK|REFACTOR|BROKEN' $@;
+    ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR|BROKEN):' $@
 }
 
 function find-note-files {
     find $1 -type f -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
-      |grep -v '~'  # ignore tempfiles
+      |grep -v '~\|#'  \
+      |grep -v '/export/'
 }
 
 function find-notes {
     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
     if [[ "$#" -eq "0" ]]; then
         green "Ten most recent files:"
-        echo "$files" | head
+        ls -t $files | head -n20
     else
         for filter in "$@"; do
             files=`echo "$files" | grep -i $filter`
         done
         echo "$files"
-        # todo: if one match open file; otherwise ask user to be more specific
     fi
 }
 
-function note {
+function notes {
     notes="$(find-notes "$@")"
     if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
         cd $(dirname $notes)
@@ -557,9 +602,7 @@ function note {
     fi
 }
 
-alias notes='note'
-
-function note-dir {
+function notes-dir {
     cd $(dirname $(find-notes "$@"))
 }
 
