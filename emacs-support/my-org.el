@@ -27,6 +27,8 @@
 
 (setq org-src-fontify-natively t)
 
+;(setq org-return-follows-link t)
+
 
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
@@ -39,23 +41,33 @@
                ("\\section{%s}" . "\\section*{%s}")))
 
 
+(require 'org-publish)
+;(setq org-publish-project-alist
+;      '(
+;        ("org-notes"
+;         :base-directory "~/projects/notes"
+;         :base-extension "org"
+;         :publishing-directory "~/projects/notes/export"
+;         :recursive t
+;         :publishing-function org-publish-org-to-pdf
+;         :headline-levels 4             ; Just the default for this project.
+;         :auto-preamble t
+;         )
+;      ))
+
+
 (defun org-init ()
   (interactive)
   (org-indent-mode t)   ;; alternative to "#+STARTUP: indent"
 
   (load "my-latex")
 
+  (local-unset-key "\C-c\C-c")
   ;; export to pdf
   (fset 'my-org-export-pdf
         [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
-  (local-unset-key "\C-c\C-c")
   (local-set-key "\C-c\C-c" 'my-org-export-pdf)
-
-  (fset 'my-org-export-pdf
-        [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
-
-  (local-unset-key "\C-c\C-c")
-  (local-set-key "\C-c\C-c" 'my-org-export-pdf)
+;  (local-set-key "\C-c\C-c" 'org-publish-current-file)
 
   (local-unset-key "\C-c\C-v")
   (local-set-key "\C-c\C-v" 'latex-open-this-pdf)
@@ -64,13 +76,10 @@
    (quote org-babel-load-languages)
    (quote ((emacs-lisp . t)
            (dot . t)
-           (ditaa . t)
            (python . t)
            (gnuplot . t)
            (sh . t)
-           (ledger . t)
            (org . t)
-           (plantuml . t)
            (latex . t))))
 
   ;; Do not prompt to confirm evaluation
@@ -79,6 +88,7 @@
   ;; highlight certain keywords
   (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|todo\\|FIXME\\|CHECK\\|check\\|Check\\):" 1
                                  '(:foreground "red") t)))
+
   ;; highlight ascii hlines
   (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "yellow") t)))
 
