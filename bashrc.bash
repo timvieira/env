@@ -85,6 +85,9 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# order lines by frequency (most frequent first).
+alias freq='sort | uniq -c |sort -nr'
+
 #-------------
 
 # vanilla emacs
@@ -121,6 +124,12 @@ export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
 export HISTTIMEFORMAT='%F %T '
 
 shopt -s cmdhist
+
+
+# list top commands in bash history
+function top-commands () {
+    history |linepy 'print " ".join(line.split()[3:])' | freq
+}
 
 
 # TOOD: last_command function
@@ -171,7 +180,7 @@ function dir-history-list {
 }
 
 function dir-history-common {
-    dir-history-list |sort |uniq -c |sort -nr
+    dir-history-list |freq
 }
 
 #______________________________________________________________________________
@@ -283,10 +292,6 @@ alias skid='python -m skid'
 #______________________________________________________________________________
 # bash functions
 
-function pysearch {
-    locate -0 '*.py' |xargs -0 ack --color --group "$@"
-}
-
 # use +1GB for file larger than 1 gig.
 function find-files-by-size {
     find -size "$1" -exec ls -lh {} \;
@@ -323,7 +328,7 @@ function pyclean {
 
 # remove org-mode's LaTeX output files
 function orgclean {
-    rm `ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'`
+    rm -f `ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'`
 }
 
 #______________________________________________________________________________
@@ -387,7 +392,7 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 #______________________________________________________________________________
 # Shortcuts for jump around
 
-function edit-exec {
+function edit-script {
     # try using which.
     wh=`which $@`
     if [[ "$wh" ]]; then
@@ -410,13 +415,20 @@ function edit-bash-function {
 
     out=`declare -F "$@"`
 
+    if [[ -z "$out" ]]; then
+        echo "failed to find source for '$@', might be an alias."
+        return 1
+    fi
+
+    echo $out
+
     # convert output into a bash array
     array=(`echo "$out"`)
     lineno=${array[1]}
     filename=${array[2]}
 
     # open file at lineno with visit
-    visit -n +$lineno:0 "$filename"
+    visit +$lineno:0 "$filename"
 
     # Turn off extended shell debugging
 #    shopt -u extdebug
@@ -443,6 +455,7 @@ function e {
     fi
 }
 
+alias source-bashrc='source ~/.bashrc'
 
 function p {
     # calling with no arguments lands you in the projects directory.
@@ -450,48 +463,14 @@ function p {
         cd $PROJECTS
         return
     fi
-    allmatches=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming `
-
-    echo `ls -t $allmatches`
-
-    # try just '.*$1.*/.hg$'
-
+    allmatches=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming |grep -v '/projects/notes/' |sed s/\.hg//g`
     for proj in $allmatches; do
-        for repo in `find $proj -type d -name '.hg'`; do
-            cd $repo; cd ..
-            return
-        done
+        # might want to iterate thru this set..
+        cd "$proj"
+        return
     done
-    # second attempt
-    #for proj in `find $PROJECTS -path '*'$1'*' -type d`; do
-    #    cd $proj
-    #    return
-    #done
     red "failed to find match for project $1"
 }
-
-function write-stuff {
-    f=`find ~/projects -type f |grep '\.\(tex\|org\|md\)$' | grep -v '\.\(hg\|git\|svn\)' | grep $1`
-    echo $f
-    cd `dirname $f`
-    v $f
-    o *.pdf
-}
-
-# Bash Directory Bookmarks
-#alias m1='alias g1="cd `pwd`"'
-#alias m2='alias g2="cd `pwd`"'
-#alias m3='alias g3="cd `pwd`"'
-#alias m4='alias g4="cd `pwd`"'
-#alias m5='alias g5="cd `pwd`"'
-#alias m6='alias g6="cd `pwd`"'
-#alias m7='alias g7="cd `pwd`"'
-#alias m8='alias g8="cd `pwd`"'
-#alias m9='alias g9="cd `pwd`"'
-#alias mdump='alias|grep -e "alias g[0-9]"|grep -v "alias m" > ~/.bookmarks'
-#alias lma='alias | grep -e "alias g[0-9]"|grep -v "alias m"|sed "s/alias //"'
-#touch ~/.bookmarks
-#source ~/.bookmarks
 
 alias ldp='cd ~/projects/ldp/code/working'
 alias lpldp='cd ~/projects/ldp/code/working/lpldp'
@@ -515,6 +494,11 @@ function find-and-apply {
 
 #______________________________________________________________________________
 # Python tricks
+
+# ack thru all the python code on my hard drive
+function pysearch {
+    locate -0 '*.py' |xargs -0 ack --color --group "$@"
+}
 
 # Show pythonpath
 alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'"
@@ -568,6 +552,10 @@ function ghetto-refresh {
     done
 }
 
+
+#_______________________________________________________________________________
+# Finding notes quickly
+
 # todo: sometimes I like to make a bulleted list of TODO items... how can we grab those?
 function todos {
     ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR|BROKEN):' $@
@@ -576,9 +564,12 @@ function todos {
 function find-note-files {
     find $1 -type f -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~\|#'  \
-      |grep -v '/export/'
+      |grep -v '/export/' \
+      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
+# filters are keyword prefix matches (e.g. 'dd bp' matches 'bp-ddecomp'; but
+# 'dsl' does not match 'bdslss')
 function find-notes {
     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
     if [[ "$#" -eq "0" ]]; then
@@ -586,7 +577,7 @@ function find-notes {
         ls -t $files | head -n20
     else
         for filter in "$@"; do
-            files=`echo "$files" | grep -i $filter`
+            files=`echo "$files" | grep -i "\b$filter"`
         done
         echo "$files"
     fi
@@ -606,6 +597,9 @@ function notes-dir {
     cd $(dirname $(find-notes "$@"))
 }
 
+#_______________________________________________________________________________
+#
+
 function red    { echo -e "\e[31m$@\e[0m"; }
 function yellow { echo -e "\e[33m$@\e[0m"; }
 function green  { echo -e "\e[32m$@\e[0m"; }
@@ -614,14 +608,8 @@ function purple { echo -e "\e[35m$@\e[0m"; }
 function cyan   { echo -e "\e[36m$@\e[0m"; }
 
 # kill a process after a number of seconds
-# usage:
-#    doalarm <seconds to wait> program arg arg ...
+# usage: doalarm <seconds to wait> program arg arg ...
 function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
-
-# list top commands in bash history
-function top-commands () {
-    history |linepy 'print " ".join(line.split()[3:])' | sort | uniq -c | sort -rn
-}
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -688,5 +676,3 @@ function m4a2mp3 {
 
 #______________________________________________________________________________
 #
-
-alias freq='sort | uniq -c |sort -nr'
