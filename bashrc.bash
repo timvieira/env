@@ -4,17 +4,17 @@
 # Environment variables
 
 # prepend to path environment variable
-function add-path () {
+function add-path {
     for d in `echo $@`; do
         export PATH=$d:$PATH
     done
 }
-function add-pypath () {
+function add-pypath {
     for d in `echo $@`; do
         export PYTHONPATH=$d:$PYTHONPATH
     done
 }
-function add-classpath () {
+function add-classpath {
     for d in `echo $@`; do
         export CLASSPATH=$d:$CLASSPATH
     done
@@ -288,6 +288,7 @@ alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
 alias skid='python -m skid'
+alias skidd='cd `python -c "import skid.config as c; print c.ROOT"`'
 
 #______________________________________________________________________________
 # bash functions
@@ -369,7 +370,7 @@ function hg-changed-repos {
 # more on log formatting http://hgbook.red-bean.com/read/customizing-the-output-of-mercurial.html
 alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
 alias hgchangelog="hg log --style changelog"
-alias hgserve="o http://herman0:8000 && hg serve"   # serve and open
+alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
@@ -438,7 +439,10 @@ function t {
     if [[ "$#" -ne 1 ]]; then  # list files
         ll ~/Dropbox/todo/*
     else
-        find ~/Dropbox/todo -type f -name "*$1*" -exec v {} \;
+        files=`find ~/Dropbox/todo -type f -name "*$1*" |grep -v '\.org_archive$'`
+        for f in `echo $files`; do
+            v $f
+        done
     fi
 }
 
@@ -463,7 +467,15 @@ function p {
         cd $PROJECTS
         return
     fi
-    allmatches=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming |grep -v '/projects/notes/' |sed s/\.hg//g`
+
+    # first tier
+    a=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming |grep -v '/projects/notes/' |sed s/\.hg//g`
+
+    # second tier (not mercurial repo project root)
+    b=`find $PROJECTS -path '*'$1'*' |grep -v '\.hg'`
+
+    allmatches="$a $b"
+
     for proj in $allmatches; do
         # might want to iterate thru this set..
         cd "$proj"
@@ -562,7 +574,7 @@ function todos {
 }
 
 function find-note-files {
-    find $1 -type f -name '*TODO*' -o -name '*NOTE*' -o -name '*LOG*' -o -name "*.tex" -o -name "*.org" \
+    find $1 -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~\|#'  \
       |grep -v '/export/' \
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
@@ -583,6 +595,7 @@ function find-notes {
     fi
 }
 
+# TODO: if there is a org file and other junk; ignore the other junk.
 function notes {
     notes="$(find-notes "$@")"
     if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
@@ -596,6 +609,13 @@ function notes {
 function notes-dir {
     cd $(dirname $(find-notes "$@"))
 }
+
+# grep notes for patterns
+# TODO: generalize to keyword search
+function notes-ack {
+    ack -i "\b$@\b" `find-note-files "$HOME"`
+}
+
 
 #_______________________________________________________________________________
 #
