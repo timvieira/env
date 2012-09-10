@@ -12,7 +12,8 @@
 
 ;; I don't want to see blank lines in collapsed (contents) views. This setting
 ;; hides single blank lines and exposes the rest so I can clean them up.
-(setq org-cycle-separator-lines 2)
+;(setq org-cycle-separator-lines 2)
+(setq org-cycle-separator-lines 1)
 
 
 ;; Links to emails, web pages, and other files are sprinkled all over my org
@@ -86,7 +87,7 @@
   (setq org-confirm-babel-evaluate nil)
 
   ;; highlight certain keywords
-  (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|todo\\|FIXME\\|CHECK\\|check\\|Check\\):" 1
+  (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|todo\\|FIXME\\|CHECK\\|check\\|Check\\|revise\\|REVISE\\):" 1
                                  '(:foreground "red") t)))
 
   ;; highlight ascii hlines
