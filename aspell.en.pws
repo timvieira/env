@@ -1,12 +1,13 @@
-personal_ws-1.1 en 182 
+personal_ws-1.1 en 189 
 runtime
 Prefuse
 API
+reweighted
 webpages
 uninstalled
 JHU
-simulative
 Kinect
+simulative
 decomposability
 CGI
 sbt
@@ -36,6 +37,7 @@ Yanif
 LDP
 regex
 timv
+facebook
 subsumptive
 RPC
 elisp
@@ -43,6 +45,7 @@ dualdecomp
 Dykstra's
 munge
 semirings
+EP
 backpointers
 dymamic
 subsequence
@@ -64,6 +67,7 @@ reprioritization
 Datalog
 overfitting
 resampling
+adjoint
 CPLEX
 Javascript
 symlink
@@ -94,6 +98,7 @@ Teichert
 subgraph
 UMD
 unimodular
+Minka
 RL
 memoized
 priori
@@ -136,10 +141,12 @@ submatrix
 datasets
 resample
 workflows
+Gaussians
 plaintext
 exponentiate
 superset
 discretized
+multimodal
 hacky
 DBLP
 deduplication
