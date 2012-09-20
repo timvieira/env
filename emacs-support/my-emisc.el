@@ -13,6 +13,8 @@
 (defun ascii-fy ()
   (interactive)
   (replace-string " " " ")
+  (replace-string "“" "\"")
+  (replace-string "’" "'")
   (replace-string "’" "'")
   (replace-string "“" "\"")
   (replace-string "”" "\"")
