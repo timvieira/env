@@ -39,7 +39,9 @@
                "\\documentclass{article}
                \\setlength\\parindent{0pt}   % no paragraph indentation
                \\newcommand{\\parents}[1]{\\textsc{Pa}(#1)}"
-               ("\\section{%s}" . "\\section*{%s}")))
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}"))
+)
 
 
 (require 'org-publish)
