@@ -155,10 +155,10 @@ function prompt_command {
   CMD=`history 1`  # faster than `history |tail -n1`
 
   # pull command number out of history file; $HISTCMD didn't work inside a function...
-  HISTNUM=`echo $CMD |cut -f1 -d' '`
+  HISTNUM=`echo "$CMD" |cut -f1 -d' '`
 
-  if [[ "PREV_HISTNUM" -ne "$HISTNUM" ]]; then
-      if [ ! -z $PREV_DIRECTORY ]; then
+  if [[ "$PREV_HISTNUM" -ne "$HISTNUM" ]]; then
+      if [ ! -z "$PREV_DIRECTORY" ]; then
           DIR="$PREV_DIRECTORY"
           echo "$DIR $CMD" >> ~/.bash_history_metadata
       fi
@@ -468,17 +468,34 @@ function p {
         return
     fi
 
-    # first tier
-    a=`find $PROJECTS -path '*'$1'*/.hg' -type d | grep -v incoming |grep -v '/projects/notes/' |sed s/\.hg//g`
+    # courses
+    courses=`find $PROJECTS/courses -type d`
 
-    # second tier (not mercurial repo project root)
-    b=`find $PROJECTS -path '*'$1'*' |grep -v '\.hg'`
+    # version controlled project roots -- be sure to strip off hg directories or
+    # else they'll get filtered out
+    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
 
-    allmatches="$a $b"
+    # everything else
+    everythingelse=`find $PROJECTS -type d`
 
-    for proj in $allmatches; do
+    matches="$courses
+$vcroots
+$everythingelse"
+
+    # first filter things inside .hg directories
+    matches=`echo "$matches" | grep -v '\.hg'`
+
+    matches=`echo "$matches" |sort |uniq`
+
+    for filter in "$@"; do
+        matches=`echo "$matches" | grep -i "\b$filter"`
+    done
+
+    #echo "$matches"
+
+    for d in $matches; do
         # might want to iterate thru this set..
-        cd "$proj"
+        cd "$d"
         return
     done
     red "failed to find match for project $1"
@@ -564,7 +581,6 @@ function ghetto-refresh {
     done
 }
 
-
 #_______________________________________________________________________________
 # Finding notes quickly
 
@@ -580,10 +596,15 @@ function find-note-files {
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
+
 # filters are keyword prefix matches (e.g. 'dd bp' matches 'bp-ddecomp'; but
 # 'dsl' does not match 'bdslss')
 function find-notes {
     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
+
+    # remove org-export files
+    files=`ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $files`
+
     if [[ "$#" -eq "0" ]]; then
         green "Ten most recent files:"
         ls -t $files | head -n20
