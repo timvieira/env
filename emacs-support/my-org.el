@@ -31,6 +31,13 @@
 ;(setq org-return-follows-link t)
 
 
+
+(eval-after-load "org"
+  '(progn
+     ;; Change .pdf association directly within the alist
+     (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")))
+
+
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
