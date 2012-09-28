@@ -47,7 +47,8 @@ add-pypath \
     $PROJECTS \
     $PROJECTS/extras/python \
     $PROJECTS/incubator \
-    $PROJECTS/shelf
+    $PROJECTS/shelf \
+    $PROJECTS/shelf/quantities
 
 # Classpath
 add-classpath .
@@ -310,6 +311,10 @@ function f {
     find $2 -type f |ignore-filter |grep -i "$1"
 }
 
+function ff {
+    find $2 -type f -iname '*'$1'*' |ignore-filter
+}
+
 function ignore-filter {
     grep -v '\(.class\|.pyc\)$' |grep -v '.hg\|.git'
 }
@@ -485,13 +490,20 @@ $everythingelse"
     # first filter things inside .hg directories
     matches=`echo "$matches" | grep -v '\.hg'`
 
-    matches=`echo "$matches" |sort |uniq`
-
     for filter in "$@"; do
         matches=`echo "$matches" | grep -i "\b$filter"`
     done
 
-    #echo "$matches"
+    # TODO: repos with more overlap with name should come first
+    # e.g.
+    #     $ p pdfhacks
+    #
+    # should prefer ~/projects/pdfhacks over
+    #  ~/projects/pdfhacks/bibtex-as-annotation, but doesn't at the moment
+    #  simply because of directory ordering.
+
+#    matches=`echo "$matches" |sort |uniq`
+#    echo "$matches"
 
     for d in $matches; do
         # might want to iterate thru this set..
@@ -511,14 +523,9 @@ alias sso='cd ~/projects/courses/stochastic-opt/project'
 #
 # TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
 
-# find files LIKE $1 and open them in emacs
+# open filenames matching pattern
 function fv {
-    find-and-apply $1 v
-}
-
-# find file LIKE $1 and then call $2
-function find-and-apply {
-    $2 `find src/ -name "*$1*"`
+    ff "$1" "$2" | ignore-filter |xargs v
 }
 
 #______________________________________________________________________________
@@ -590,9 +597,10 @@ function todos {
 }
 
 function find-note-files {
-    find $1 -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
+    find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~\|#'  \
       |grep -v '/export/' \
+      |grep -v emacs-support \
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
@@ -603,6 +611,7 @@ function find-notes {
     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
 
     # remove org-export files
+    # TODO: make this a filter
     files=`ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $files`
 
     if [[ "$#" -eq "0" ]]; then
@@ -616,9 +625,15 @@ function find-notes {
     fi
 }
 
+alias remove-empty-lines='grep -v "^\s*$"'
+
 # TODO: if there is a org file and other junk; ignore the other junk.
 function notes {
     notes="$(find-notes "$@")"
+    if [[ `echo "$notes" |remove-empty-lines| wc -l` -eq "0" ]]; then
+        red "no results.";
+        return
+    fi
     if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
         cd $(dirname $notes)
         v "$notes"
@@ -634,9 +649,9 @@ function notes-dir {
 # grep notes for patterns
 # TODO: generalize to keyword search
 function notes-ack {
-    ack -i "\b$@\b" `find-note-files "$HOME"`
+    find-note-files ~/projects | xargs ack -i "$@"
+    find-note-files ~/Dropbox | xargs ack -i "$@"
 }
-
 
 #_______________________________________________________________________________
 #
