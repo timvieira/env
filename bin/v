@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+
+# convert line number suffix if there is any...
+args="$@"
+args=$(python -c "import re; print re.sub('(.*?):(\d*:?\d*):?$', r'+\2 \1', '$args')")
+
 function emacsd() {
     ps -C emacs >/dev/null && return 1
-    emacs "$@" 2>&1 >/dev/null &
+    emacs $args 2>&1 >/dev/null &
     disown `pgrep emacs`  # get emacs PID and detach it from this shell.
 }
 
-( emacsd "$@" 2>&1 >/dev/null ) || ( emacsclient -n "$@" 2>&1 >/dev/null & )
+( emacsd $args 2>&1 >/dev/null ) || ( emacsclient -n $args 2>&1 >/dev/null & )
