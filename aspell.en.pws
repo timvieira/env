@@ -1,4 +1,4 @@
-personal_ws-1.1 en 189 
+personal_ws-1.1 en 191 
 runtime
 Prefuse
 API
@@ -44,8 +44,8 @@ elisp
 dualdecomp
 Dykstra's
 munge
-semirings
 EP
+semirings
 backpointers
 dymamic
 subsequence
@@ -73,6 +73,7 @@ Javascript
 symlink
 bigram
 REPL
+satisfiability
 emacs
 constituent's
 scala
@@ -144,6 +145,7 @@ workflows
 Gaussians
 plaintext
 exponentiate
+discriminatively
 superset
 discretized
 multimodal
