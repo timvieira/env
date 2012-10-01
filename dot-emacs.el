@@ -53,6 +53,31 @@
 (add-path "site-lisp/zimpl-mode.el")
 (add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
+(add-path "site-lisp/haskell-mode")
+
+
+
+
+;;(defun load-rudel ()
+;;  (interactive)
+;;  ;; Do these in a shell in ~/src:
+;;  ;; cvs -d:pserver:anonymous@cedet.cvs.sourceforge.net:/cvsroot/cedet login
+;;  ;; cvs -z3 -d:pserver:anonymous@cedet.cvs.sourceforge.net:/cvsroot/cedet co -P cedet
+;;  ;; cd cedet && make && cd ..
+;;  ;; svn co https://rudel.svn.sourceforge.net/svnroot/rudel/rudel/trunk rudel
+;;
+;;  (add-path "site-lisp/rudel-0.2-4")
+;;  (add-path "site-lisp/rudel-0.2-4/obby")
+;;  (add-path "site-lisp/rudel-0.2-4/zeroconf")
+;;
+;;  (load-file "/home/timv/projects/env/emacs-support/site-lisp/rudel-0.2-4/rudel-loaddefs.el")
+;;  ;  This will set Rudel up to be loaded on demand when one of the
+;;  ;  commands `rudel-join-session', `rudel-host-session' or
+;;  ;  `global-rudel-minor-mode' is invoked.
+;;
+;;  (require 'rudel-mode)
+;;  (require 'rudel-obby)
+;;  (global-rudel-minor-mode))
 
 
 ;; recent files list
@@ -85,23 +110,22 @@
 (line-number-mode 1)   ; show line number near mode=line
 (column-number-mode 1) ; show column number near mode-line
 
+
+;; TODO: Can we fix the columns/rows discretization problem by adding a margin?
 (defun my-window-placement ()
   (interactive)
   (if (window-system)
-    ;; this function is a bit quirky; hence you'll see some seemingly redundant code below
     (progn
-      ;; the following lines work *after* initialization
       (set-frame-position (selected-frame) 615 0)
-      (set-frame-height (selected-frame) 50)
-      (set-frame-width (selected-frame) 120)
-      ;; works during initialization
-      ;(add-to-list 'default-frame-alist '(height . 160))
-      ;(add-to-list 'default-frame-alist '(width . 120))
-)))
-
+      (set-frame-size (selected-frame) 120 51))))  ; rows instead of pixels => imperfect
 
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(current-language-environment "Latin-1")
+ '(cursor-in-nonselected-windows nil)
  '(default-input-method "latin-1-prefix")
  '(global-font-lock-mode t nil (font-lock))
  '(ibuffer-saved-filter-groups nil)
@@ -111,18 +135,26 @@
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
- '(visible-cursor nil)
- '(cursor-in-nonselected-windows nil)
-)
+ '(visible-cursor nil))
 
 
 (defun dark-colors ()
   "Quicky change to custom dark color theme"
   (interactive)
   (custom-set-faces
-   '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil
-                  :box nil :strike-through nil :overline nil :underline nil :slant normal
-                  :weight normal  :width normal :foundry "bitstream"
+   '(default ((t (:stipple nil
+                  :background "black"
+                  :foreground "white"
+                  :inverse-video nil
+                  :box nil
+                  :strike-through nil
+                  :overline nil
+                  :underline nil
+                  :slant normal
+                  :weight normal
+;                  :width normal
+;                  :height 100
+                  :foundry "bitstream"
                   :family "Bitstream Vera Sans Mono"
                   ))))
    '(bold ((t (:weight extra-bold))))
@@ -150,12 +182,19 @@
   "Switch to a light color scheme."
   (interactive)
   (custom-set-faces
-   '(default ((t (:stipple
-                  nil :background "white" :foreground "black" :inverse-video
-                  nil :box nil :strike-through nil :overline nil :underline
-                  nil :slant normal :weight normal :width
-                  normal :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
-
+   '(default ((t (:stipple nil
+                  :background "white"
+                  :foreground "black"
+                  :inverse-video nil
+                  :box nil
+                  :strike-through nil
+                  :overline nil
+                  :underline nil
+                  :slant normal
+                  :weight normal
+;                  :width  normal
+                  :foundry "bitstream"
+                  :family "Bitstream Vera Sans Mono"))))
    '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(minibuffer-prompt ((t (:foreground "black"))))
@@ -171,7 +210,8 @@
 (dark-colors)
 ;(light-colors)
 
-(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
+(add-hook 'window-setup-hook 'my-window-placement)
+;(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
 ;(my-window-placement)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -211,7 +251,18 @@
       scroll-preserve-screen-position 1
 )
 
-;; ido settings
+
+
+;;; ido: "Interactively do" things (switch buffers, open files)
+(require 'ido)
+;(setq completion-ignored-extensions '(".aux" ".toc" ".tex~" "pyc"))
+;(setq ido-ignore-extensions t)
+;(setq ido-file-extensions-order '(".py" ".org" ".txt" ".tex" ".bib" ".scala" ".java"
+;                                  ".el" ".xml" ".html" ".css" ".js"))
+;(add-hook 'ido-setup-hook
+;          (lambda ()
+;            (define-key ido-completion-map [tab] 'ido-next-match)))
+
 (setq ido-case-fold  t                     ; be case-insensitive
       ido-enable-last-directory-history  t ; remember last used dirs
       ido-use-filename-at-point nil        ; don't use filename at point (annoying)
@@ -329,6 +380,7 @@
   (global-font-lock-mode t)
   (load-library "my-emisc")
   (load-library "my-python")
+  (load-library "my-haskell")
   (load-library "my-latex")
   (load-library "my-org")
 
@@ -337,7 +389,6 @@
   (defun X-setup ()
     (server-start)
     (set-mouse-color "black")
-    (my-window-placement)
     (mouse-avoidance-mode)
   )
 
