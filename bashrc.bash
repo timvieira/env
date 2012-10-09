@@ -38,6 +38,7 @@ add-path $PROJECTS/env/bin            # my misc scripts
 add-path ~/software/visualvm_133/bin
 add-path ~/software/eclps/bin/x86_64_linux   # ECLiPSe constraint solver
 add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
+add-path ~/.cabal/bin                        # Haskell executables
 
 # CPLEX license file
 export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
@@ -94,6 +95,9 @@ alias freq='sort | uniq -c |sort -nr'
 # vanilla emacs
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 alias visualvm='shutup-and-disown visualvm'
+
+alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
+
 
 ############################################################
 # If not running interactively, don't do anything
@@ -332,6 +336,12 @@ function pyclean {
     rm -f `find . -name "*$py.class"`
 }
 
+# TODO: remove executables associate with file... e.g. hw4.hs has {hw4.hi, hw4.0, hw4}
+function haskell-clean {
+    rm -f `find -name "*.hi"`
+    rm -f `find -name "*.o"`
+}
+
 # remove org-mode's LaTeX output files
 function orgclean {
     rm -f `ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'`
@@ -398,7 +408,14 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 #______________________________________________________________________________
 # Shortcuts for jump around
 
-function edit-script {
+alias source-bashrc='source ~/.bashrc'
+alias sb='source-bashrc'
+alias edit-script='es'
+function es {
+    if [[ "$#" -eq "0" ]]; then  # list files
+        v ~/.bashrc
+        return 0
+    fi
     # try using which.
     wh=`which $@`
     if [[ "$wh" ]]; then
@@ -464,8 +481,6 @@ function e {
     fi
 }
 
-alias source-bashrc='source ~/.bashrc'
-
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
@@ -479,6 +494,9 @@ function p {
     # version controlled project roots -- be sure to strip off hg directories or
     # else they'll get filtered out
     vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
+
+    # sort vc roots so that prefixes come first
+    vcroots=`echo "$vcroots" |sort`
 
     # everything else
     everythingelse=`find $PROJECTS -type d`
@@ -505,6 +523,8 @@ $everythingelse"
 #    matches=`echo "$matches" |sort |uniq`
 #    echo "$matches"
 
+#    echo "$matches"
+
     for d in $matches; do
         # might want to iterate thru this set..
         cd "$d"
@@ -523,9 +543,20 @@ alias sso='cd ~/projects/courses/stochastic-opt/project'
 #
 # TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
 
-# open filenames matching pattern
+# open filenames matching pattern. By default, look in the `src/` directory
+# (specify `.` as second argument for old behavior).
 function fv {
-    ff "$1" "$2" | ignore-filter |xargs v
+    pattern="$1"
+    directory="$2"
+    if [[ "$#" -eq "0" ]]; then
+        return
+    fi
+    if [[ "$#" -eq "1" ]]; then
+        directory="src"
+    fi
+    matches=`ff "$pattern" "$directory" | ignore-filter`
+    echo "$matches"
+    echo "$matches" |xargs v
 }
 
 #______________________________________________________________________________
@@ -555,13 +586,6 @@ function vpy {
 function o {
     # gnome-open; xdg-open    # unity equivalent of gnome-open
     xdg-open "$@" 2>/dev/null
-}
-
-# like nohup
-function shutup-and-disown {
-    CMD="$@"
-    $CMD 2>/dev/null &
-    disown $! 2>/dev/null >/dev/null   # $! is most recent PID
 }
 
 function push-public-key {
