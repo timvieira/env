@@ -117,7 +117,8 @@
   (if (window-system)
     (progn
       (set-frame-position (selected-frame) 615 0)
-      (set-frame-size (selected-frame) 120 51))))  ; rows instead of pixels => imperfect
+      ; rows instead of pixels => imperfect
+      (set-frame-size (selected-frame) 121 51))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -151,9 +152,7 @@
                   :overline nil
                   :underline nil
                   :slant normal
-                  :weight normal
-;                  :width normal
-;                  :height 100
+                  :height 100
                   :foundry "bitstream"
                   :family "Bitstream Vera Sans Mono"
                   ))))
@@ -176,7 +175,6 @@
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
   )
 )
-
 
 (defun light-colors ()
   "Switch to a light color scheme."
@@ -384,6 +382,7 @@
   (load-library "my-latex")
   (load-library "my-org")
 
+  ; notably, no-X-setup does not start a server.
   (defun no-X-setup () nil)
 
   (defun X-setup ()
