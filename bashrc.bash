@@ -459,9 +459,9 @@ function edit-bash-function {
 
 function t {
     if [[ "$#" -ne 1 ]]; then  # list files
-        ll ~/Dropbox/todo/*
+        tree ~/Dropbox/todo/
     else
-        files=`find ~/Dropbox/todo -type f -name "*$1*" |grep -v '\.org_archive$'`
+        files=`find ~/Dropbox/todo -type f -name "*$1*" |grep -v '\.org_archive$' |ignore-filter`
         for f in `echo $files`; do
             v $f
         done
