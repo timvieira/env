@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Execute command, detach from this shell, tell stdout/stderr to take a hike.
+#
+
+CMD="$@"
+$CMD 2>/dev/null &
+disown $! 2>/dev/null >/dev/null   # $! is most recent PID
