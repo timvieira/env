@@ -540,8 +540,6 @@ alias sso='cd ~/projects/courses/stochastic-opt/project'
 
 #______________________________________________________________________________
 # Shortcuts for annoying deep directories (like Java source code).
-#
-# TODO: add smare ignores like ack (e.g. *.class .hg/* .cvs/*)
 
 # open filenames matching pattern. By default, look in the `src/` directory
 # (specify `.` as second argument for old behavior).
@@ -615,7 +613,8 @@ function ghetto-refresh {
 #_______________________________________________________________________________
 # Finding notes quickly
 
-# todo: sometimes I like to make a bulleted list of TODO items... how can we grab those?
+# todo: sometimes I like to make a bulleted list of TODO items... how can we
+# grab those?
 function todos {
     ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR|BROKEN):' $@
 }
@@ -753,6 +752,5 @@ function m4a2mp3 {
     echo "There are probably some temporary wav files you can delete."
     echo "Currenly, m4a2mp3 will *not* delete these for you."
 }
-
 #______________________________________________________________________________
 #
