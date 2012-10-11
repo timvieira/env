@@ -475,7 +475,7 @@ function e {
         cd $ENV
     else
         files="$(find $ENV |grep -iv '.hg\|site-lisp\|bin')
-`ls -x $ENV/emacs-support/*.el`"
+`ls -x $ENV/emacs/*.el`"
         echo "$files" |grep $1
         v $(echo "$files" |grep $1)
     fi
@@ -624,7 +624,7 @@ function find-note-files {
     find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~\|#'  \
       |grep -v '/export/' \
-      |grep -v emacs-support \
+      |grep -v 'site-lisp' \
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
