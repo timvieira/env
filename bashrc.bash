@@ -46,7 +46,7 @@ export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 # Python
 add-pypath \
     $PROJECTS \
-    $PROJECTS/extras/python \
+    $PROJECTS/arsenal \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
     $PROJECTS/shelf/quantities
@@ -474,7 +474,7 @@ function e {
     if [[ "$#" -ne 1 ]]; then
         cd $ENV
     else
-        files="$(find $ENV |grep -iv '.hg\|emacs-support\|bin')
+        files="$(find $ENV |grep -iv '.hg\|site-lisp\|bin')
 `ls -x $ENV/emacs-support/*.el`"
         echo "$files" |grep $1
         v $(echo "$files" |grep $1)
@@ -577,7 +577,7 @@ function cdpy {
 
 # edit python module by name
 function vpy {
-    python -m debug.edit "$@"
+    python -m arsenal.debug.edit "$@"
 }
 
 #______________________________________________________________________________

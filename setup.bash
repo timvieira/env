@@ -1,5 +1,7 @@
-ln -s $ENV/bashrc ~/.bashrc
-ln -s $ENV/dot-emacs.el ~/.emacs
+ln -s $ENV/bashrc.bash ~/.bashrc
+ln -s $ENV/emacs/dot-emacs.el ~/.emacs
+ln -s $ENV/pylintrc ~/.pylintrc
+ln -s $ENV/screenrc ~/.screenrc
 
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
