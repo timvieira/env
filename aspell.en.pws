@@ -1,5 +1,6 @@
-personal_ws-1.1 en 210 
+personal_ws-1.1 en 215 
 workflows
+noncommutativity
 UMass
 mentorship
 hypergraph
@@ -16,6 +17,7 @@ tradeoff
 Teichert
 MCMC
 EMNLP
+analyses
 uninstalled
 argmax
 memoized
@@ -31,6 +33,7 @@ semirings
 emacs
 exponentiate
 DBLP
+noncommutative
 HMMs
 decomposability
 Datalog
@@ -64,6 +67,7 @@ superset
 workspaces
 submatrix
 matplotlib
+collineation
 lookup
 multimodal
 Makefile
@@ -114,6 +118,7 @@ CLSP
 probit
 webpage
 symlink
+Bodenstab's
 BP
 html
 internet
@@ -188,7 +193,6 @@ Jiarong's
 discretize
 revisitation
 nonprojective
-Boddenstab
 subsequence
 rollouts
 RANSAC
