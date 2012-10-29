@@ -108,6 +108,7 @@ dataset
 simulative
 elisp
 subproblem
+DAgger
 eigenvectors
 backpropagation
 priori
@@ -164,8 +165,8 @@ approximators
 subtree
 RL
 preterminal
-pdf
 NLP
+pdf
 reweighted
 Mathematica
 Sudoku
