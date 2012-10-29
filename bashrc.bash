@@ -1,5 +1,8 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
+# pass aliases through sudo ... don't know if the really works...
+#alias sudo="sudo " # space triggers alias substitution
+
 #______________________________________________________________________________
 # Environment variables
 
@@ -49,12 +52,13 @@ add-pypath \
     $PROJECTS/arsenal \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
-    $PROJECTS/shelf/quantities
+    $PROJECTS/shelf/quantities \
+    ~/software/OpenCV-2.4.2/release/lib \
 
 # Classpath
 add-classpath .
 
-# add all jars in directory to classpath
+# add all jars in directory to classpath (not permanent)
 function add-jars-to-classpath {
     jars=`find -name '*.jar'`
     add-classpath $jars
@@ -89,6 +93,26 @@ alias .....='cd ../../../..'
 
 # order lines by frequency (most frequent first).
 alias freq='sort | uniq -c |sort -nr'
+
+
+#--------------------------
+# potentially useful
+alias grepall="grep -RIn" # recursive grep on non-binary files; a lot like ack
+
+# highlighter
+function hl() {
+  grep -E --color=always $1'|$'
+}
+
+# grep paragraphs
+function grepp() {
+  pattern=$1
+  file=$2
+  awk 'BEGIN{RS="";ORS="\n\n";FS="\n"}/'$pattern'/' $file | hl $pattern
+}
+
+#--------------------------
+
 
 #-------------
 
@@ -293,7 +317,7 @@ alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
 alias skid='python -m skid'
-alias skidd='cd `python -c "import skid.config as c; print c.ROOT"`'
+alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 
 #______________________________________________________________________________
 # bash functions
@@ -344,7 +368,11 @@ function haskell-clean {
 
 # remove org-mode's LaTeX output files
 function orgclean {
-    rm -f `ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'`
+    rm -f `org-export-files`
+}
+
+function org-export-files {
+    find -name '*.tex' |xargs ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'
 }
 
 #______________________________________________________________________________
@@ -627,47 +655,63 @@ function find-note-files {
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
+function org-export-filter {
+    ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $@
+}
 
-# filters are keyword prefix matches (e.g. 'dd bp' matches 'bp-ddecomp'; but
-# 'dsl' does not match 'bdslss')
-function find-notes {
-    files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
+## # filters are keyword prefix matches (e.g. 'dd bp' matches 'bp-ddecomp'; but
+## # 'dsl' does not match 'bdslss')
+## function find-notes {
+##     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
+##
+##     if [[ "$#" -eq "0" ]]; then
+##         green "Ten most recent files:"
+##
+##         # remove org-export files -- apply this filter after others because it
+##         # is slower (it looks at the content of the file).
+##         files=`org-export-filter $files`
+##
+##         ls -t $files | head -n20
+##     else
+## #        for filter in "$@"; do
+## #            files=`echo "$files" | grep -i "\b$filter"`
+## #        done
+##
+##         files=`echo "$files"| filter.py $@`
+##
+##         # remove org-export files -- apply this filter after others because it
+##         # is slower (it looks at the content of the file).
+##         files=`org-export-filter $files`
+##
+##         echo "$files"
+##     fi
+## }
 
-    # remove org-export files
-    # TODO: make this a filter
-    files=`ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $files`
-
-    if [[ "$#" -eq "0" ]]; then
-        green "Ten most recent files:"
-        ls -t $files | head -n20
-    else
-        for filter in "$@"; do
-            files=`echo "$files" | grep -i "\b$filter"`
-        done
-        echo "$files"
-    fi
+function notes {
+   find-note-files ~/projects |filter.py $@
+   # TODO: search skid as well
 }
 
 alias remove-empty-lines='grep -v "^\s*$"'
 
-# TODO: if there is a org file and other junk; ignore the other junk.
-function notes {
-    notes="$(find-notes "$@")"
-    if [[ `echo "$notes" |remove-empty-lines| wc -l` -eq "0" ]]; then
-        red "no results.";
-        return
-    fi
-    if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
-        cd $(dirname $notes)
-        v "$notes"
-    else
-        echo "$notes"
-    fi
-}
+# TODO: if there is an org file and other junk; ignore the other junk.
+#function notes {
+#    notes="$(find-notes "$@")"
+#    if [[ `echo "$notes" |remove-empty-lines| wc -l` -eq "0" ]]; then
+#        red "no results.";
+#        return
+#    fi
+#    if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
+#        cd $(dirname $notes)
+#        v "$notes"
+#    else
+#        echo "$notes"
+#    fi
+#}
 
-function notes-dir {
-    cd $(dirname $(find-notes "$@"))
-}
+#function notes-dir {
+#    cd $(dirname $(find-notes "$@"))
+#}
 
 # grep notes for patterns
 # TODO: generalize to keyword search
