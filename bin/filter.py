@@ -11,6 +11,20 @@ filters = [re.compile('\\b' + f, re.I) for f in argv[1:]]
 
 matches = [line for line in stdin if all(f.findall(line) for f in filters)]
 
+def filter1(f):
+    f = f.strip()
+    if f.endswith('.tex'):
+        # filter org-mode tex export files.
+        for line in file(f):
+            if 'Emacs Org-mode version' in line:
+                return False
+    [_, ext] = os.path.splitext(f)
+    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown']:
+        return False
+    return True
+
+matches = filter(filter1, matches)
+
 for line in matches:
     for f, c in zip(filters, cycle(colors)):
         line = f.sub(lambda m: c % m.group(0), line)
