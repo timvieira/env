@@ -19,7 +19,8 @@ def filter1(f):
             if 'Emacs Org-mode version' in line:
                 return False
     [_, ext] = os.path.splitext(f)
-    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown']:
+    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown', 
+                   '.py', '.scala', '.java']:
         return False
     return True
 
