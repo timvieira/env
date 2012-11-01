@@ -49,9 +49,9 @@
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
 (add-path "site-lisp/scala-mode")
-(add-path "site-lisp/protobuf-mode.el")
-(add-path "site-lisp/zimpl-mode.el")
-(add-path "site-lisp/writegood-mode.el")
+;(add-path "site-lisp/protobuf-mode.el")
+;(add-path "site-lisp/zimpl-mode.el")
+;(add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
 (add-path "site-lisp/haskell-mode")
 
@@ -246,6 +246,9 @@
       scroll-preserve-screen-position 1
 )
 
+;; TODO: does this make hippie expand more usable?
+(delete 'try-expand-line hippie-expand-try-functions-list)
+(delete 'try-expand-list hippie-expand-try-functions-list)
 
 
 ;;; ido: "Interactively do" things (switch buffers, open files)
@@ -445,3 +448,21 @@
 ;; make the file executable if it is a script.
 ;(add-hook 'after-save-hook
 ;  'executable-make-buffer-file-executable-if-script-p)
+
+
+
+;; http://jblevins.org/projects/deft/
+(when (require 'deft nil 'noerror)
+   (setq
+      deft-extension "org"
+      deft-directory "~/Desktop/deft/"
+      deft-text-mode 'org-mode)
+   (global-set-key (kbd "<f9>") 'deft))
+
+
+;; TODO: configure anything.el
+;;  - http://emacs-fu.blogspot.com/2011/09/finding-just-about-anything.html
+;;  - http://www.emacswiki.org/emacs/Anything
+;;  - http://metasandwich.com/2010/07/30/what-can-i-get-for-10-dolla-anything-el/
+
+
