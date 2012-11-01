@@ -65,3 +65,8 @@
 
 ;; Set as a minor mode for python
 (add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+
+
+; type "from debug import ip; ip()"
+(fset 'python-ip
+      [?f ?r ?o ?m ?  ?d ?e ?b ?u ?g ?  ?i ?m ?p ?o ?r ?t ?  ?i ?p ?\; ?  ?i ?p ?\( ?\)])
