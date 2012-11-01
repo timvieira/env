@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
 # pass aliases through sudo ... don't know if the really works...
@@ -798,3 +800,6 @@ function m4a2mp3 {
 }
 #______________________________________________________________________________
 #
+
+# convert {ppt, odf} to pdf
+alias to-pdf='libreoffice --headless --invisible --convert-to pdf'
