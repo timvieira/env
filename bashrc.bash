@@ -505,9 +505,10 @@ function e {
         cd $ENV
     else
         files="$(find $ENV |grep -iv '.hg\|site-lisp\|bin')
-`ls -x $ENV/emacs/*.el`"
-        echo "$files" |grep $1
-        v $(echo "$files" |grep $1)
+$(ls -x $ENV/emacs/*.el)"
+        files=$(echo "$files" |grep $1)
+        echo "$files" |grep $1           # only for highlighting
+        v $files
     fi
 }
 
