@@ -466,3 +466,30 @@
 ;;  - http://metasandwich.com/2010/07/30/what-can-i-get-for-10-dolla-anything-el/
 
 
+;;------------------------------------------------------------------------------
+;; Support for skid links
+;;
+;; USAGE:
+;;
+;; The link directive 'skid'
+;;
+;;  [[skid:author:"Jason Eisner"][Jason Eisner]]
+;;
+;; Programmatic
+;;
+;;  (skid-search "tags:related:discrete-backprop")
+;;  (skid-search "machine learning")
+;;
+;; org-mode reference http://orgmode.org/org.html#Adding-hyperlink-types
+
+(require 'org)
+
+(org-add-link-type "skid" 'skid-search)
+
+(defun skid-search (query)
+  "skid tag search."
+  (interactive)
+  (shell-command (concat "python -m skid search1 " query)))
+
+
+;;------------------------------------------------------------------------------
