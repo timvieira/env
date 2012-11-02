@@ -10,6 +10,10 @@ Interactively select a single file
 
    $ clspxerox.py
 
+INSTALL:
+
+   $ sudo easy_install selenium
+
 """
 
 import httplib
