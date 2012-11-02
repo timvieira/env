@@ -72,15 +72,14 @@
 
   (load "my-latex")
 
-  (local-unset-key "\C-c\C-c")
+  (local-unset-key (kbd "s-e"))
   ;; export to pdf
   (fset 'my-org-export-pdf
         [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
-  (local-set-key "\C-c\C-c" 'my-org-export-pdf)
-;  (local-set-key "\C-c\C-c" 'org-publish-current-file)
+  (local-set-key (kbd "s-e") 'my-org-export-pdf) ; 'org-publish-current-file)
 
-  (local-unset-key "\C-c\C-v")
-  (local-set-key "\C-c\C-v" 'latex-open-this-pdf)
+  (local-unset-key (kbd "s-o"))
+  (local-set-key (kbd "s-o") 'latex-open-this-pdf)
 
   (org-babel-do-load-languages
    (quote org-babel-load-languages)
@@ -100,14 +99,14 @@
                                  '(:foreground "red") t)))
 
   ;; highlight ascii hlines
-  (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "yellow") t)))
+  (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "orange") t)))
 
   ;; highlight bullet stuff colon. E.g. "1. Something interesting: elaboration"
-;  (font-lock-add-keywords nil '(("[\\-\\*] \\(.*?\\):" 1 '(:foreground "yellow") t)))
+;  (font-lock-add-keywords nil '(("[\\-\\*] \\(.*?\\):" 1 '(:foreground "orange") t)))
 
-  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):" 1 '(:foreground "yellow") t)))
-;  (font-lock-add-keywords nil '(("- \\(.*?\\):" 1 '(:foreground "yellow") t)))
-  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):" 1 '(:foreground "yellow") t)))
+  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):" 1 '(:foreground "orange") t)))
+;  (font-lock-add-keywords nil '(("- \\(.*?\\):" 1 '(:foreground "orange") t)))
+  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):" 1 '(:foreground "orange") t)))
 
   ;(flyspell-start)
 )
