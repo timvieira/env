@@ -489,7 +489,9 @@
 (defun skid-search (query)
   "skid tag search."
   (interactive)
-  (shell-command (concat "python -m skid search1 " query)))
-
+  (switch-to-buffer (make-temp-name "Skid"))
+  (insert (shell-command-to-string (concat "python -m skid search1 " query)))
+  (beginning-of-buffer)
+  (org-mode))
 
 ;;------------------------------------------------------------------------------
