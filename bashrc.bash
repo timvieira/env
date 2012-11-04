@@ -107,7 +107,7 @@ function hl() {
 }
 
 # grep paragraphs
-function grepp() {
+function grepp {
   pattern=$1
   file=$2
   awk 'BEGIN{RS="";ORS="\n\n";FS="\n"}/'$pattern'/' $file | hl $pattern
@@ -491,7 +491,7 @@ function t {
     if [[ "$#" -ne 1 ]]; then  # list files
         tree ~/Dropbox/todo/
     else
-        files=`find ~/Dropbox/todo -type f -name "*$1*" |grep -v '\.org_archive$' |ignore-filter`
+        files=`find ~/Dropbox/todo -type f -name "*$1*.org*" |grep -v '\.org_archive$' |ignore-filter`
         for f in `echo $files`; do
             v $f
         done
