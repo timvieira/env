@@ -318,9 +318,6 @@ export PAGER='less -RSimw'
 alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
-alias skid='python -m skid'
-alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
-
 #______________________________________________________________________________
 # bash functions
 
@@ -369,12 +366,26 @@ function haskell-clean {
 }
 
 # remove org-mode's LaTeX output files
-function orgclean {
+function org-clean {
     rm -f `org-export-files`
 }
 
 function org-export-files {
+    find -name '*.pdf' |xargs ack --files-with-matches 'Creator\(Emacs Org-mode version 7.8.03\)'
     find -name '*.tex' |xargs ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'
+}
+
+# clean up tex derived files
+function tex-clean {
+    rm -f *.log *.pdf *.aux *.blg *.bbl *.dvi
+}
+
+# clean up derived files.
+function clean {
+    tex-clean
+    org-clean
+    pyclean
+    haskell-clean
 }
 
 #______________________________________________________________________________
@@ -512,12 +523,29 @@ $(ls -x $ENV/emacs/*.el)"
     fi
 }
 
+
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
         cd $PROJECTS
         return
     fi
+
+    # TODO: in order to get some shortcircuiting/lazy evaluation, break the
+    # search process up by project sources {courses, vcroots, everythingelse}
+    # rather than accumulating the lists up front as we do here, make separate
+    # calls to a utility which tries to find a match on success goes there -
+    # short-circuiting the search process.
+
+    # TODO: cache the output of these functions try searching the cache first -
+    # whenever we find something which is "broken" or "missing" we can
+    # regenerate it.
+
+    # TODO: add directories of recently modified files to the list of things we
+    # search
+
+    # TODO: utility which searches recent files from the command-line (such a
+    # tool must already exist!)
 
     # courses
     courses=`find $PROJECTS/courses -type d`
@@ -539,9 +567,9 @@ $everythingelse"
     # first filter things inside .hg directories
     matches=`echo "$matches" | grep -v '\.hg'`
 
-    for filter in "$@"; do
-        matches=`echo "$matches" | grep -i "\b$filter"`
-    done
+    #echo "$matches" |filter.py $@
+
+    matches=`echo "$matches" |filter.py -c $@`
 
     # TODO: repos with more overlap with name should come first
     # e.g.
@@ -550,11 +578,6 @@ $everythingelse"
     # should prefer ~/projects/pdfhacks over
     #  ~/projects/pdfhacks/bibtex-as-annotation, but doesn't at the moment
     #  simply because of directory ordering.
-
-#    matches=`echo "$matches" |sort |uniq`
-#    echo "$matches"
-
-#    echo "$matches"
 
     for d in $matches; do
         # might want to iterate thru this set..
@@ -719,8 +742,8 @@ alias remove-empty-lines='grep -v "^\s*$"'
 # grep notes for patterns
 # TODO: generalize to keyword search
 function notes-ack {
-    find-note-files ~/projects | xargs ack -i "$@"
-    find-note-files ~/Dropbox | xargs ack -i "$@"
+    find-note-files ~/projects | xargs ack -ai "$@"
+    find-note-files ~/Dropbox | xargs ack -ai "$@"
 }
 
 #_______________________________________________________________________________
@@ -804,3 +827,27 @@ function m4a2mp3 {
 
 # convert {ppt, odf} to pdf
 alias to-pdf='libreoffice --headless --invisible --convert-to pdf'
+
+
+#_______________________________________________________________________________
+#
+
+# optcomplete harness for bash shell. You then need to tell
+# bash to invoke this shell function with a command like
+# this::
+#
+#   complete -F _optcomplete <program>
+#
+_optcomplete()
+{
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 $1 ) )
+}
+
+
+#alias skid='python -m skid'
+alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
+
+complete -F _optcomplete skid
