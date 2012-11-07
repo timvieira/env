@@ -102,11 +102,12 @@
   (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "orange") t)))
 
   ;; highlight bullet stuff colon. E.g. "1. Something interesting: elaboration"
-;  (font-lock-add-keywords nil '(("[\\-\\*] \\(.*?\\):" 1 '(:foreground "orange") t)))
+  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
+  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
-  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):" 1 '(:foreground "orange") t)))
-;  (font-lock-add-keywords nil '(("- \\(.*?\\):" 1 '(:foreground "orange") t)))
-  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):" 1 '(:foreground "orange") t)))
+  ;; note: require a space to avoid false positive on "http:" and "file:"
+  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
+  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
   ;(flyspell-start)
 )
