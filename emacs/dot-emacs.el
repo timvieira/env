@@ -28,6 +28,8 @@
 ;;    alternatives to ctrl-alt-{left and right arrows})
 ;;
 
+;; TODO: easily search google for word-at-point or phrase-in-region
+
 ;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
@@ -490,7 +492,7 @@
   "skid tag search."
   (interactive)
   (switch-to-buffer (make-temp-name "Skid"))
-  (insert (shell-command-to-string (concat "python -m skid search1 " query)))
+  (insert (shell-command-to-string (concat "/home/timv/projects/env/bin/skid search_org " query)))
   (beginning-of-buffer)
   (org-mode))
 
