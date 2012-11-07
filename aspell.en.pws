@@ -1,4 +1,4 @@
-personal_ws-1.1 en 215 
+personal_ws-1.1 en 222 
 workflows
 noncommutativity
 UMass
@@ -28,6 +28,7 @@ backpointer
 checksum
 Tim
 CRF
+epipole
 DLM
 semirings
 emacs
@@ -41,6 +42,7 @@ subgraphs
 subsumptive
 Wishlist
 argmin
+Szeliski
 inliner
 linux
 workflow
@@ -71,6 +73,7 @@ collineation
 lookup
 multimodal
 Makefile
+Sobel
 hacky
 backtrace
 canonicalize
@@ -93,6 +96,7 @@ Earley
 nondeterminism
 equational
 ILP
+Multi
 reranking
 JHU
 scala
@@ -121,6 +125,7 @@ webpage
 symlink
 Bodenstab's
 BP
+Homographies
 html
 internet
 rsync
@@ -129,6 +134,7 @@ Minka
 vieira
 BUGFIX
 online
+Prewitt
 scriptable
 MDP
 hyperedges
@@ -157,6 +163,7 @@ backpointers
 coreference
 subderivations
 subsequences
+Epipolar
 datasets
 resamples
 google
