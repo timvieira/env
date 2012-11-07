@@ -1,11 +1,20 @@
 #!/usr/bin/env python
-import re, os
+import re, os, sys
 from terminal import red, green, yellow, blue, magenta, cyan
 from sys import argv, stdin, stdout
 from itertools import cycle
 from os.path import dirname
 
-colors = [red, green, yellow, blue, magenta, cyan]
+
+# TODO: use argparse, b/c this is hideous
+try:
+    # TODO: better name; `-c` sounds like "use color" instead of "don't use color"
+    sys.argv.remove('-c')
+except ValueError as e:
+    colors = [red, green, yellow, blue, magenta, cyan]
+else:
+    colors = ['%s']
+
 
 filters = [re.compile('\\b' + f, re.I) for f in argv[1:]]
 
@@ -19,7 +28,7 @@ def filter1(f):
             if 'Emacs Org-mode version' in line:
                 return False
     [_, ext] = os.path.splitext(f)
-    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown', 
+    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown',
                    '.py', '.scala', '.java']:
         return False
     return True
@@ -32,9 +41,10 @@ for line in matches:
     stdout.write(line)
 
 if not matches:
-    print red % 'no results'
+    print >> sys.stderr, red % 'no results'
     exit(1)
 
 if len(matches) == 1:
-    os.system('gnome-open %s' % matches[0])
-    #os.system('cd %s' % dirname(matches[0]))  # TODO: doesn't change the directory in bash
+    match = matches[0].strip()
+    if not os.path.isdir(match):
+        os.system('gnome-open %s' % matches[0])
