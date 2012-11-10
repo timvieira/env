@@ -846,8 +846,20 @@ _optcomplete()
         OPTPARSE_AUTO_COMPLETE=1 $1 ) )
 }
 
+# work-in-progress general solution to bash_history-based completion
+_histcomplete()
+{
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py notes ) )
+}
+
 
 #alias skid='python -m skid'
 alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 
 complete -F _optcomplete skid
+
+#complete -F _optcomplete notes.py
+complete -F _histcomplete notes.py
