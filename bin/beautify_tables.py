@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# TODO: consider using pandas to do this (maybe even add a command-line 
+#       argument to pop open a python shell with the data loaded).
+
 import sys
 from itertools import imap, izip
 
