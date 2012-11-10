@@ -6,20 +6,6 @@ from itertools import cycle
 from os.path import dirname
 
 
-# TODO: use argparse, b/c this is hideous
-try:
-    # TODO: better name; `-c` sounds like "use color" instead of "don't use color"
-    sys.argv.remove('-c')
-except ValueError as e:
-    colors = [red, green, yellow, blue, magenta, cyan]
-else:
-    colors = ['%s']
-
-
-filters = [re.compile('\\b' + f, re.I) for f in argv[1:]]
-
-matches = [line for line in stdin if all(f.findall(line) for f in filters)]
-
 def filter1(f):
     f = f.strip()
     if f.endswith('.tex'):
@@ -33,18 +19,46 @@ def filter1(f):
         return False
     return True
 
-matches = filter(filter1, matches)
 
-for line in matches:
-    for f, c in zip(filters, cycle(colors)):
-        line = f.sub(lambda m: c % m.group(0), line)
-    stdout.write(line)
+def main(filters, lines, color=True):
+    colors = [red, green, yellow, blue, magenta, cyan] if color else ['%s']
+    filters = [re.compile('\\b' + f, re.I) for f in filters]
 
-if not matches:
-    print >> sys.stderr, red % 'no results'
-    exit(1)
+    for line in lines:
+        if not all(f.findall(line) for f in filters):
+            continue
+        if not filter1(line):
+            continue
+        for f, c in zip(filters, cycle(colors)):
+            line = f.sub(lambda m: c % m.group(0), line)
+        yield line
 
-if len(matches) == 1:
-    match = matches[0].strip()
-    if not os.path.isdir(match):
-        os.system('gnome-open %s' % matches[0])
+
+if __name__ == '__main__':
+
+    # TODO: use argparse, b/c this is hideous
+    try:
+        # TODO: better name; `-c` sounds like "use color" instead of "don't use color"
+        sys.argv.remove('-c')
+    except ValueError as e:
+        color = True
+    else:
+        color = False
+
+    matches = main(filters = argv[1:],
+                   lines = stdin,
+                   color = color)
+    matches = list(matches)
+
+    if not matches:
+        print >> sys.stderr, red % 'no results'
+        exit(1)
+
+    for m in matches:
+        stdout.write(m)
+
+#    if len(matches) == 1:
+#        match = matches[0].strip()
+#        if not os.path.isdir(match):
+#            os.system('gnome-open %s' % matches[0])
+
