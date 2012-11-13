@@ -166,8 +166,8 @@ function top-commands () {
 # TOOD: last_command function
 
 #######
-# Augmented bash history with metadta (~/.bash_history_meta), such as working
-# directory to command.
+# Augmented bash history with metadta (~/.bash_history_meta), such as the
+# working directory command was executed.
 #
 # TODO:
 #
@@ -180,12 +180,12 @@ function top-commands () {
 #
 function prompt_command {
 
-  # timv: I think this writes bash history
+  # timv: this seems to write to bash history
   history -a
 
-  CMD=`history 1`  # faster than `history |tail -n1`
+  CMD=`history 1`  # much faster than `history |tail -n1`
 
-  # pull command number out of history file; $HISTCMD didn't work inside a function...
+  # pull command number out of history file; $HISTCMD didn't work..
   HISTNUM=`echo "$CMD" |cut -f1 -d' '`
 
   if [[ "$PREV_HISTNUM" -ne "$HISTNUM" ]]; then
@@ -210,6 +210,8 @@ function dir-history-list {
     dir-history | linepy 'print re.sub("^\\S+\\s+\\S+\\s+\\S+\\s+\\S+ ", "", line)'
 }
 
+# note: this is not an accurate count because store succesive repeats of an
+# identical command.
 function dir-history-common {
     dir-history-list |freq
 }
@@ -452,6 +454,9 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 alias source-bashrc='source ~/.bashrc'
 alias sb='source-bashrc'
 alias edit-script='es'
+
+# TODO: (low priority) bash completion for things on path!
+# TODO: (low priority) fall-back for aliases?
 function es {
     if [[ "$#" -eq "0" ]]; then  # list files
         v ~/.bashrc
@@ -480,7 +485,14 @@ function edit-bash-function {
     out=`declare -F "$@"`
 
     if [[ -z "$out" ]]; then
-        echo "failed to find source for '$@', might be an alias."
+
+        if [[ $(alias $1) ]]; then
+            echo "'$@' appears to be an alias. You're on your own for this one."
+            return 1
+        fi
+
+        echo "failed to find source for '$@'."
+
         return 1
     fi
 
@@ -589,8 +601,7 @@ $everythingelse"
 
 alias ldp='cd ~/projects/ldp/code/working'
 alias lpldp='cd ~/projects/ldp/code/working/lpldp'
-alias extras='cd ~/projects/extras/python'
-alias sso='cd ~/projects/courses/stochastic-opt/project'
+alias arsenal='cd ~/projects/arsenal'
 
 #______________________________________________________________________________
 # Shortcuts for annoying deep directories (like Java source code).
