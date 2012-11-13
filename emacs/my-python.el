@@ -55,6 +55,11 @@
 
 (defun my-python-hook ()
   (local-set-key [f7] 'flymake-mode)
+
+  ; type "from debug import ip; ip()"
+  (fset 'python-ip [?f ?r ?o ?m ?  ?d ?e ?b ?u ?g ?  ?i ?m ?p ?o ?r ?t ?  ?i ?p ?\; ?  ?i ?p ?\( ?\)])
+  (local-set-key (kbd "\C-cb") 'python-ip)
+
   ;; highlight special comments
   (font-lock-add-keywords
    nil
@@ -65,9 +70,3 @@
 
 ;; Set as a minor mode for python
 (add-hook 'python-mode-hook '(lambda () (flymake-mode)))
-
-
-; type "from debug import ip; ip()"
-(fset 'python-ip
-      [?f ?r ?o ?m ?  ?d ?e ?b ?u ?g ?  ?i ?m ?p ?o ?r ?t ?  ?i ?p ?\; ?  ?i ?p ?\( ?\)])
-(local-set-key (kbd "s-b") 'python-ip)
