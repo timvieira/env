@@ -17,6 +17,12 @@ set -e # abort script immediately if any command fails
 
 # todo: write stdout/err to file in backups directory; make sure to include date
 
+# TODO: sometimes rsync can't copy a file due to permissions and ends up exiting
+# with an "error status", the backup doesn't complete. Should do something more
+# useful in this case. Either (a) identify and ignore it -- don't treat it as an
+# 'error' (b) ask the user if its ok, then instruct the user how to proceed
+# (right now this is as simple as two specific mv commands)
+
 TODAY=`date '+%F'`
 
 HD="/media/gluttony"
