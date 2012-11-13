@@ -1,4 +1,4 @@
-personal_ws-1.1 en 222 
+personal_ws-1.1 en 224 
 workflows
 noncommutativity
 UMass
@@ -97,6 +97,7 @@ nondeterminism
 equational
 ILP
 Multi
+Reachability
 reranking
 JHU
 scala
@@ -164,6 +165,7 @@ coreference
 subderivations
 subsequences
 Epipolar
+binarization
 datasets
 resamples
 google
@@ -172,8 +174,8 @@ approximators
 subtree
 RL
 preterminal
-NLP
 pdf
+NLP
 reweighted
 Mathematica
 Sudoku
