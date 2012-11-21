@@ -1,4 +1,4 @@
-personal_ws-1.1 en 224 
+personal_ws-1.1 en 227 
 workflows
 noncommutativity
 UMass
@@ -77,6 +77,7 @@ Sobel
 hacky
 backtrace
 canonicalize
+preprocessing
 Preprocessing
 Prolog's
 facebook
@@ -115,6 +116,7 @@ elisp
 subproblem
 DAgger
 eigenvectors
+timeline
 backpropagation
 priori
 Jiarong
@@ -158,6 +160,7 @@ dymamic
 overfitting
 perceptron
 unimodular
+Nelder
 resample
 Kinect
 backpointers
@@ -174,8 +177,8 @@ approximators
 subtree
 RL
 preterminal
-pdf
 NLP
+pdf
 reweighted
 Mathematica
 Sudoku
