@@ -3,35 +3,22 @@
 --type-set=txt=.md,.markdown,.text,.rst,.txt,.org,.rst
 --type-set=org=.org
 
-# always color
+# always color, even if piping to a another program
 --color
-
-# include txt files in searches
---text
-
-# Always color, even if piping to a another program
---color
-
-# unsure what this is doing, stole em from http://al3x.net/2008/12/03/how-i-use-textmate.html
-#--context=1
+--flush
 
 # follow symlinks
 --follow
 
-# group results
---group
-
 # comprehensively searches all files
---all
+#--all
+
+# include txt files in searches
+#--text
+#--nobinary
 
 # search case-insensitive, unless search term explictly has capitalization
 --smart-case
 
 # ignore dirs
 --ignore-dir="/home/timv/projects/data"
-
-# no binary files
---nobinary
-
-#
---flush
