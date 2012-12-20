@@ -16,13 +16,13 @@ INSTALL:
 
 """
 
-import httplib
-from sys import argv
+from httplib import BadStatusLine
 from selenium.webdriver import Firefox
 from selenium.webdriver.common.keys import Keys
+from argparse import ArgumentParser
 from os.path import abspath
 
-def print_doc(*docs):
+def print_doc(docs, submit):
     b = Firefox()
     b.get('http://192.168.51.251:8000')
     b.find_element_by_name('deptid').send_keys('1234')
@@ -36,7 +36,7 @@ def print_doc(*docs):
         if d:
             try:
                 f.send_keys(abspath(d))
-            except httplib.BadStatusLine:   # in case send keys fails
+            except BadStatusLine:   # in case send keys fails
                 f.click()  # interactively pop-up the file selection menu
         else:
             f.click()  # interactively pop-up the file selection menu
@@ -49,14 +49,13 @@ def print_doc(*docs):
 
 if __name__ == '__main__':
 
-    try:
-        argv.remove('--submit')
-    except ValueError:
-        submit = False
-    else:
-        submit = True
+    parser = ArgumentParser(description='Print documents on CLSP Xerox printer.')
+    parser.add_argument('docs', nargs='+',  help='document')
+    parser.add_argument('--no-submit', dest='submit',
+                        action='store_false',
+                        help='automatically submit print job')
 
-    if '-h' in argv or '--help' in argv:
-        print __doc__
-    else:
-        print_doc(*argv[1:])
+    argv = parser.parse_args()
+
+    print_doc(docs=argv.docs,
+              submit=argv.submit)
