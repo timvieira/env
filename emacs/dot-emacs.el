@@ -57,6 +57,13 @@
 (add-path "site-lisp/org-7.8.03/lisp")
 (add-path "site-lisp/haskell-mode")
 
+;;(add-path "site-lisp/dyna-mode.el")
+
+(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
+(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
+(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
+
+
 ;;(defun load-rudel ()
 ;;  (interactive)
 ;;  ;; Do these in a shell in ~/src:
@@ -172,6 +179,8 @@
    '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
    '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
+   '(org-link ((t (:foreground "cyan"))))
+   '(button ((t (:foreground "cyan"))))
   )
 )
 
