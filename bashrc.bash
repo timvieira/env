@@ -92,6 +92,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
+alias dl='cd ~/Downloads'
+alias de='cd ~/Desktop'
 
 # order lines by frequency (most frequent first).
 alias freq='sort | uniq -c |sort -nr'
@@ -335,6 +337,9 @@ function find-files-by-size {
 
 alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
+#______________________________________________________________________________
+# Shortcuts for annoying deep directories (like Java source code).
+
 # grep filenames recursive file listing
 function f {
     find $2 -type f |ignore-filter |grep -i "$1"
@@ -348,6 +353,21 @@ function ignore-filter {
     grep -v '\(.class\|.pyc\)$' |grep -v '.hg\|.git'
 }
 
+# open filenames matching pattern. By default, look in the `src/` directory
+# (specify `.` as second argument for old behavior).
+function fv {
+    pattern="$1"
+    directory="$2"
+    if [[ "$#" -eq "0" ]]; then
+        return
+    fi
+    if [[ "$#" -eq "1" ]]; then
+        directory="src"
+    fi
+    matches=`f "$pattern" "$directory" | ignore-filter`
+    echo "$matches"
+    echo "$matches" |xargs v
+}
 
 #______________________________________________________________________________
 # Clean up
@@ -379,7 +399,7 @@ function org-export-files {
 
 # clean up tex derived files
 function tex-clean {
-    rm -f *.log *.pdf *.aux *.blg *.bbl *.dvi
+    rm -f *.log *.aux *.blg *.bbl *.dvi
 }
 
 # clean up derived files.
@@ -559,6 +579,8 @@ function p {
     # TODO: utility which searches recent files from the command-line (such a
     # tool must already exist!)
 
+    projname=$(echo $PROJECTS/*/working $PROJECTS/* |sed 's/ /\n/g')
+
     # courses
     courses=`find $PROJECTS/courses -type d`
 
@@ -572,7 +594,8 @@ function p {
     # everything else
     everythingelse=`find $PROJECTS -type d`
 
-    matches="$courses
+    matches="$projname
+$courses
 $vcroots
 $everythingelse"
 
@@ -603,24 +626,6 @@ alias ldp='cd ~/projects/ldp/code/working'
 alias lpldp='cd ~/projects/ldp/code/working/lpldp'
 alias arsenal='cd ~/projects/arsenal'
 
-#______________________________________________________________________________
-# Shortcuts for annoying deep directories (like Java source code).
-
-# open filenames matching pattern. By default, look in the `src/` directory
-# (specify `.` as second argument for old behavior).
-function fv {
-    pattern="$1"
-    directory="$2"
-    if [[ "$#" -eq "0" ]]; then
-        return
-    fi
-    if [[ "$#" -eq "1" ]]; then
-        directory="src"
-    fi
-    matches=`ff "$pattern" "$directory" | ignore-filter`
-    echo "$matches"
-    echo "$matches" |xargs v
-}
 
 #______________________________________________________________________________
 # Python tricks
@@ -648,7 +653,7 @@ function vpy {
 
 function o {
     # gnome-open; xdg-open    # unity equivalent of gnome-open
-    xdg-open "$@" 2>/dev/null
+    xdg-open "$@" 2>/dev/null >/dev/null
 }
 
 function push-public-key {
@@ -681,7 +686,7 @@ function ghetto-refresh {
 # todo: sometimes I like to make a bulleted list of TODO items... how can we
 # grab those?
 function todos {
-    ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR|BROKEN):' $@
+    ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR):|XXX[ ]' $@
 }
 
 function find-note-files {
@@ -796,7 +801,8 @@ function extract {
     case $1 in
       *.tar.bz2)   tar xvjf $1   ;;
       *.tar.gz)    tar xvzf $1   ;;
-      *.bz2)       bunzip2 $1    ;;
+#      *.bz2)       bunzip2 $1    ;;
+      *.bz2)       tar xjfv $1    ;;
       *.rar)       unrar x $1    ;;
       *.gz)        gunzip $1     ;;
       *.tar)       tar xvf $1    ;;
@@ -838,6 +844,13 @@ function m4a2mp3 {
 
 # convert {ppt, odf} to pdf
 alias to-pdf='libreoffice --headless --invisible --convert-to pdf'
+
+# concatenate pdfs
+function concat-pdfs {
+  out='output.pdf'
+  gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$out" -dBATCH "$@"
+  echo "wrote to $out"
+}
 
 
 #_______________________________________________________________________________
