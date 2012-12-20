@@ -1,4 +1,4 @@
-personal_ws-1.1 en 227 
+personal_ws-1.1 en 231 
 workflows
 noncommutativity
 UMass
@@ -10,6 +10,7 @@ pdfs
 nonsingularity
 Treebank
 resampling
+arity
 canonicalizing
 Javascript
 BP's
@@ -28,6 +29,7 @@ backpointer
 checksum
 Tim
 CRF
+Kaelbling
 epipole
 DLM
 semirings
@@ -55,11 +57,13 @@ discriminatively
 renormalize
 UMD
 DSL
+treewidth
 McCallum
 unmodeled
 Prolog
 SEARN
 backend
+nand
 Dykstra's
 deduplication
 hyperedge
@@ -78,13 +82,13 @@ hacky
 backtrace
 canonicalize
 preprocessing
-Preprocessing
 Prolog's
 facebook
 Peano
 backprop
 unmemoized
 README
+aggregators
 vertices
 underdetermined
 semiring
