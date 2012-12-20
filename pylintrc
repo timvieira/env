@@ -12,7 +12,6 @@ bad-functions=
 # E1101 - Has no member
 disable-msg=W0142,W0232,W0212
 
-
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
