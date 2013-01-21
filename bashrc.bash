@@ -72,8 +72,8 @@ export JYTHON_HOME=$JAVAEXTRAS/jython
 add-classpath $JYTHON_HOME/jython.jar
 alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
 
-# Emacs is my preferred editor, dammit!
-export EDITOR=emacs
+#export EDITOR=emacs
+export EDITOR=visit
 export HGEDITOR='emacs -nw'
 
 function pkill9 {
@@ -299,15 +299,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias ack='ack --color --group'
     alias tree='tree -C'
 fi
-
-# Compress the cd, ls -l series of commands.
-function cl {
-   if [ $# = 0 ]; then
-      cd && l
-   else
-      cd "$*" && ll
-   fi
-}
 
 alias less='less -RSimw'
 export PAGER='less -RSimw'
@@ -579,7 +570,7 @@ function p {
     # TODO: utility which searches recent files from the command-line (such a
     # tool must already exist!)
 
-    projname=$(echo $PROJECTS/*/working $PROJECTS/* |sed 's/ /\n/g')
+    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
 
     # courses
     courses=`find $PROJECTS/courses -type d`
@@ -730,9 +721,31 @@ function org-export-filter {
 ## }
 
 function notes {
-   find-note-files ~/projects |filter.py $@
+   matches=`find-note-files ~/projects |filter.py $@`
+
+   retcode="$?"
+
    # TODO: search skid as well
+   echo "$matches"
+
+   if [[ "$retcode" -eq "0" ]]; then
+       # feeling lucky, so we'll open the file for you.
+
+       # drop color codes
+       match=`echo "$matches" |pysed '\\033\[.*?m' ''`
+
+       cd `dirname $match`
+
+       o "$match"
+
+   else
+       yellow "pick a file or be more specific."
+
+   fi
+
+
 }
+
 
 alias remove-empty-lines='grep -v "^\s*$"'
 
@@ -760,6 +773,7 @@ alias remove-empty-lines='grep -v "^\s*$"'
 function notes-ack {
     find-note-files ~/projects | xargs ack -ai "$@"
     find-note-files ~/Dropbox | xargs ack -ai "$@"
+    find-note-files ~/.skid | xargs ack -ai "$@"
 }
 
 #_______________________________________________________________________________
@@ -886,4 +900,4 @@ alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 complete -F _optcomplete skid
 
 #complete -F _optcomplete notes.py
-complete -F _histcomplete notes.py
+complete -F _histcomplete notes
