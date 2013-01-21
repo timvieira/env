@@ -1,4 +1,4 @@
-personal_ws-1.1 en 231 
+personal_ws-1.1 en 232 
 workflows
 noncommutativity
 UMass
@@ -86,9 +86,9 @@ Prolog's
 facebook
 Peano
 backprop
+aggregators
 unmemoized
 README
-aggregators
 vertices
 underdetermined
 semiring
@@ -130,6 +130,7 @@ CLSP
 probit
 webpage
 symlink
+BibTeX
 Bodenstab's
 BP
 Homographies
@@ -181,8 +182,8 @@ approximators
 subtree
 RL
 preterminal
-NLP
 pdf
+NLP
 reweighted
 Mathematica
 Sudoku
