@@ -57,11 +57,29 @@
 (add-path "site-lisp/org-7.8.03/lisp")
 (add-path "site-lisp/haskell-mode")
 
-;;(add-path "site-lisp/dyna-mode.el")
+;(add-path "site-lisp/color-theme")
+;(add-path "site-lisp/emacs-color-theme-solarized")
+;(require 'color-theme-solarized)
+;;(color-theme-solarized-light)
+;(color-theme-solarized-dark)
 
+;;(add-path "site-lisp/dyna-mode.el")
 (autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
 (add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
 (add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
+
+
+
+;; TODO: configure anything.el
+;;  - http://emacs-fu.blogspot.com/2011/09/finding-just-about-anything.html
+;;  - http://www.emacswiki.org/emacs/Anything
+;;  - http://metasandwich.com/2010/07/30/what-can-i-get-for-10-dolla-anything-el/
+
+(add-path "site-lisp/anything-config.el")
+(add-path "site-lisp/anything-match-plugin.el")
+(require 'anything-match-plugin)
+(require 'anything-config)
+
 
 
 ;;(defun load-rudel ()
@@ -85,7 +103,6 @@
 ;;  (require 'rudel-obby)
 ;;  (global-rudel-minor-mode))
 
-
 ;; recent files list
 (require 'recentf)
 (recentf-mode 1)
@@ -102,6 +119,13 @@
 (require 'scala-mode-auto)
 ;(require 'zimpl-mode)
 
+
+
+;; Highlight current line
+;(global-hl-line-mode 1)
+
+;; Blinking cursor
+;(blink-cursor-mode 0)
 
 ;; TODO: evaluation period. Not sure how useful this is.
 (add-path "site-lisp/expand-region/")
@@ -181,6 +205,8 @@
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
    '(org-link ((t (:foreground "cyan"))))
    '(button ((t (:foreground "cyan"))))
+
+   '(rst-level-2-face ((t (:foreground "Purple2"))))
   )
 )
 
@@ -327,6 +353,10 @@
   (global-set-key (kbd "s-v") 'clipboard-yank)           ; paste
 
   (global-set-key (kbd "s-r") 'recentf-open-files)       ; recent files
+  (global-set-key (kbd "s-a") 'anything)                 ; anything.el
+
+  (global-set-key (kbd "\C-ca") 'anything)
+
 
   (global-set-key "\C-b" 'goto-matching-paren)
   (global-set-key (kbd "s-q") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
@@ -374,8 +404,8 @@
   (global-set-key [(control ?0)] 'bs-cycle-next)
 
   ;; use super+arrow keys to move between split windows
-  (require 'windmove)
-  (windmove-default-keybindings 'super)
+  ;(require 'windmove)
+  ;(windmove-default-keybindings 'super)
 
   ;; lists functions, jump to begining of definition
   (global-set-key (kbd "M-i") 'ido-goto-symbol)
@@ -464,17 +494,10 @@
 
 ;; http://jblevins.org/projects/deft/
 (when (require 'deft nil 'noerror)
-   (setq
-      deft-extension "org"
-      deft-directory "~/Desktop/deft/"
-      deft-text-mode 'org-mode)
-   (global-set-key (kbd "<f9>") 'deft))
-
-
-;; TODO: configure anything.el
-;;  - http://emacs-fu.blogspot.com/2011/09/finding-just-about-anything.html
-;;  - http://www.emacswiki.org/emacs/Anything
-;;  - http://metasandwich.com/2010/07/30/what-can-i-get-for-10-dolla-anything-el/
+   (setq deft-extension "org"
+         deft-directory "~/projects/notes/"
+         deft-text-mode 'org-mode)
+   (global-set-key (kbd "<f8>") 'deft))
 
 
 ;;------------------------------------------------------------------------------
