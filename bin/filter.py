@@ -57,8 +57,14 @@ if __name__ == '__main__':
     for m in matches:
         stdout.write(m)
 
+    if len(matches) == 1:
+        exit(0)
+    elif len(matches) == 0:
+        exit(1)
+    else:
+        exit(2)
+
 #    if len(matches) == 1:
 #        match = matches[0].strip()
 #        if not os.path.isdir(match):
 #            os.system('gnome-open %s' % matches[0])
-
