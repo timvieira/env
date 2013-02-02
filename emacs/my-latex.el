@@ -20,6 +20,7 @@
       (message "bibtex succeeded")
       (delete-other-windows))))
 
+; todo: "make clean" first: sometimes deleting aux file fixes compile issues
 (defun latex-thing ()
   (interactive)
   (let ((tex (buffer-file-name)))
