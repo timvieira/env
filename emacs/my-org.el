@@ -76,6 +76,7 @@
   ;; export to pdf
   (fset 'my-org-export-pdf
         [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
+
   (local-set-key (kbd "s-e") 'my-org-export-pdf) ; 'org-publish-current-file)
 
   (local-unset-key (kbd "s-o"))
