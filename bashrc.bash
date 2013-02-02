@@ -8,6 +8,8 @@
 #______________________________________________________________________________
 # Environment variables
 
+export BIBINPUTS=/home/timv/projects/env/timv.bib:$BIBINPUTS
+
 # prepend to path environment variable
 function add-path {
     for d in `echo $@`; do
@@ -355,9 +357,12 @@ function fv {
     if [[ "$#" -eq "1" ]]; then
         directory="src"
     fi
-    matches=`f "$pattern" "$directory" | ignore-filter`
+#    matches=`f "$pattern" "$directory" | ignore-filter |filter.py $@`
+
+    matches=`find | ignore-filter |filter.py $@ --on-unique 'visit {match}'`
+
     echo "$matches"
-    echo "$matches" |xargs v
+#    echo "$matches" |xargs v
 }
 
 #______________________________________________________________________________
@@ -517,18 +522,33 @@ function edit-bash-function {
     # open file at lineno with visit
     visit +$lineno:0 "$filename"
 
+    # recenter window
+    ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
+
     # Turn off extended shell debugging
 #    shopt -u extdebug
 }
 
 function t {
-    if [[ "$#" -ne 1 ]]; then  # list files
-        tree ~/Dropbox/todo/
-    else
-        files=`find ~/Dropbox/todo -type f -name "*$1*.org*" |grep -v '\.org_archive$' |ignore-filter`
-        for f in `echo $files`; do
-            v $f
-        done
+    files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
+
+    matches=`echo "$files" |filter.py $@ --on-unique 'visit {match}'`
+
+    retcode="$?"
+
+    # TODO: search skid as well
+    echo "$matches"
+
+    if [[ "$retcode" -eq "0" ]]; then
+       # feeling lucky, so we'll open the file for you.
+
+       # drop color codes
+       match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+
+       cd `dirname $match`
+
+       # open file in editor
+       $EDITOR "$match"
     fi
 }
 
@@ -595,7 +615,7 @@ $everythingelse"
 
     #echo "$matches" |filter.py $@
 
-    matches=`echo "$matches" |filter.py -c $@`
+    matches=`echo "$matches" |filter.py -C $@`
 
     # TODO: repos with more overlap with name should come first
     # e.g.
@@ -732,17 +752,17 @@ function notes {
        # feeling lucky, so we'll open the file for you.
 
        # drop color codes
-       match=`echo "$matches" |pysed '\\033\[.*?m' ''`
+       match=`echo "$matches" |pysed '\\033\[.*?m' '' `
 
        cd `dirname $match`
 
-       o "$match"
+       # open file in editor
+       $EDITOR "$match"
 
    else
        yellow "pick a file or be more specific."
 
    fi
-
 
 }
 
@@ -897,7 +917,9 @@ _histcomplete()
 #alias skid='python -m skid'
 alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 
-complete -F _optcomplete skid
+#complete -F _optcomplete skid
 
-#complete -F _optcomplete notes.py
+# todo: include previous search in completion results. E.g if you just ran notes
+# and got more than one set of results. Also consider using words taken from
+# running find-note-files.
 complete -F _histcomplete notes
