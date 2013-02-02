@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 import re, os, sys
 from terminal import red, green, yellow, blue, magenta, cyan
-from sys import argv, stdin, stdout
+from sys import stdin, stdout
 from itertools import cycle
-from os.path import dirname
-
+from subprocess import Popen
 
 def filter1(f):
     f = f.strip()
@@ -25,7 +24,12 @@ def main(filters, lines, color=True):
     filters = [re.compile('\\b' + f, re.I) for f in filters]
 
     for line in lines:
-        if not all(f.findall(line) for f in filters):
+
+        # XXX: is there a better way to do this? note that highlighting doesn't work.
+        # add spaces at camel case word boundaries
+        line2 = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', line.strip())
+
+        if not all(f.findall(line) for f in filters) and not all(f.findall(line2) for f in filters):
             continue
         if not filter1(line):
             continue
@@ -36,18 +40,24 @@ def main(filters, lines, color=True):
 
 if __name__ == '__main__':
 
-    # TODO: use argparse, b/c this is hideous
-    try:
-        # TODO: better name; `-c` sounds like "use color" instead of "don't use color"
-        sys.argv.remove('-c')
-    except ValueError as e:
-        color = True
-    else:
-        color = False
+    from argparse import ArgumentParser
 
-    matches = main(filters = argv[1:],
+    # "if (pattern1 and pattern2 ...) then action"
+
+    parser = ArgumentParser(description='Filter a sequence of lines by matching patterns.')
+    parser.add_argument('filters', nargs='+', help='filters, each is a regex')
+
+    parser.add_argument('--on-unique', help='When a single match is found execute this command.')
+    parser.add_argument('--on-fail', help='When a no match is found execute this command.')
+
+    parser.add_argument('-C', '--no-color', dest='color', action='store_false',
+                        help='Do not print ANSO color codes.')
+
+    args = parser.parse_args()
+
+    matches = main(filters = args.filters,
                    lines = stdin,
-                   color = color)
+                   color = args.color)
     matches = list(matches)
 
     if not matches:
@@ -58,9 +68,16 @@ if __name__ == '__main__':
         stdout.write(m)
 
     if len(matches) == 1:
+        if args.on_unique:
+            Popen(args.on_unique.format(match=re.sub('\\033\[.*?m', '', matches[0])),
+                  shell=True)
         exit(0)
+
     elif len(matches) == 0:
+        if args.on_fail:
+            os.system(args.on_fail)
         exit(1)
+
     else:
         exit(2)
 
