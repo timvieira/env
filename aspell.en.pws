@@ -1,4 +1,5 @@
-personal_ws-1.1 en 232 
+personal_ws-1.1 en 241 
+sigmoidal
 workflows
 noncommutativity
 UMass
@@ -21,6 +22,7 @@ EMNLP
 analyses
 uninstalled
 argmax
+majorization
 memoized
 subsumption
 subgradient
@@ -57,12 +59,14 @@ discriminatively
 renormalize
 UMD
 DSL
+LBFGS
 treewidth
 McCallum
 unmodeled
 Prolog
 SEARN
 backend
+adjoints
 nand
 Dykstra's
 deduplication
@@ -129,8 +133,8 @@ Searchable
 CLSP
 probit
 webpage
-symlink
 BibTeX
+symlink
 Bodenstab's
 BP
 Homographies
@@ -182,8 +186,10 @@ approximators
 subtree
 RL
 preterminal
+regularizer
 pdf
 NLP
+CRFs
 reweighted
 Mathematica
 Sudoku
@@ -195,10 +201,12 @@ subproblems
 Hollingshead
 automata
 nonterminal
+nonconvex
 uninstall
 repropagation
 Prefuse
 pseudocode
+nonstationary
 REPL
 regex
 Charniak's
@@ -222,6 +230,7 @@ bigram
 reprioritization
 API
 sbt
+subconstituents
 CGI
 regressor
 subgraph
