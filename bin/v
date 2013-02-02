@@ -5,7 +5,6 @@ args="$@"
 args=$(python -c "import re; print re.sub('(.*?):(\d*:?\d*):?$', r'+\2 \1', '$args')")
 
 function new-emacs {
-    #echo "starting new emacs"
     emacs $args &
     disown $!
 }
