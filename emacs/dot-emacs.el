@@ -132,7 +132,6 @@
 (require 'expand-region)  ; https://github.com/magnars/expand-region.el/
 (global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
 
-
 ;; maximize screen real estate
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -140,15 +139,14 @@
 (line-number-mode 1)   ; show line number near mode=line
 (column-number-mode 1) ; show column number near mode-line
 
-
 ;; TODO: Can we fix the columns/rows discretization problem by adding a margin?
 (defun my-window-placement ()
   (interactive)
   (if (window-system)
     (progn
-      (set-frame-position (selected-frame) 615 0)
+      (set-frame-position (selected-frame) 622 0)
       ; rows instead of pixels => imperfect
-      (set-frame-size (selected-frame) 121 51))))
+      (set-frame-size (selected-frame) 119 49))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
