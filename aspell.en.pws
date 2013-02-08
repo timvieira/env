@@ -1,5 +1,6 @@
-personal_ws-1.1 en 241 
+personal_ws-1.1 en 244 
 sigmoidal
+jammer
 workflows
 noncommutativity
 UMass
@@ -58,6 +59,7 @@ SVD
 discriminatively
 renormalize
 UMD
+Hixkaryana
 DSL
 LBFGS
 treewidth
@@ -95,6 +97,7 @@ unmemoized
 README
 vertices
 underdetermined
+GPS
 semiring
 gmail
 munge
