@@ -3,7 +3,7 @@ import re, os, sys
 from terminal import red, green, yellow, blue, magenta, cyan
 from sys import stdin, stdout
 from itertools import cycle
-from subprocess import Popen
+from subprocess import Popen, PIPE
 
 def filter1(f):
     f = f.strip()
@@ -70,7 +70,12 @@ if __name__ == '__main__':
     if len(matches) == 1:
         if args.on_unique:
             Popen(args.on_unique.format(match=re.sub('\\033\[.*?m', '', matches[0])),
-                  shell=True)
+                  stdout=PIPE,
+                  stdin=PIPE,
+                  stderr=PIPE,
+                  shell=True, 
+                  close_fds=True)
+
         exit(0)
 
     elif len(matches) == 0:
