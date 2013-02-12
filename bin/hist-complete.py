@@ -19,34 +19,58 @@ complete -F _histcomplete <YOUR SCRIPT>
 </goes in your bashrc>
 """
 
-import re
+import re, os, sys
 from os import environ, path
 from collections import Counter
+from arsenal.terminal import red
+from env.bin.filter import main
 
-def complete(prefix):
+def complete(prefix, filename='~/.bash_history', freq=3):
+    freq = int(freq)
+    filename = path.expanduser(filename)
 
-    h = path.expanduser('~/.bash_history')
-
-    cwords = environ['COMP_WORDS'].split()
+    cwords = environ.get('COMP_WORDS', '').split()[1:]   # ignore program name.
     #cline = environ['COMP_LINE']
     #cpoint = int(environ['COMP_POINT'])
-    cword = int(environ['COMP_CWORD'])
+    cword = int(environ.get('COMP_CWORD', 0)) - 1
 
     if cword >= len(cwords):
         currword = None
     else:
         currword = cwords[cword]
 
-    c = Counter(w for line in file(h) if line.startswith(prefix) for w in re.findall('\w+', line))
+    lines = [line.strip() for line in file(filename)]
+#    ix = {w: line for line in lines for w in re.findall('\w+', line)}
+#    c = Counter(ix.keys())
+#    possible = [k for (k, v) in c.iteritems() if v >= freq]
 
-    possible = [k for (k, v) in c.iteritems() if v > 3]
+    matches = list(main(cwords, lines, color=False))
 
-    if currword:
-        possible = [x for x in possible if x.startswith(currword) and len(x) >= len(currword)]
+#    print >> sys.stderr, '===='
+#    print >> sys.stderr, '\n'.join(cwords)
+#    print >> sys.stderr, '===='
+#    print >> sys.stderr, '\n'.join(matches)
+#    print >> sys.stderr, '===='
+#    print >> sys.stderr, '\n'.join(lines)
+
+#    print >> sys.stderr, '\n'.join(cwords)
+
+    if not currword:
+        print ''
+        return
+
+    # get words of matches
+    possible = [w for line in matches for w in re.findall('\w+', line)]
+
+#    print >> sys.stderr, '==='
+#    print >> sys.stderr, ' '.join(possible)
+
+    # filter words of matches by prefix match
+    possible = {x for x in possible if x.startswith(currword) and len(x) >= len(currword)}
 
     print ' '.join(possible).encode('utf8')
 
 
 if __name__ == '__main__':
     from sys import argv
-    complete(argv[1])
+    complete(*argv[1:])
