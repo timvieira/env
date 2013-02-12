@@ -346,20 +346,21 @@ function ignore-filter {
     grep -v '\(.class\|.pyc\)$' |grep -v '.hg\|.git'
 }
 
-# open filenames matching pattern. By default, look in the `src/` directory
-# (specify `.` as second argument for old behavior).
+# fv ("flexible visit" or "find and visit") opens recursively searches for a
+# file path matching specified pattern. Opens the file if a unique match is
+# found.
 function fv {
     pattern="$1"
-    directory="$2"
+#    directory="$2"
     if [[ "$#" -eq "0" ]]; then
         return
     fi
-    if [[ "$#" -eq "1" ]]; then
-        directory="src"
-    fi
+#    if [[ "$#" -eq "1" ]]; then
+#        directory="src"
+#    fi
 #    matches=`f "$pattern" "$directory" | ignore-filter |filter.py $@`
 
-    matches=`find | ignore-filter |filter.py $@ --on-unique 'visit {match}'`
+    matches=`find | ignore-filter |filter.py $@ --on-unique 'v {match}'`
 
     echo "$matches"
 #    echo "$matches" |xargs v
@@ -487,7 +488,6 @@ function es {
     fi
 }
 
-
 # turn on bash's extended debugging options
 shopt -s extdebug
 
@@ -555,15 +555,15 @@ function t {
 # edit configuration files with env project
 function e {
     ENV=~/projects/env
-    if [[ "$#" -ne 1 ]]; then
+    if [[ "$#" -eq 0 ]]; then
+        yellow $ENV
         cd $ENV
-    else
-        files="$(find $ENV |grep -iv '.hg\|site-lisp\|bin')
-$(ls -x $ENV/emacs/*.el)"
-        files=$(echo "$files" |grep $1)
-        echo "$files" |grep $1           # only for highlighting
-        v $files
+        return
     fi
+    files="$(find $ENV |grep -iv '.hg\|site-lisp\|bin')
+$(ls -x $ENV/emacs/*.el)"
+    matches=`echo "$files" | ignore-filter |filter.py $@ --on-unique 'v {match}'`
+    echo "$matches"
 }
 
 
@@ -905,7 +905,7 @@ _optcomplete()
 }
 
 # work-in-progress general solution to bash_history-based completion
-_histcomplete()
+_histcomplete_notes()
 {
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
@@ -913,6 +913,31 @@ _histcomplete()
         OPTPARSE_AUTO_COMPLETE=1 hist-complete.py notes ) )
 }
 
+_complete_fv()
+{
+    X="/tmp/find-dump"
+#    find |ignore-filter |filter.py -C -N $COMP_LINE > $X
+    find |ignore-filter > $X
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py "" $X 0 ) )
+}
+
+
+_complete_e()
+{
+    X="/tmp/e-complete"
+    find $ENV |grep -iv '.hg\|site-lisp\|bin' > $X
+    ls -x $ENV/emacs/*.el >> $X
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py "" $X 0 ) )
+}
+
+
+# TODO: create a version of hist complete which uses dir-history.
 
 #alias skid='python -m skid'
 alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
@@ -922,4 +947,6 @@ alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 # todo: include previous search in completion results. E.g if you just ran notes
 # and got more than one set of results. Also consider using words taken from
 # running find-note-files.
-complete -F _histcomplete notes
+complete -F _histcomplete_notes notes
+complete -F _complete_fv fv
+complete -F _complete_e e
