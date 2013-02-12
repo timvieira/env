@@ -19,54 +19,30 @@ complete -F _histcomplete <YOUR SCRIPT>
 </goes in your bashrc>
 """
 
-import re, os, sys
+import re, sys
 from os import environ, path
-from collections import Counter
-from arsenal.terminal import red
 from env.bin.filter import main
 
 def complete(prefix, filename='~/.bash_history', freq=3):
     freq = int(freq)
     filename = path.expanduser(filename)
 
-    cwords = environ.get('COMP_WORDS', '').split()[1:]   # ignore program name.
-    #cline = environ['COMP_LINE']
-    #cpoint = int(environ['COMP_POINT'])
+    cwords = environ.get('COMP_WORDS', '').split()[1:] + ['']   # ignore program name, pad by one word
     cword = int(environ.get('COMP_CWORD', 0)) - 1
 
-    if cword >= len(cwords):
-        currword = None
-    else:
-        currword = cwords[cword]
+    currword = cwords[cword]
 
     lines = [line.strip() for line in file(filename)]
-#    ix = {w: line for line in lines for w in re.findall('\w+', line)}
-#    c = Counter(ix.keys())
-#    possible = [k for (k, v) in c.iteritems() if v >= freq]
 
     matches = list(main(cwords, lines, color=False))
-
-#    print >> sys.stderr, '===='
-#    print >> sys.stderr, '\n'.join(cwords)
-#    print >> sys.stderr, '===='
-#    print >> sys.stderr, '\n'.join(matches)
-#    print >> sys.stderr, '===='
-#    print >> sys.stderr, '\n'.join(lines)
-
-#    print >> sys.stderr, '\n'.join(cwords)
-
-    if not currword:
-        print ''
-        return
 
     # get words of matches
     possible = [w for line in matches for w in re.findall('\w+', line)]
 
-#    print >> sys.stderr, '==='
-#    print >> sys.stderr, ' '.join(possible)
-
     # filter words of matches by prefix match
     possible = {x for x in possible if x.startswith(currword) and len(x) >= len(currword)}
+
+    # TODO: remove words common to all hits since there is no information gain
 
     print ' '.join(possible).encode('utf8')
 
