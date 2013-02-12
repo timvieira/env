@@ -13,16 +13,18 @@ def filter1(f):
             if 'Emacs Org-mode version' in line:
                 return False
     [_, ext] = os.path.splitext(f)
-    if ext not in ['', '.tex', '.org', '.txt', '.rst', '.md', '.markdown',
-                   '.py', '.scala', '.java']:
+    ext = ext[1:]  # drop period.
+    if ext not in ['', 'tex', 'org', 'txt', 'rst', 'md', 'markdown',
+                   'py', 'scala', 'java', 'bash', 'el']:
         return False
     return True
 
 
 def main(filters, lines, color=True):
-    colors = [red, green, yellow, blue, magenta, cyan] if color else ['%s']
+    colors = [red, green, yellow, blue, magenta, cyan]
     filters = [re.compile('\\b' + f, re.I) for f in filters]
 
+    lines = set(lines)
     for line in lines:
 
         # XXX: is there a better way to do this? note that highlighting doesn't work.
@@ -33,8 +35,9 @@ def main(filters, lines, color=True):
             continue
         if not filter1(line):
             continue
-        for f, c in zip(filters, cycle(colors)):
-            line = f.sub(lambda m: c % m.group(0), line)
+        if color:
+            for f, c in zip(filters, cycle(colors)):
+                line = f.sub(lambda m: c % m.group(0), line)
         yield line
 
 
@@ -53,6 +56,9 @@ if __name__ == '__main__':
     parser.add_argument('-C', '--no-color', dest='color', action='store_false',
                         help='Do not print ANSO color codes.')
 
+    parser.add_argument('-N', dest='msg', action='store_false',
+                        help='omit "no results" msg')
+
     args = parser.parse_args()
 
     matches = main(filters = args.filters,
@@ -61,7 +67,8 @@ if __name__ == '__main__':
     matches = list(matches)
 
     if not matches:
-        print >> sys.stderr, red % 'no results'
+        if args.msg:
+            print >> sys.stderr, red % 'no results'
         exit(1)
 
     for m in matches:
@@ -73,7 +80,7 @@ if __name__ == '__main__':
                   stdout=PIPE,
                   stdin=PIPE,
                   stderr=PIPE,
-                  shell=True, 
+                  shell=True,
                   close_fds=True)
 
         exit(0)
