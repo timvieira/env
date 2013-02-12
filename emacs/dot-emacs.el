@@ -238,7 +238,7 @@
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 '(:foreground "yellow") t)))
 
 (dark-colors)
-;(light-colors)
+(light-colors)
 
 (add-hook 'window-setup-hook 'my-window-placement)
 ;(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
