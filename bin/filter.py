@@ -67,7 +67,7 @@ if __name__ == '__main__':
     # "if (pattern1 and pattern2 ...) then action"
 
     parser = ArgumentParser(description='Filter a sequence of lines by matching patterns.')
-    parser.add_argument('filters', nargs='+', help='filters, each is a regex')
+    parser.add_argument('filters', nargs='*', help='filters, each is a regex')
 
     parser.add_argument('--on-unique', help='When a single match is found execute this command.')
     parser.add_argument('--on-fail', help='When a no match is found execute this command.')
