@@ -567,6 +567,33 @@ $(ls -x $ENV/emacs/*.el)"
 }
 
 
+function comp_projects {
+    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
+
+    # courses
+    courses=`find $PROJECTS/courses -type d`
+
+    # version controlled project roots -- be sure to strip off hg directories or
+    # else they'll get filtered out
+    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
+
+    # sort vc roots so that prefixes come first
+    vcroots=`echo "$vcroots" |sort`
+
+    # everything else
+#    everythingelse=`find $PROJECTS -type d`
+
+    matches="$projname
+$courses
+$vcroots
+$everythingelse"
+
+    echo "$matches"| ignore-filter| grep -v '/data/'
+}
+
+COMP_PROJECTS=/tmp/comp-projects
+comp_projects > $COMP_PROJECTS
+
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
@@ -590,25 +617,7 @@ function p {
     # TODO: utility which searches recent files from the command-line (such a
     # tool must already exist!)
 
-    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
-
-    # courses
-    courses=`find $PROJECTS/courses -type d`
-
-    # version controlled project roots -- be sure to strip off hg directories or
-    # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
-
-    # sort vc roots so that prefixes come first
-    vcroots=`echo "$vcroots" |sort`
-
-    # everything else
-    everythingelse=`find $PROJECTS -type d`
-
-    matches="$projname
-$courses
-$vcroots
-$everythingelse"
+    matches=`cat $COMP_PROJECTS`
 
     # first filter things inside .hg directories
     matches=`echo "$matches" | grep -v '\.hg'`
@@ -904,15 +913,6 @@ _optcomplete()
         OPTPARSE_AUTO_COMPLETE=1 $1 ) )
 }
 
-# work-in-progress general solution to bash_history-based completion
-_histcomplete_notes()
-{
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py notes ) )
-}
-
 _complete_fv()
 {
     X="/tmp/find-dump"
@@ -920,7 +920,7 @@ _complete_fv()
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py "" $X 0 ) )
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
 }
 
 _complete_e()
@@ -929,7 +929,7 @@ _complete_e()
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py "" $X 0 ) )
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
 }
 
 _complete_notes()
@@ -938,7 +938,16 @@ _complete_notes()
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py "" $X 0 ) )
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
+}
+
+_complete_p()
+{
+    X=$COMP_PROJECTS
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
 }
 
 
@@ -958,7 +967,7 @@ function update {
 }
 
 # TODO: check the age of these files before automatically updating
-update
+#update
 
 # TODO: create a version of hist complete which uses dir-history.
 
@@ -970,7 +979,7 @@ alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 # todo: include previous search in completion results. E.g if you just ran notes
 # and got more than one set of results. Also consider using words taken from
 # running find-note-files.
-complete -F _histcomplete_notes notes
 complete -F _complete_fv fv
 complete -F _complete_e e
 complete -F _complete_notes notes
+complete -F _complete_p p
