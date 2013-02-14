@@ -1,26 +1,68 @@
 #!/usr/bin/env python
 """
-To be used in conjunction with minimal bash configuration.
+Find completions of a query given prefix, based on information gain. Assumes a
+file of possible completions is given.
 
-TODO: this seems like a lot of boilerplate...
+Runs in two modes
 
-<goes in your bashrc>
+(1) Testing
 
-_histcomplete()
-{
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py <YOUR SCRIPT> ) )
-}
+    $ python hist-complete.py $COMP_NOTES 'vision '
 
-complete -F _histcomplete <YOUR SCRIPT>
 
-</goes in your bashrc>
+(2) Completion
 
-Testing mode:
+    Requires the following bash configuration. Note, there are two things to
+    fill out <SCRIPTNAME>, the name of your script, and <COMPLETION_FILE>, a
+    file with lines corresponding to completions (i.e. the things we are trying
+    to select from, executing this script will essentially just narrow down the
+    lines of this file).
 
-   python hist-complete.py $COMP_NOTES 'vision '
+    <bashrc>
+    _complete_<SCRIPTNAME>()
+    {
+        COMPREPLY=( $( \
+            COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+            COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+            hist-complete.py <COMPLETION_FILE> ) )
+    }
+    complete -F _complete_<SCRIPTNAME> <SCRIPTNAME>
+    </bashrc>
+
+
+    EXAMPLE
+    =======
+
+    Here's an example function fv, which recursively searches the current
+    directory for a file to open in the editor.
+
+    function fv {
+       find |filter.py $@ --on-unique "$EDITOR {match}"
+    }
+
+    We going to define complete behaviour which complements the filter script
+    and will help use refine our query until there is a unique file so we can
+    open it in the editor.
+
+    <bashrc>
+    _complete_fv()
+    {
+        COMPLETION_FILE=/tmp/find-completions
+
+        find > $COMPLETION_FILE
+
+        COMPREPLY=( $( \
+            COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+            COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+            hist-complete.py $COMPLETION_FILE ) )
+    }
+    complete -F _complete_fv fv
+    </bashrc>
+
+
+
+TODO: The bash configuration stuff seems like excessive boilerplate.
+
 
 """
 
@@ -80,6 +122,6 @@ def complete(filename, testing=''):
                 for _, d in ds:
                     print '##   %s' % d
 
+
 if __name__ == '__main__':
-    from sys import argv
-    complete(*argv[1:])
+    complete(*sys.argv[1:])
