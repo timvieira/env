@@ -4,6 +4,21 @@ from terminal import red, green, yellow, blue, magenta, cyan
 from sys import stdin, stdout
 from itertools import cycle
 from subprocess import Popen, PIPE
+from arsenal.iterextras import unique
+
+"""
+TODO: Can't distinguish.
+
+  $ fv jhu nlp Grammar.java
+  ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
+  ./src/main/java/edu/jhu/nlp/parsing/grammar/ConvertSlavGrammar.java
+
+TODO:
+
+  $ fv ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
+  no results
+
+"""
 
 def filter1(f):
     f = f.strip()
@@ -20,12 +35,16 @@ def filter1(f):
     return True
 
 
+def words(x):
+    x = x.strip()
+    x = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
+    return re.findall('\w+', x)
+
 def main(filters, lines, color=True):
     colors = [red, green, yellow, blue, magenta, cyan]
     filters = [re.compile('\\b' + f, re.I) for f in filters]
 
-    lines = set(lines)
-    for line in lines:
+    for line in unique(lines):
 
         # XXX: is there a better way to do this? note that highlighting doesn't work.
         # add spaces at camel case word boundaries
