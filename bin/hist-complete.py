@@ -17,35 +17,68 @@ _histcomplete()
 complete -F _histcomplete <YOUR SCRIPT>
 
 </goes in your bashrc>
+
+Testing mode:
+
+   python hist-complete.py $COMP_NOTES 'vision '
+
 """
 
-import re, sys
+import sys
 from os import environ, path
-from env.bin.filter import main
+from env.bin.filter import main, words
+from collections import defaultdict
+from scientific.featureselection import kl_filter
 
-def complete(prefix, filename='~/.bash_history', freq=3):
-    freq = int(freq)
+
+def complete(filename, testing=''):
     filename = path.expanduser(filename)
 
-    cwords = environ.get('COMP_WORDS', '').split()[1:] + ['']   # ignore program name, pad by one word
-    cword = int(environ.get('COMP_CWORD', 0)) - 1
+    if testing:
+        cwords = testing.split()
+        if testing.endswith(' '):
+            cwords.append('')
+        currword = cwords[-1]
 
-    currword = cwords[cword]
+    else:
+        cwords = environ.get('COMP_WORDS', '').split()[1:] + ['']   # ignore program name, pad by one word
+        currword = cwords[int(environ.get('COMP_CWORD', 0)) - 1]
 
     lines = [line.strip() for line in file(filename)]
 
+    # ensures prefix of query matches
     matches = list(main(cwords, lines, color=False))
 
-    # get words of matches
-    possible = [w for line in matches for w in re.findall('\w+', line)]
+    if not matches:
+        return
 
-    # filter words of matches by prefix match
-    possible = {x for x in possible if x.startswith(currword) and len(x) >= len(currword)}
+    d = defaultdict(list)
+    for line in set(matches):
+        for w in words(line.lower()):
+            if w.startswith(currword):
+                d[line].append(w)
 
-    # TODO: remove words common to all hits since there is no information gain
+    kl = kl_filter(d.items(), verbose=False)
+    kl = list(kl)
 
-    print ' '.join(possible).encode('utf8')
+    n = len(set(matches))
+    m = len(kl)
 
+    for s, w, ds in kl:
+        # when we've narrowed it down to one line or word given the current
+        # prefix, KL divergence will be zero.
+        if s > 0.01 or m == 1 or (n == 1 and len(w) > len(currword) > 0):  # strict prefix has been typed
+            if testing:
+                print '(%g) %s' % (s, w)
+                for _, d in ds:
+                    print '   %s' % d
+            else:
+                print w.encode('utf8')
+        else:
+            if testing:
+                print '## (%g) %s' % (s, w)
+                for _, d in ds:
+                    print '##   %s' % d
 
 if __name__ == '__main__':
     from sys import argv
