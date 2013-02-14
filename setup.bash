@@ -1,7 +1,19 @@
-ln -s $ENV/bashrc.bash ~/.bashrc
-ln -s $ENV/emacs/dot-emacs.el ~/.emacs
-ln -s $ENV/pylintrc ~/.pylintrc
-ln -s $ENV/screenrc ~/.screenrc
+#!/usr/bin/env bash
+
+cd `dirname $0`
+
+function add-link {
+   absp=$(ls -d -1 $PWD/$1)
+   base=`basename $absp`
+   ln -s $absp ~/.$base
+}
+
+add-link bashrc
+add-link pylintrc
+add-link screenrc
+add-link ackrc
+add-link aspell.en.pws
+add-link emacs/emacs.el
 
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
