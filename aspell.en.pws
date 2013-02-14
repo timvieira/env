@@ -1,4 +1,4 @@
-personal_ws-1.1 en 244 
+personal_ws-1.1 en 246 
 sigmoidal
 jammer
 workflows
@@ -36,6 +36,7 @@ Kaelbling
 epipole
 DLM
 semirings
+versa
 emacs
 exponentiate
 DBLP
@@ -190,8 +191,8 @@ subtree
 RL
 preterminal
 regularizer
-pdf
 NLP
+pdf
 CRFs
 reweighted
 Mathematica
@@ -239,6 +240,7 @@ regressor
 subgraph
 discretization
 todo
+antiderivative
 DAGs
 adjoint
 advisor
