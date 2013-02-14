@@ -8,7 +8,7 @@
 --flush
 
 # follow symlinks
---follow
+#--follow
 
 # comprehensively searches all files
 #--all
