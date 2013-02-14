@@ -1,0 +1,2 @@
+Configuration files for my environment "dotfiles", scripts, a big heap of emacs
+modules. I've even included my aspell dictionary!

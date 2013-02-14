@@ -32,7 +32,7 @@
 
 ;; speed-dial
 (global-unset-key [f3])
-(global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs"))))
+(global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs.el"))))
 (global-unset-key [f2])
 (global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
 (global-unset-key [f4])

@@ -532,11 +532,10 @@ function edit-bash-function {
 function t {
     files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
 
-    matches=`echo "$files" |filter.py $@ --on-unique 'visit {match}'`
+    matches=`echo "$files" |filter.py "$@" --on-unique 'visit {match}'`
 
     retcode="$?"
 
-    # TODO: search skid as well
     echo "$matches"
 
     if [[ "$retcode" -eq "0" ]]; then
@@ -950,6 +949,17 @@ _complete_p()
         OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
 }
 
+_complete_t()
+{
+    X="/tmp/comp-t"
+    find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter > $X
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        OPTPARSE_AUTO_COMPLETE=1 hist-complete.py $X ) )
+}
+
+
 
 # TODO: add projects
 # TODO: are there any clever things we can do to speed this up?
@@ -983,3 +993,4 @@ complete -F _complete_fv fv
 complete -F _complete_e e
 complete -F _complete_notes notes
 complete -F _complete_p p
+complete -F _complete_t t
