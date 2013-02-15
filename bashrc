@@ -53,7 +53,6 @@ export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 # Python
 add-pypath \
     $PROJECTS \
-    $PROJECTS/arsenal \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
     $PROJECTS/shelf/quantities \
@@ -70,9 +69,9 @@ function add-jars-to-classpath {
 }
 
 # Jython
-export JYTHON_HOME=$JAVAEXTRAS/jython
-add-classpath $JYTHON_HOME/jython.jar
-alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
+#export JYTHON_HOME=$JAVAEXTRAS/jython
+#add-classpath $JYTHON_HOME/jython.jar
+#alias jython="java -mx3G -cp target -jar $JYTHON_HOME/jython.jar"
 
 #export EDITOR=emacs
 export EDITOR=visit
@@ -360,7 +359,7 @@ function fv {
 #    fi
 #    matches=`f "$pattern" "$directory" | ignore-filter |filter.py $@`
 
-    matches=`find | ignore-filter |filter.py $@ --on-unique 'v {match}'`
+    matches=`find -type f | ignore-filter |filter.py $@ --on-unique 'v {match}'`
 
     echo "$matches"
 #    echo "$matches" |xargs v
@@ -565,33 +564,6 @@ $(ls -x $ENV/emacs/*.el)"
     echo "$matches"
 }
 
-
-function comp_projects {
-    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
-
-    # courses
-    courses=`find $PROJECTS/courses -type d`
-
-    # version controlled project roots -- be sure to strip off hg directories or
-    # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
-
-    # sort vc roots so that prefixes come first
-    vcroots=`echo "$vcroots" |sort`
-
-    # everything else
-#    everythingelse=`find $PROJECTS -type d`
-
-    matches="$projname
-$courses
-$vcroots
-$everythingelse"
-
-    echo "$matches"| ignore-filter| grep -v '/data/'
-}
-
-COMP_PROJECTS=/tmp/comp-projects
-comp_projects > $COMP_PROJECTS
 
 function p {
     # calling with no arguments lands you in the projects directory.
@@ -915,7 +887,7 @@ _optcomplete()
 _complete_fv()
 {
     X="/tmp/find-dump"
-    find |ignore-filter > $X
+    find -type f |ignore-filter > $X
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
@@ -961,20 +933,45 @@ _complete_t()
 
 
 
-# TODO: add projects
-# TODO: are there any clever things we can do to speed this up?
+# TODO: are there any clever things we can do to speed this up and keep things
+# up-to-date?
 COMP_ENV="/tmp/comp-e"
 COMP_NOTES="/tmp/complete-notes"
+COMP_PROJECTS=/tmp/comp-projects
 function update {
 
     # notes files
     find-note-files ~/projects > $COMP_NOTES
 
     # environment files
-    find $ENV |grep -iv '.hg\|site-lisp' > $COMP_ENV
+    find $ENV |ignore-filter |grep -v 'site-lisp' > $COMP_ENV
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
+    # project directories
+    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
+
+    # courses
+    courses=`find $PROJECTS/courses -type d`
+
+    # version controlled project roots -- be sure to strip off hg directories or
+    # else they'll get filtered out
+    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
+
+    # sort vc roots so that prefixes come first
+    vcroots=`echo "$vcroots" |sort`
+
+    # everything else
+    #everythingelse=`find $PROJECTS -type d`
+
+    matches="$projname
+$courses
+$vcroots
+$everythingelse"
+
+    echo "$matches"| ignore-filter| grep -v '/data/' > $COMP_PROJECTS
 }
+
+
 
 # TODO: check the age of these files before automatically updating
 #update
