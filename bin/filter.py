@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import re, os, sys
-from terminal import red, green, yellow, blue, magenta, cyan
+from arsenal.terminal import red, green, yellow, blue, magenta, cyan
 from sys import stdin, stdout
 from itertools import cycle
 from subprocess import Popen, PIPE

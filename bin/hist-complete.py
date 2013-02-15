@@ -60,17 +60,14 @@ Runs in two modes
     </bashrc>
 
 
-
 TODO: The bash configuration stuff seems like excessive boilerplate.
-
-
 """
 
 import sys
 from os import environ, path
 from env.bin.filter import main, words
 from collections import defaultdict
-from scientific.featureselection import kl_filter
+from arsenal.math.featureselection import kl_filter
 
 
 def complete(filename, testing=''):
