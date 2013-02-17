@@ -15,6 +15,10 @@ add-link ackrc
 add-link aspell.en.pws
 add-link emacs/emacs.el
 
+
+ln -s `pwd`/texmf ~/texmf
+
+
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
 #sudo easy_install ipython
