@@ -189,7 +189,9 @@ function prompt_command {
   CMD=`history 1`  # much faster than `history |tail -n1`
 
   # pull command number out of history file; $HISTCMD didn't work..
-  HISTNUM=`echo "$CMD" |cut -f1 -d' '`
+#  HISTNUM=`echo "$CMD" |cut -f1 -d' ' `   # broken now has space prefix...
+#  HISTNUM=`echo "$CMD" |linepy 'print line.strip().split()[0]' `   # slow
+  HISTNUM=`echo "$CMD" |sed 's/^ *//' | cut -f1 -d' ' `  # trim prefix
 
   if [[ "$PREV_HISTNUM" -ne "$HISTNUM" ]]; then
       if [ ! -z "$PREV_DIRECTORY" ]; then
