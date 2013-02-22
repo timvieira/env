@@ -5,6 +5,28 @@
 # pass aliases through sudo ... don't know if the really works...
 #alias sudo="sudo " # space triggers alias substitution
 
+ENV=~/projects/env
+PROJECTS=~/projects
+JAVAEXTRAS=$PROJECTS/extras/java
+
+
+## function _gnome-do-logged {
+##     while true; do
+##         echo "starting gnome-do"
+##         gnome-do 2>&1 >> ~/gnome-do.log
+##         if [ "$?" -ne "0" ]; then
+##             notify-send --urgency=low --icon=gnome-do "GNOME-Do has crashed." \
+##                 "The cause of the crash has been logged to ~/.gnome-do.log."
+##         else
+##             break
+##         fi
+##     done
+## }
+## function gnome-do-logged {
+##     shutup-and-disown gnome-do-logged
+## }
+
+
 #______________________________________________________________________________
 # Environment variables
 
@@ -35,9 +57,6 @@ else
 fi
 
 
-PROJECTS=~/projects
-JAVAEXTRAS=$PROJECTS/extras/java
-
 # The Path
 add-path $JAVA_HOME/bin
 add-path ~/inst/bin                   # local install
@@ -53,6 +72,7 @@ export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 # Python
 add-pypath \
     $PROJECTS \
+    $PROJECTS/ldp/code/working/lpldp \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
     $PROJECTS/shelf/quantities \
@@ -98,24 +118,24 @@ alias de='cd ~/Desktop'
 
 # order lines by frequency (most frequent first).
 alias freq='sort | uniq -c |sort -nr'
+alias remove-empty-lines='grep -v "^\s*$"'
 
 
 #--------------------------
 # potentially useful
-alias grepall="grep -RIn" # recursive grep on non-binary files; a lot like ack
-
-# highlighter
-function hl() {
-  grep -E --color=always $1'|$'
-}
-
-# grep paragraphs
-function grepp {
-  pattern=$1
-  file=$2
-  awk 'BEGIN{RS="";ORS="\n\n";FS="\n"}/'$pattern'/' $file | hl $pattern
-}
-
+#alias grepall="grep -RIn" # recursive grep on non-binary files; a lot like ac
+#
+## highlighter
+#function hl() {
+#  grep -E --color=always $1'|$'
+#}
+#
+## grep paragraphs
+#function grepp {
+#  pattern=$1
+#  file=$2
+#  awk 'BEGIN{RS="";ORS="\n\n";FS="\n"}/'$pattern'/' $file | hl $pattern
+#}
 #--------------------------
 
 
@@ -124,7 +144,6 @@ function grepp {
 # vanilla emacs
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 alias visualvm='shutup-and-disown visualvm'
-
 alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 
 
@@ -151,13 +170,21 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
+# cmdhist: If set, Bash attempts to save all lines of a multiple-line command in
+#    the same history entry. This allows easy re-editing of multi-line commands.
+shopt -s cmdhist
+
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=10000000000
 export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
 export HISTTIMEFORMAT='%F %T '
 
-shopt -s cmdhist
+
+# globstar: If set, the pattern '**' used in a filename expansion context will
+#    match all files and zero or more directories and subdirectories. If the
+#    pattern is followed by a '/', only directories and subdirectories match.
+shopt -s globstar
 
 
 # list top commands in bash history
@@ -166,60 +193,7 @@ function top-commands () {
 }
 
 
-# TOOD: last_command function
-
-#######
-# Augmented bash history with metadta (~/.bash_history_meta), such as the
-# working directory command was executed.
-#
-# TODO:
-#
-#  * PROMPT_COMMAND is only called after the command executes. What we actually
-#    need is a pre-execute hook.
-#
-#  * some commands don't get written in history (e.g. ls, pwd
-#
-#  * might "break" if there are two shells writting to history
-#
-function prompt_command {
-
-  # timv: this seems to write to bash history
-  history -a
-
-  CMD=`history 1`  # much faster than `history |tail -n1`
-
-  # pull command number out of history file; $HISTCMD didn't work..
-#  HISTNUM=`echo "$CMD" |cut -f1 -d' ' `   # broken now has space prefix...
-#  HISTNUM=`echo "$CMD" |linepy 'print line.strip().split()[0]' `   # slow
-  HISTNUM=`echo "$CMD" |sed 's/^ *//' | cut -f1 -d' ' `  # trim prefix
-
-  if [[ "$PREV_HISTNUM" -ne "$HISTNUM" ]]; then
-      if [ ! -z "$PREV_DIRECTORY" ]; then
-          DIR="$PREV_DIRECTORY"
-          echo "$DIR $CMD" >> ~/.bash_history_metadata
-      fi
-  fi
-
-  export PREV_DIRECTORY="$PWD"
-  export PREV_HISTNUM="$HISTNUM"
-}
-
-PROMPT_COMMAND="prompt_command"
-
-# view bash history for this directory
-function dir-history {
-    cat ~/.bash_history_metadata |grep "^$PWD "
-}
-
-function dir-history-list {
-    dir-history | linepy 'print re.sub("^\\S+\\s+\\S+\\s+\\S+\\s+\\S+ ", "", line)'
-}
-
-# note: this is not an accurate count because store succesive repeats of an
-# identical command.
-function dir-history-common {
-    dir-history-list |freq
-}
+source $ENV/bash/dir-history.bash
 
 #______________________________________________________________________________
 #
@@ -411,6 +385,7 @@ function clean {
 #______________________________________________________________________________
 # Version control tricks
 
+# todo: use locate instead.
 function find-repos {
     find ~/ -name ".hg" -type d -exec dirname {} \;
     find ~/ -name ".git" -type d -exec dirname {} \;
@@ -469,67 +444,9 @@ alias gittree-when='git log --graph --full-history --all --color --pretty=format
 #______________________________________________________________________________
 # Shortcuts for jump around
 
-alias source-bashrc='source ~/.bashrc'
-alias sb='source-bashrc'
-alias edit-script='es'
+source $ENV/bash/quick-edit.bash
 
-# TODO: (low priority) bash completion for things on path!
-# TODO: (low priority) fall-back for aliases?
-function es {
-    if [[ "$#" -eq "0" ]]; then  # list files
-        v ~/.bashrc
-        return 0
-    fi
-    # try using which.
-    wh=`which $@`
-    if [[ "$wh" ]]; then
-        v "$wh"
-    else
-        edit-bash-function "$@"
-    fi
-}
-
-# turn on bash's extended debugging options
-shopt -s extdebug
-
-
-# Edit file defining some bash function; we'll even jump to the line number.
-function edit-bash-function {
-
-    # we'll need to temporarily enable bash's extended debugging
-    shopt -s extdebug
-
-    out=`declare -F "$@"`
-
-    if [[ -z "$out" ]]; then
-
-        if [[ $(alias $1) ]]; then
-            echo "'$@' appears to be an alias. You're on your own for this one."
-            return 1
-        fi
-
-        echo "failed to find source for '$@'."
-
-        return 1
-    fi
-
-    echo $out
-
-    # convert output into a bash array
-    array=(`echo "$out"`)
-    lineno=${array[1]}
-    filename=${array[2]}
-
-    # open file at lineno with visit
-    visit +$lineno:0 "$filename"
-
-    # recenter window
-    ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
-
-    # Turn off extended shell debugging
-#    shopt -u extdebug
-}
-
+# open todo lists
 function t {
     files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
 
@@ -552,8 +469,7 @@ function t {
     fi
 }
 
-ENV=~/projects/env
-# edit configuration files with env project
+# Edit configuration files in the env project
 function e {
     if [[ "$#" -eq 0 ]]; then
         yellow $ENV
@@ -567,6 +483,7 @@ $(ls -x $ENV/emacs/*.el)"
 }
 
 
+# Jump to project directory
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
@@ -614,11 +531,6 @@ function p {
     done
     red "failed to find match for project $1"
 }
-
-alias ldp='cd ~/projects/ldp/code/working'
-alias lpldp='cd ~/projects/ldp/code/working/lpldp'
-alias arsenal='cd ~/projects/arsenal'
-
 
 #______________________________________________________________________________
 # Python tricks
@@ -694,40 +606,15 @@ function org-export-filter {
     ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $@
 }
 
-## # filters are keyword prefix matches (e.g. 'dd bp' matches 'bp-ddecomp'; but
-## # 'dsl' does not match 'bdslss')
-## function find-notes {
-##     files="$(ls -t1 `find-note-files ~/projects`) $(ls -t1 `find-note-files ~/Dropbox`)"
-##
-##     if [[ "$#" -eq "0" ]]; then
-##         green "Ten most recent files:"
-##
-##         # remove org-export files -- apply this filter after others because it
-##         # is slower (it looks at the content of the file).
-##         files=`org-export-filter $files`
-##
-##         ls -t $files | head -n20
-##     else
-## #        for filter in "$@"; do
-## #            files=`echo "$files" | grep -i "\b$filter"`
-## #        done
-##
-##         files=`echo "$files"| filter.py $@`
-##
-##         # remove org-export files -- apply this filter after others because it
-##         # is slower (it looks at the content of the file).
-##         files=`org-export-filter $files`
-##
-##         echo "$files"
-##     fi
-## }
-
 function notes {
    matches=`find-note-files ~/projects |filter.py $@`
-
    retcode="$?"
 
-   # TODO: search skid as well
+   # TODO: search skid as well.
+
+   # TODO: don't just use file name. include the title (heuristically take first
+   # line as title)
+
    echo "$matches"
 
    if [[ "$retcode" -eq "0" ]]; then
@@ -745,30 +632,7 @@ function notes {
        yellow "pick a file or be more specific."
 
    fi
-
 }
-
-
-alias remove-empty-lines='grep -v "^\s*$"'
-
-# TODO: if there is an org file and other junk; ignore the other junk.
-#function notes {
-#    notes="$(find-notes "$@")"
-#    if [[ `echo "$notes" |remove-empty-lines| wc -l` -eq "0" ]]; then
-#        red "no results.";
-#        return
-#    fi
-#    if [[ `echo "$notes" |wc -l` -eq "1" ]]; then
-#        cd $(dirname $notes)
-#        v "$notes"
-#    else
-#        echo "$notes"
-#    fi
-#}
-
-#function notes-dir {
-#    cd $(dirname $(find-notes "$@"))
-#}
 
 # grep notes for patterns
 # TODO: generalize to keyword search
@@ -817,8 +681,7 @@ function extract {
     case $1 in
       *.tar.bz2)   tar xvjf $1   ;;
       *.tar.gz)    tar xvzf $1   ;;
-#      *.bz2)       bunzip2 $1    ;;
-      *.bz2)       tar xjfv $1    ;;
+      *.bz2)       tar xjfv $1   ;;
       *.rar)       unrar x $1    ;;
       *.gz)        gunzip $1     ;;
       *.tar)       tar xvf $1    ;;
@@ -872,124 +735,8 @@ function concat-pdfs {
 #_______________________________________________________________________________
 #
 
-# optcomplete harness for bash shell. You then need to tell
-# bash to invoke this shell function with a command like
-# this::
-#
-#   complete -F _optcomplete <program>
-#
-_optcomplete()
-{
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        $1 ) )
-}
-
-_complete_fv()
-{
-    X="/tmp/find-dump"
-    find -type f |ignore-filter > $X
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        hist-complete.py $X ) )
-}
-
-_complete_e()
-{
-    X=$COMP_ENV
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        hist-complete.py $X ) )
-}
-
-_complete_notes()
-{
-    X=$COMP_NOTES
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        hist-complete.py $X ) )
-}
-
-_complete_p()
-{
-    X=$COMP_PROJECTS
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        hist-complete.py $X ) )
-}
-
-_complete_t()
-{
-    X="/tmp/comp-t"
-    find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter > $X
-    COMPREPLY=( $( \
-        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-        hist-complete.py $X ) )
-}
-
-
-
-# TODO: are there any clever things we can do to speed this up and keep things
-# up-to-date?
-COMP_ENV="/tmp/comp-e"
-COMP_NOTES="/tmp/complete-notes"
-COMP_PROJECTS=/tmp/comp-projects
-function update {
-
-    # notes files
-    find-note-files ~/projects > $COMP_NOTES
-
-    # environment files
-    find $ENV |ignore-filter |grep -v 'site-lisp' > $COMP_ENV
-    ls -x $ENV/emacs/*.el >> $COMP_ENV
-
-    # project directories
-    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
-
-    # courses
-    courses=`find $PROJECTS/courses -type d`
-
-    # version controlled project roots -- be sure to strip off hg directories or
-    # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
-
-    # sort vc roots so that prefixes come first
-    vcroots=`echo "$vcroots" |sort`
-
-    # everything else
-    #everythingelse=`find $PROJECTS -type d`
-
-    matches="$projname
-$courses
-$vcroots
-$everythingelse"
-
-    echo "$matches"| ignore-filter| grep -v '/data/' > $COMP_PROJECTS
-}
-
-
-
-# TODO: check the age of these files before automatically updating
-#update
-
-# TODO: create a version of hist complete which uses dir-history.
-
 #alias skid='python -m skid'
 alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 
-#complete -F _optcomplete skid
 
-# todo: include previous search in completion results. E.g if you just ran notes
-# and got more than one set of results. Also consider using words taken from
-# running find-note-files.
-complete -F _complete_fv fv
-complete -F _complete_e e
-complete -F _complete_notes notes
-complete -F _complete_p p
-complete -F _complete_t t
+source $ENV/bash/my-complete.bash
