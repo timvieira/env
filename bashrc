@@ -98,6 +98,7 @@ export EDITOR=visit
 export HGEDITOR='emacs -nw'
 
 function pkill9 {
+  ps aux |grep "$@"
   kill -9 `pgrep $@`
 }
 
@@ -455,18 +456,6 @@ function t {
     retcode="$?"
 
     echo "$matches"
-
-    if [[ "$retcode" -eq "0" ]]; then
-       # feeling lucky, so we'll open the file for you.
-
-       # drop color codes
-       match=`echo "$matches" |pysed '\\033\[.*?m' '' `
-
-       cd `dirname $match`
-
-       # open file in editor
-       $EDITOR "$match"
-    fi
 }
 
 # Edit configuration files in the env project
