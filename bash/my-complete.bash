@@ -65,7 +65,9 @@ _complete_vpy ()
 COMP_ENV="/tmp/comp-e"
 COMP_NOTES="/tmp/complete-notes"
 COMP_PROJECTS=/tmp/comp-projects
+
 function update {
+    yellow "Updating completions"
 
     # notes files
     find-note-files ~/projects > $COMP_NOTES
@@ -97,6 +99,11 @@ $everythingelse"
 
     echo "$matches"| ignore-filter| grep -v '/data/' > $COMP_PROJECTS
 }
+
+
+if [ ! -f /tmp/comp-projects ]; then
+    update
+fi
 
 
 
