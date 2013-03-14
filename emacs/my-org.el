@@ -37,15 +37,16 @@
      ;; Change .pdf association directly within the alist
      (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")))
 
-
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
 (add-to-list 'org-export-latex-classes
              '("article"
                "\\documentclass{article}
-               \\setlength\\parindent{0pt}   % no paragraph indentation
-               \\newcommand{\\parents}[1]{\\textsc{Pa}(#1)}"
+                \\setlength\\parindent{0pt}   % no paragraph indentation
+                \\usepackage[utf8]{inputenc}
+                \\usepackage{fullpage}
+                \\setlength{\\parskip}{.35cm plus4mm minus3mm}"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}"))
 )
