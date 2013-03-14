@@ -7,7 +7,7 @@ Requires gdata package <http://pypi.python.org/pypi/gdata>
 """
 
 import sys, webbrowser
-from misc import password
+from arsenal.misc import password
 
 from atom import Content
 from gdata.calendar import CalendarEventEntry, QuickAdd, Reminder
