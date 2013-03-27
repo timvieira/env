@@ -434,7 +434,7 @@
   (load-library "matlab")
 
   (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
-  (setq auto-mode-alist (cons '("\\.\\(text\\|md\\|markdown\\)" . markdown-mode) auto-mode-alist))
+  (setq auto-mode-alist (cons '("\\.\\(md\\|markdown\\)" . markdown-mode) auto-mode-alist))
 
   (if (window-system) (X-setup) (no-X-setup))
 
@@ -522,7 +522,7 @@
   "skid tag search."
   (interactive)
   (switch-to-buffer (make-temp-name "Skid"))
-  (insert (shell-command-to-string (concat "/home/timv/projects/env/bin/skid search_org " query)))
+  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 " query)))
   (beginning-of-buffer)
   (org-mode))
 
