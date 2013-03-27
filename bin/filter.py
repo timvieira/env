@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import re, os, sys
 from arsenal.terminal import red, green, yellow, blue, magenta, cyan
-from sys import stdin, stdout
+from sys import stdin
 from itertools import cycle
 from subprocess import Popen, PIPE
 from arsenal.iterextras import unique
@@ -22,6 +22,9 @@ TODO:
 
 def filter1(f):
     f = f.strip()
+    if not os.path.exists(f):   # XXX: can't apply filter to nonfiles or nonexistent files (e.g. out-of-date input)
+        return True
+    f = f.strip()
     if f.endswith('.tex'):
         # filter org-mode tex export files.
         for line in file(f):
@@ -35,12 +38,45 @@ def filter1(f):
     return True
 
 
+def camel_space(x):
+    """
+    Insert spaces implied by camel case.
+
+    >>> camel_space('McDonald')
+    'Mc Donald'
+
+    >>> camel_space('thisIsAWordInCamelCaseWord')
+    'this Is A Word In Camel Case Word'
+
+    >>> camel_space('howAboutNumbersLike2Or3')
+    'how About Numbers Like2 Or3'
+
+    """
+    return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
+
 def words(x):
-    x = x.strip()
-    x = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
+    """
+    Extract words.
+
+    >>> words('/path/to/some-file.txt')
+    ['path', 'to', 'some', 'file', 'txt']
+
+    >>> words('McDonald')
+    ['Mc', 'Donald']
+
+    >>> words('thisIsAWordInCamelCaseWord')
+    ['this', 'Is', 'A', 'Word', 'In', 'Camel', 'Case', 'Word']
+
+    """
+    x = camel_space(x)
     return re.findall('\w+', x)
 
+
 def main(filters, lines, color=True):
+
+    # cleanup.
+    lines = [l.strip() for l in lines]
+
     colors = [red, green, yellow, blue, magenta, cyan]
     filters = [re.compile('\\b' + f, re.I) for f in filters]
 
@@ -48,11 +84,11 @@ def main(filters, lines, color=True):
 
         # XXX: is there a better way to do this? note that highlighting doesn't work.
         # add spaces at camel case word boundaries
-        line2 = re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', line.strip())
+        line2 = camel_space(line)
 
         if not all(f.findall(line) for f in filters) and not all(f.findall(line2) for f in filters):
             continue
-        if not filter1(line):
+        if not filter1(line):   # XXX: not everything is a file, should add an cmdline option
             continue
         if color:
             for f, c in zip(filters, cycle(colors)):
@@ -91,7 +127,7 @@ if __name__ == '__main__':
         exit(1)
 
     for m in matches:
-        stdout.write(m)
+        print m
 
     if len(matches) == 1:
         if args.on_unique:
