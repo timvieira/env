@@ -4,6 +4,9 @@
 args="$@"
 args=$(python -c "import re; print re.sub('(.*?):(\d*:?\d*):?$', r'+\2 \1', '$args')")
 
+# remove "file://" prefix from file names
+args=$(python -c "import re; print re.sub(r'\bfile://(.*?)', r'\1', '$args')")
+
 function new-emacs {
     emacs $args &
     disown $!
@@ -19,7 +22,6 @@ if [[ `ps aux |grep emacs |grep -v grep |grep emacs` ]]; then
 else
     new-emacs
 fi
-
 
 # TODO: looks like emacsclient give you a fallback... behavior isn't exactly the
 # same. Can we simplify the stuff above?
