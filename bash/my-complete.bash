@@ -2,6 +2,7 @@
 # Experimental Bash completion based on information gain
 #
 # See also bin/hist-complete.py and bin/filter.py
+#
 
 _complete_fv ()
 {
@@ -64,7 +65,7 @@ _complete_vpy ()
 # up-to-date?
 COMP_ENV="/tmp/comp-e"
 COMP_NOTES="/tmp/complete-notes"
-COMP_PROJECTS=/tmp/comp-projects
+COMP_PROJECTS="/tmp/comp-projects"
 
 function update {
     yellow "Updating completions"
@@ -73,7 +74,7 @@ function update {
     find-note-files ~/projects > $COMP_NOTES
 
     # environment files
-    find $ENV |ignore-filter |grep -v 'site-lisp' > $COMP_ENV
+    find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
     # project directories
@@ -97,7 +98,7 @@ $courses
 $vcroots
 $everythingelse"
 
-    echo "$matches"| ignore-filter| grep -v '/data/' > $COMP_PROJECTS
+    echo "$matches" |ignore-filter |grep -v bdslss/reviews |grep -v '/data/' > $COMP_PROJECTS
 }
 
 
@@ -106,26 +107,22 @@ if [ ! -f /tmp/comp-projects ]; then
 fi
 
 
-
-# TODO: check the age of these files before automatically updating
-#update
-
 # TODO: create a version of hist complete which uses dir-history.
 
 
-#  # optcomplete harness for bash shell. You then need to tell
-#  # bash to invoke this shell function with a command like
-#  # this::
-#  #
-#  #   complete -F _optcomplete <program>
-#  #
-#  _optcomplete {
-#      COMPREPLY=( $( \
-#          COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
-#          COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
-#          $1 ) )
-#  }
-#  complete -F _optcomplete skid
+# optcomplete harness for bash shell. You then need to tell
+# bash to invoke this shell function with a command like
+# this::
+#
+#   complete -F _optcomplete <program>
+#
+function _optcomplete {
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        $1 ) )
+}
+complete -F _optcomplete skid
 
 complete -F _complete_fv    fv
 complete -F _complete_e     e
