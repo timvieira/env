@@ -5,10 +5,10 @@
 
 ;; -- Display images in org mode
 ;; enable image mode first
-(iimage-mode)
+;(iimage-mode)
 ;; add the org file link format to the iimage mode regex
-(add-to-list 'iimage-mode-image-regex-alist
-             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex "\\)\\]")  1))
+;(add-to-list 'iimage-mode-image-regex-alist
+;             (cons (concat "\\[\\[file:\\(~?" iimage-mode-image-filename-regex "\\)\\]")  1))
 
 ;; I don't want to see blank lines in collapsed (contents) views. This setting
 ;; hides single blank lines and exposes the rest so I can clean them up.
@@ -29,7 +29,6 @@
 (setq org-src-fontify-natively t)
 
 ;(setq org-return-follows-link t)
-
 
 
 (eval-after-load "org"
@@ -114,6 +113,6 @@
   ;(flyspell-start)
 )
 
-;(setq org-startup-with-inline-images t)
+(setq org-startup-with-inline-images nil)
 (add-hook 'org-mode-hook
           'org-init)
