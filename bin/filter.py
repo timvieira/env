@@ -30,13 +30,13 @@ def filter1(f):
         for line in file(f):
             if 'Emacs Org-mode version' in line:
                 return False
-    [_, ext] = os.path.splitext(f)
-    ext = ext[1:]  # drop period.
-    if ext not in ['', 'tex', 'org', 'txt', 'rst', 'md', 'markdown',
-                   'py', 'scala', 'java', 'bash', 'el']:
-        return False
+#    [_, ext] = os.path.splitext(f)
+#    ext = ext[1:]  # drop period.
+#    if ext not in ['', 'tex', 'org', 'txt', 'rst', 'md', 'markdown',
+#                   'py', 'scala', 'java', 'bash', 'el', 'nb', 'ipynb']:
+#        return False
+#    return True
     return True
-
 
 def camel_space(x):
     """
