@@ -28,7 +28,7 @@
 
 (setq org-src-fontify-natively t)
 
-;(setq org-return-follows-link t)
+(setq org-return-follows-link t)
 
 
 (eval-after-load "org"
@@ -36,18 +36,105 @@
      ;; Change .pdf association directly within the alist
      (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")))
 
+(defun read-file (file)
+  "Return a list of lines in FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (buffer-string)))
+
+;(defvar org-latex-header)
+;(setq org-latex-header
+ ;     (read-file "/home/timv/projects/env/emacs/org-latex-header.tex"))
+
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
 (add-to-list 'org-export-latex-classes
              '("article"
-               "\\documentclass{article}
-                \\setlength\\parindent{0pt}   % no paragraph indentation
-                \\usepackage[utf8]{inputenc}
-                \\usepackage{fullpage}
-                \\setlength{\\parskip}{.35cm plus4mm minus3mm}"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}"))
+;               (format "%s" org-latex-header)
+
+"\\documentclass{article}
+\\setlength\\parindent{0pt}   % no paragraph indentation
+\\usepackage[utf8]{inputenc}
+\\usepackage{fullpage}
+\\setlength{\\parskip}{.35cm plus4mm minus3mm}
+
+\\usepackage{fancybox}
+\\usepackage{pgf}
+\\usepackage{tikz}
+\\usetikzlibrary{arrows,automata}
+\\usepackage[latin1]{inputenc}
+
+\\usepackage{framed,color}
+\\definecolor{shadecolor}{rgb}{1,0.8,0.3}
+
+\\usepackage{multirow}
+\\usepackage{url}
+\\usepackage{graphicx}
+
+\\usepackage{latexsym}
+\\usepackage{amsfonts}
+\\usepackage{amsmath}
+\\usepackage{amsthm}
+\\usepackage{amssymb}
+\\usepackage{amsbsy}
+
+\\usepackage{verbatim}
+\\usepackage{xspace}
+\\usepackage{url}
+\\usepackage{algorithm2e}
+
+\\usepackage{color}
+\\usepackage{xcolor}
+\\definecolor{darkgrey}{rgb}{0.2,0.2,0.2}
+\\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\\definecolor{darkpurple}{rgb}{0.4,0.0,0.4}
+\\definecolor{darkred}{rgb}{0.5,0.0,0.0}
+\\definecolor{darkorange}{rgb}{0.5,0.45,0.4}
+\\definecolor{darkgreen}{rgb}{0.0,0.5,0.0}
+\\definecolor{darkergreen}{rgb}{0.0,0.4,0.0}
+\\definecolor{lightblue}{rgb}{0.8,0.8,1.0}
+\\definecolor{lightgreen}{rgb}{0.8,1.0,0.8}
+\\definecolor{lightred}{rgb}{1.0,0.8,0.8}
+\\definecolor{lightyellow}{rgb}{1.0,1.0,0.8}
+\\definecolor{lightorange}{rgb}{1.0,0.9,0.8}
+\\definecolor{lightgrey}{rgb}{0.96,0.97,0.98}
+
+\\newsavebox{\\savelisting}
+\\newenvironment{timbox}
+{\\begin{lrbox}{\\savelisting}
+\\begin{minipage}{6.5in}
+\\begin{flushleft}}
+{\\end{flushleft}
+\\end{minipage}
+\\end{lrbox}
+\\begin{center}
+\\resizebox{\\columnwidth}{!}{\\setlength\\fboxsep{6pt}\\fbox{\\usebox{\\savelisting}}}
+\\end{center}}
+
+\\newcommand{\\Note}[3]{{\\textcolor{#2}{[\\textbf{#1:} #3]}}}
+\\newcommand{\\todo}[1]{\\Note{TODO}{red}{#1}}
+\\newcommand{\\timv}[1]{\\Note{timv}{magenta}{#1}}
+\\newcommand{\\halt}{\\textsc{halt}\\xspace }
+\\newcommand{\\astar}{A$^*$\\xspace}
+\\newcommand{\\softmin}{{\\text{{softmin}}}}
+\\newcommand{\\softmax}{{\\text{{softmax}}}}
+
+\\newcommand{\\loss}[1]{ \\mathcal{L}\\left( #1 \\right) }
+\\newcommand{\\indicator}[1]{ \\textbf{1}\\left[ #1 \\right] }
+
+\\newcommand{\\gradtheta}[1]{\\nabla_\\theta \\left[ #1 \\right] }
+\\renewcommand{\\vec}[1]{\\boldsymbol{#1}}
+\\renewcommand{\\|}{\\textrm{~}\\arrowvert\\textrm{~}}
+
+\\newcommand{\\R}{\\ensuremath{\\mathbb{R}}}
+
+\\DeclareMathOperator*{\\argmax}{arg\\,max}
+\\DeclareMathOperator*{\\argmin}{arg\\,min}
+"
+               ("\\section*{%s}" . "\\section*{%s}")
+               ("\\subsection*{%s}" . "\\subsection*{%s}"))
 )
 
 
@@ -103,12 +190,12 @@
   (font-lock-add-keywords nil '(("^\\([\\-\\=]+\\)$" 1 '(:foreground "orange") t)))
 
   ;; highlight bullet stuff colon. E.g. "1. Something interesting: elaboration"
-  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
-  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):$" 1 '(:foreground "orange") t)))
+;  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
+;  (font-lock-add-keywords nil '(("[0-9\\.]+\\. \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
   ;; note: require a space to avoid false positive on "http:" and "file:"
-  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
-  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):$" 1 '(:foreground "orange") t)))
+;  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):[ ]" 1 '(:foreground "orange") t)))
+;  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
   ;(flyspell-start)
 )
