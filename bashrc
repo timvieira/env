@@ -120,6 +120,7 @@ alias de='cd ~/Desktop'
 # order lines by frequency (most frequent first).
 alias freq='sort | uniq -c |sort -nr'
 alias remove-empty-lines='grep -v "^\s*$"'
+alias space2newline="sed 's/ /\n/g'"
 
 
 #--------------------------
@@ -163,13 +164,8 @@ bind "'\C-f': '\C-ustty sane\n\r\C-l'"   # some times terminal get broken...
 # Bash History
 
 # don't put duplicate lines in the history. See bash(1) for more options don't
-# overwrite. GNU Midnight Commander's setting of `ignorespace'.
-HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoreboth
-
-# append to the history file, don't overwrite it
-shopt -s histappend
+# overwrite.
+export HISTCONTROL=ignoredups,ignoreboth
 
 # cmdhist: If set, Bash attempts to save all lines of a multiple-line command in
 #    the same history entry. This allows easy re-editing of multi-line commands.
@@ -181,6 +177,8 @@ export HISTFILESIZE=100000000000
 export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
 export HISTTIMEFORMAT='%F %T '
 
+# append to the history file, don't overwrite it
+shopt -s histappend
 
 # globstar: If set, the pattern '**' used in a filename expansion context will
 #    match all files and zero or more directories and subdirectories. If the
@@ -258,7 +256,13 @@ esac
 # Enable bash completion.
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
-    bind "set completion-ignore-case on"   # case insensitive
+
+    # If 'on', words with more than one completion cause the matches to be
+    # listed immediately instead of ringing the bell. Default 'off'.
+    bind "set show-all-if-ambiguous on"
+
+    # case insensitive
+    bind "set completion-ignore-case on"
 fi
 
 
@@ -423,6 +427,7 @@ function hg-changed-repos {
 alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
 alias hgchangelog="hg log --style changelog"
 alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
+alias hg-dummy-ci='hg ci -m "()"'
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
@@ -497,9 +502,6 @@ function p {
     # tool must already exist!)
 
     matches=`cat $COMP_PROJECTS`
-
-    # first filter things inside .hg directories
-    matches=`echo "$matches" | grep -v '\.hg'`
 
     #echo "$matches" |filter.py $@
 
@@ -586,8 +588,10 @@ function todos {
 function find-note-files {
     find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
       |grep -v '~\|#'  \
+      |grep -v '/env/' \
       |grep -v '/export/' \
       |grep -v 'site-lisp' \
+      |grep -v 'incoming/' \
       |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 }
 
@@ -596,7 +600,8 @@ function org-export-filter {
 }
 
 function notes {
-   matches=`find-note-files ~/projects |filter.py $@`
+#   matches=`find-note-files ~/projects |filter.py $@`
+   matches=`cat $COMP_NOTES |filter.py $@`
    retcode="$?"
 
    # TODO: search skid as well.
@@ -614,8 +619,12 @@ function notes {
 
        cd `dirname $match`
 
-       # open file in editor
-       $EDITOR "$match"
+       # dispatch to the appropriate opener; the text editor is the default
+       if [[ "$match" =~ .*\.(ipynb|nb)$ ]]; then
+           gnome-open $match
+       else
+           $EDITOR "$match"
+       fi
 
    else
        yellow "pick a file or be more specific."
@@ -626,9 +635,9 @@ function notes {
 # grep notes for patterns
 # TODO: generalize to keyword search
 function notes-ack {
-    find-note-files ~/projects | xargs ack -ai "$@"
-    find-note-files ~/Dropbox | xargs ack -ai "$@"
-    find-note-files ~/.skid | xargs ack -ai "$@"
+    find-note-files ~/projects | xargs ack -i "$@"
+    find-note-files ~/Dropbox | xargs ack -i "$@"
+    echo ~/.skid/marks/*.d/notes.org | xargs ack -i "$@"
 }
 
 #_______________________________________________________________________________
@@ -664,6 +673,29 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 #    echo
 #  done
 #}
+
+function compare-lines {
+    hs=""
+    for f in `echo $@`; do
+        h=/tmp/`pyhash $f`
+        hs="$hs $h"
+        cat $f |sort > $h   # timv: option for uniq (i.e. set difference)?
+    done
+    kdiff3 $hs
+}
+
+function compare-uniq-lines {
+    hs=""
+    for f in `echo $@`; do
+        h=/tmp/`pyhash $f`
+        hs="$hs $h"
+        cat $f |sort |uniq > $h
+    done
+    kdiff3 $hs
+}
+
+alias pyhash="python -c 'import sys, hashlib; print hashlib.sha1(str().join(sys.argv[1:]) or raw_input()).hexdigest()'"
+
 
 function extract {
   if [ -f $1 ] ; then
