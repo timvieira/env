@@ -1,4 +1,5 @@
-personal_ws-1.1 en 262 
+personal_ws-1.1 en 282 
+preterminals
 sigmoidal
 jammer
 workflows
@@ -20,6 +21,7 @@ tradeoff
 Teichert
 MCMC
 EMNLP
+CKY
 analyses
 uninstalled
 argmax
@@ -32,6 +34,7 @@ timvieira
 backpointer
 checksum
 Tim
+SPC
 CRF
 Kaelbling
 epipole
@@ -43,6 +46,7 @@ exponentiate
 DBLP
 noncommutative
 HMMs
+hyperparameter
 decomposability
 anaphor
 Datalog
@@ -66,6 +70,7 @@ UMD
 Hixkaryana
 DSL
 LBFGS
+SVM
 treewidth
 McCallum
 unmodeled
@@ -99,8 +104,10 @@ Peano
 backprop
 aggregators
 unmemoized
+pretrained
 README
 vertices
+pragma
 underdetermined
 GPS
 semiring
@@ -108,6 +115,7 @@ gmail
 munge
 runtime
 hypergraphs
+Tetris
 decomposablility
 Earley
 nondeterminism
@@ -115,7 +123,8 @@ equational
 ILP
 Multi
 repropagated
-Reachability
+Boyan
+reachability
 reranking
 clitics
 JHU
@@ -152,6 +161,7 @@ BP
 Homographies
 html
 internet
+MBR
 rsync
 satisfiability
 Minka
@@ -169,6 +179,7 @@ disambiguates
 CPLEX
 overfit
 Ew
+nondifferentiable
 toolkits
 discretized
 subgradients
@@ -185,6 +196,10 @@ perceptron
 Bottou's
 unimodular
 Nelder
+MLNs
+MLN
+Pearlmutter
+subderivation
 resample
 Kinect
 backpointers
@@ -214,6 +229,7 @@ metadata
 dualdecomp
 overcounting
 subproblems
+Roark
 Hollingshead
 automata
 nonterminal
@@ -232,6 +248,7 @@ might've
 OOV
 traversable
 Jiarong's
+intuiton
 discretize
 revisitation
 nonprojective
@@ -240,11 +257,13 @@ rollouts
 RANSAC
 hyperparameters
 webpages
-Counterfactuals
+counterfactuals
+coindexed
 Viterbi
 noogie
 parallelizing
 rollout
+POS
 anaphors
 bigram
 reprioritization
@@ -255,6 +274,7 @@ CGI
 regressor
 subgraph
 discretization
+SGD
 todo
 antiderivative
 DAGs
