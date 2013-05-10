@@ -1,5 +1,22 @@
 ;; -*- coding: utf-8 -*-
 
+;; NOTES:
+;;
+;;  - we hardcode the use of evince as pdf viewer
+;;
+;;  - assumes bibtex file has same prefix (e.g. mydoc.tex and mydoc.bib)
+;; 
+;; INSTALLATION:
+;;
+;;  - put this code in your .emacs file or in it's own file (e.g. my-latex.el)
+;;    and then add (load-library "my-latex") to your .emacs
+;;
+;;  - you should also include the following in your .emacs to associate with
+;;    tex files
+;;
+;;       (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
+;;
+
 (defun flyspell-start ()
   "initialize flyspell-mode and check buffer."
   (interactive)
