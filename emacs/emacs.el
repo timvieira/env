@@ -238,7 +238,7 @@
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 '(:foreground "yellow") t)))
 
 (dark-colors)
-(light-colors)
+;(light-colors)
 
 (add-hook 'window-setup-hook 'my-window-placement)
 ;(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
@@ -427,7 +427,7 @@
   (defun X-setup ()
     (server-start)
     (set-mouse-color "black")
-    (mouse-avoidance-mode)
+;    (mouse-avoidance-mode)
   )
 
   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
@@ -525,5 +525,9 @@
   (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 " query)))
   (beginning-of-buffer)
   (org-mode))
+
+(org-add-link-type "bash" 'shell-command)
+
+
 
 ;;------------------------------------------------------------------------------
