@@ -64,14 +64,15 @@ _complete_vpy ()
 # TODO: are there any clever things we can do to speed this up and keep things
 # up-to-date?
 COMP_ENV="/tmp/comp-e"
-COMP_NOTES="/tmp/complete-notes"
+#COMP_NOTES="/tmp/comp-notes"
+COMP_NOTES='/home/timv/projects/notes/.index/files'
 COMP_PROJECTS="/tmp/comp-projects"
 
 function update {
     yellow "Updating completions"
 
     # notes files
-    find-note-files ~/projects > $COMP_NOTES
+    notes.py --files
 
     # environment files
     find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
@@ -85,7 +86,9 @@ function update {
 
     # version controlled project roots -- be sure to strip off hg directories or
     # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | grep -v '/projects/notes/' |sed 's/\\/\.hg$//g'`
+    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
+
+    # TODO: why did I have this filter "grep -v '/projects/notes/'" above
 
     # sort vc roots so that prefixes come first
     vcroots=`echo "$vcroots" |sort`
