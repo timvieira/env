@@ -1,52 +1,208 @@
 #!/usr/bin/env python
-import re, sys
-from sys import argv
-from os import environ
-from collections import Counter
-from subprocess import Popen, PIPE
+"""
 
-def complete():
-    cwords = environ['COMP_WORDS'].split()
-    cline = environ['COMP_LINE']
-    cpoint = int(environ['COMP_POINT'])
-    cword = int(environ['COMP_CWORD'])
+Very simple indexing files. I like to use it for my notes.
 
-    if cword >= len(cwords):
-        currword = None
-    else:
-        currword = cwords[cword]
+This script extracts a small amount of metadata: title and tags. The title is
+taken to be the first line of the file. tags are specific in a comment
 
-    c = Counter(w for line in file('/home/timv/.bash_history') if line.startswith('notes') for w in re.findall('\w+', line))
+(#|%|;) tags: tag1 tag2 tag3
 
-    possible = [k for (k, v) in c.iteritems() if v > 3]
+"""
 
-    if currword:
-        possible = [x for x in possible if x.startswith(currword) and len(x) >= len(currword)]
+import re, os
+from datetime import datetime
+from path import path
+from whoosh.index import create_in, open_dir
+from whoosh.fields import Schema, TEXT, ID, DATETIME
+from whoosh.qparser import QueryParser
+from whoosh.analysis import KeywordAnalyzer
 
-    print ' '.join(possible).encode('utf8')
+from arsenal.terminal import cyan, red, yellow, magenta
+from arsenal.fsutils import find
 
 
-def find_notes():
+# globals
+DIRECTORY = path('/home/timv/projects/notes/.index')
+TRACKED = DIRECTORY / 'files'
+NAME = 'index'
 
-    p = Popen("""
-    find ~/projects -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
-      |grep -v '~\|#'  \
-      |grep -v '/export/' \
-      |grep -v 'site-lisp' \
-      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
-    """, stdout=PIPE, stderr=PIPE, shell=True)
+from env.bin.filter import filter1
 
-    (out, err) = p.communicate()
+def dump_files():
+    p = '(.*\.(org|tex)$|.*\\b(TODO|NOTES|LOG)\\b.*)'
+    r = ['/home/timv/projects/notes',
+         '/home/timv/projects/learn',
+         '/home/timv/projects',
+         '/home/timv/projects/ldp/write/working/',
+         '/home/timv/Dropbox/todo']
+    with file(TRACKED, 'wb') as f:
 
-    return out.split()
+        # add python and mathematica scripts notes directory
+        for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb)$'):
+            f.write(x)
+            f.write('\n')
+
+        for d in r:
+            for x in sorted(find(d, regex=p)):
+                if filter1(x) and not re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/)', x) and not x.endswith('~'):
+                    f.write(x)
+                    f.write('\n')
+
+"""
+def files():
+    p = '(.*\.org$|TODO|NOTES|LOG)'
+    d = ['/home/timv/projects/notes',
+         '/home/timv/projects/learn',
+         '/home/timv/projects',
+         '/home/timv/Dropbox/todo']
+    for x in d:
+        for f in find(x, regex=p):
+            yield f
+"""
+def files():
+    for f in file(TRACKED):
+        f = f.strip()
+        yield f
 
 
-if 'COMP_WORDS' in environ:
-    complete()
-    exit(1)
+def create():
+    """ Create a new Whoosh index.. """
+    print 'creating new index in directory %s' % DIRECTORY
+    os.system('rm -rf %s' % DIRECTORY)
+    os.mkdir(DIRECTORY)
+    schema = Schema(path = ID(stored=True, unique=True),
+                    title = TEXT(stored=True),
+                    content = TEXT(stored=True),
+                    tags = TEXT(stored=True, analyzer=KeywordAnalyzer()),
+                    mtime = DATETIME(stored=True))
+    create_in(DIRECTORY, schema, NAME)
 
 
-import filter
+def drop():
+    "Drop existing index."
+    assert DIRECTORY.exists()
+    os.system('rm -rf ' + DIRECTORY)
+    print 'dropped index', DIRECTORY
 
-for x in filter.main(filters = argv[1:], lines = find_notes()):
-    print x
+
+def _search(q, limit=None):
+    q = unicode(q.decode('utf8'))
+    ix = open_dir(DIRECTORY, NAME)
+    with ix.searcher() as searcher:
+        qp = QueryParser('content', schema=ix.schema)
+        q = qp.parse(q)
+        for hit in searcher.search(q, limit=limit):
+            yield hit
+
+
+def search(*q):
+    print
+    for hit in _search(' '.join(q)):
+        print hit['title']
+        print cyan % 'file://%s' % hit['path']
+        if hit['tags']:
+            print magenta % ' '.join(hit['tags'])
+        print
+
+
+def update():
+    "Rebuild index from scratch."
+
+    # create index if it doesn't exist
+    if not DIRECTORY.exists():
+        create()
+
+    # get handle to Whoosh index
+    ix = open_dir(DIRECTORY, NAME)
+
+    with ix.writer() as w, ix.searcher() as searcher:
+
+        for d in sorted(map(path, set(files())), key=lambda x: x.mtime, reverse=True):
+
+            # lookup document mtime in the index; don't add or extract info if
+            # you don't need it.
+            result = searcher.find('path', unicode(d))
+
+            mtime = datetime.fromtimestamp(d.mtime)
+
+            if not result:
+                print '[INFO] new document:', d
+
+            else:
+
+                assert len(result) == 1, 'should be unique.'
+                result = result[0]
+                if mtime <= result['mtime']:   # already up to date
+
+                    # Since we've sorted files by mtime, we know that files
+                    # after this one are older, and thus we're done.
+                    return
+
+                print '[INFO] update:', d
+
+            with file(d) as f:
+                content = unicode(f.read().decode('utf8', 'ignore'))
+
+
+            title = extract_title(d, content)
+
+            # a line begining with a comment marker
+            tags = re.findall('^[#%:;]\s*tags:\s*(.*)', content, re.MULTILINE)
+
+            if tags:
+                tags = [x.strip() for x in tags[0].split()]
+
+            w.update_document(path = unicode(d),
+                              title = title,
+                              content = content,
+                              mtime = mtime,
+                              tags = tags)
+
+def extract_title(d, x=None):
+    if x is None:
+        with file(d) as f:
+            x = unicode(f.read().decode('utf8', 'ignore'))
+
+    title = None
+    if d.endswith('.tex'):
+        title = re.findall(r'\\title\{([\w\W]*?)\}', x)
+        if title:
+            title = title[0]
+
+    if not title:
+        title = x.split('\n')[0]  # use first line of the file as title
+        title = re.sub('#\+title:', '', title)
+
+    return title.strip()
+
+
+
+def main():
+    from argparse import ArgumentParser
+
+    p = ArgumentParser()
+    p.add_argument('query', nargs='*')
+    p.add_argument('--rebuild', action='store_true',
+                   help='rebuild tracked files and index from scratch.')
+    p.add_argument('--update', action='store_true')
+    p.add_argument('--files', action='store_true')
+
+    args = p.parse_args()
+
+    if args.files:
+        dump_files()
+
+    if args.rebuild:
+        create()
+        dump_files()
+        update()
+
+    if args.update:
+        update()
+
+    search(*args.query)
+
+
+if __name__ == '__main__':
+    main()
