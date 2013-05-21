@@ -9,7 +9,6 @@ ENV=~/projects/env
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
 
-
 ## function _gnome-do-logged {
 ##     while true; do
 ##         echo "starting gnome-do"
@@ -428,6 +427,7 @@ alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date
 alias hgchangelog="hg log --style changelog"
 alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
 alias hg-dummy-ci='hg ci -m "()"'
+alias hg-dummy-push='hg ci -m "()" && hg push'
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
@@ -585,51 +585,22 @@ function todos {
     ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR):|XXX[ ]' $@
 }
 
+#function find-note-files {
+#    find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
+#      |grep -v '~\|#'  \
+#      |grep -v '/env/' \
+#      |grep -v '/export/' \
+#      |grep -v 'site-lisp' \
+#      |grep -v 'incoming/' \
+#      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
+#}
+
 function find-note-files {
-    find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
-      |grep -v '~\|#'  \
-      |grep -v '/env/' \
-      |grep -v '/export/' \
-      |grep -v 'site-lisp' \
-      |grep -v 'incoming/' \
-      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
+    cat $COMP_NOTES
 }
 
 function org-export-filter {
     ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $@
-}
-
-function notes {
-#   matches=`find-note-files ~/projects |filter.py $@`
-   matches=`cat $COMP_NOTES |filter.py $@`
-   retcode="$?"
-
-   # TODO: search skid as well.
-
-   # TODO: don't just use file name. include the title (heuristically take first
-   # line as title)
-
-   echo "$matches"
-
-   if [[ "$retcode" -eq "0" ]]; then
-       # feeling lucky, so we'll open the file for you.
-
-       # drop color codes
-       match=`echo "$matches" |pysed '\\033\[.*?m' '' `
-
-       cd `dirname $match`
-
-       # dispatch to the appropriate opener; the text editor is the default
-       if [[ "$match" =~ .*\.(ipynb|nb)$ ]]; then
-           gnome-open $match
-       else
-           $EDITOR "$match"
-       fi
-
-   else
-       yellow "pick a file or be more specific."
-
-   fi
 }
 
 # grep notes for patterns
@@ -759,5 +730,6 @@ function concat-pdfs {
 #alias skid='python -m skid'
 alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 
-
 source $ENV/bash/my-complete.bash
+
+alias gnome-do-restart='(pkill9 gnome-do && shutup-and-disown gnome-do) >& /dev/null'
