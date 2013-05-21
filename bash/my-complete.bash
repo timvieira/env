@@ -61,12 +61,10 @@ _complete_vpy ()
 
 
 
-# TODO: are there any clever things we can do to speed this up and keep things
-# up-to-date?
-COMP_ENV="/tmp/comp-e"
-#COMP_NOTES="/tmp/comp-notes"
+# TODO: clever things to keep things up-to-date?
+COMP_ENV="/home/timv/.completions/env"
 COMP_NOTES='/home/timv/projects/notes/.index/files'
-COMP_PROJECTS="/tmp/comp-projects"
+COMP_PROJECTS="/home/timv/.completions/projects"
 
 function update {
     yellow "Updating completions"
@@ -103,11 +101,6 @@ $everythingelse"
 
     echo "$matches" |ignore-filter |grep -v bdslss/reviews |grep -v '/data/' > $COMP_PROJECTS
 }
-
-
-if [ ! -f /tmp/comp-projects ]; then
-    update
-fi
 
 
 # TODO: create a version of hist complete which uses dir-history.
