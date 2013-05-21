@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-import re, os, sys
-from arsenal.terminal import red, green, yellow, blue, magenta, cyan
-from sys import stdin
-from itertools import cycle
-from subprocess import Popen, PIPE
-from arsenal.iterextras import unique
 
 """
 TODO: Can't distinguish.
@@ -19,6 +13,16 @@ TODO:
   no results
 
 """
+
+import re, os, sys
+
+sys.path.append('/home/timv/projects')
+
+from arsenal.terminal import red, green, yellow, blue, magenta, cyan
+from sys import stdin
+from itertools import cycle
+from subprocess import Popen, PIPE
+from arsenal.iterextras import unique
 
 def filter1(f):
     f = f.strip()
@@ -105,6 +109,8 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='Filter a sequence of lines by matching patterns.')
     parser.add_argument('filters', nargs='*', help='filters, each is a regex')
 
+    parser.add_argument('--top', action='store_true', help='call on-unique on the top hit (if there is one).')
+
     parser.add_argument('--on-unique', help='When a single match is found execute this command.')
     parser.add_argument('--on-fail', help='When a no match is found execute this command.')
 
@@ -126,10 +132,13 @@ if __name__ == '__main__':
             print >> sys.stderr, red % 'no results'
         exit(1)
 
-    for m in matches:
-        print m
+    if args.top:
+        print matches[0]
+    else:
+        for m in matches:
+            print m
 
-    if len(matches) == 1:
+    if len(matches) == 1 or args.top:
         if args.on_unique:
             Popen(args.on_unique.format(match=re.sub('\\033\[.*?m', '', matches[0])),
                   stdout=PIPE,
