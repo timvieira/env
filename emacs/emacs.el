@@ -526,8 +526,23 @@
   (beginning-of-buffer)
   (org-mode))
 
-(org-add-link-type "bash" 'shell-command)
+(defun notes (query)
+  (async-shell-command (concat "/home/timv/projects/env/bin/notes " query)))
+; (notes "gumbel")
+
+(org-add-link-type "bash" 'async-shell-command)
+(org-add-link-type "notes" 'notes)
 
 
 
 ;;------------------------------------------------------------------------------
+
+
+(setq org-latex-to-pdf-process '("pdflatex %f"))
+
+
+(defun flyspell-ignore-tex ()
+  "Tell flyspell to ignore latex commands when spell checking."
+  (interactive)
+  (set (make-variable-buffer-local 'ispell-parser) 'tex))
+;(add-to-list 'auto-mode-alist '("\\.org$" . flyspell-ignore-tex))
