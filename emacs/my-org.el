@@ -55,7 +55,6 @@
 
 "\\documentclass{article}
 \\setlength\\parindent{0pt}   % no paragraph indentation
-\\usepackage[utf8]{inputenc}
 \\usepackage{fullpage}
 \\setlength{\\parskip}{.35cm plus4mm minus3mm}
 
@@ -63,7 +62,6 @@
 \\usepackage{pgf}
 \\usepackage{tikz}
 \\usetikzlibrary{arrows,automata}
-\\usepackage[latin1]{inputenc}
 
 \\usepackage{framed,color}
 \\definecolor{shadecolor}{rgb}{1,0.8,0.3}
