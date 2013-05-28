@@ -106,7 +106,7 @@ def complete(filename, testing=''):
     for s, w, ds in kl:
         # when we've narrowed it down to one line or word given the current
         # prefix, KL divergence will be zero.
-        if s > 0.05 or m == 1 or (n == 1 and len(w) > len(currword) > 0):  # strict prefix has been typed
+        if s > 0.1 or m == 1 or (n == 1 and len(w) > len(currword) > 0):  # strict prefix has been typed
             if testing:
                 print '(%g) %s' % (s, w)
                 for _, d in ds:
