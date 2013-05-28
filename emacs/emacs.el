@@ -522,7 +522,7 @@
   "skid tag search."
   (interactive)
   (switch-to-buffer (make-temp-name "Skid"))
-  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 " query)))
+  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --pager none --top  " query)))
   (beginning-of-buffer)
   (org-mode))
 
@@ -538,11 +538,11 @@
 ;;------------------------------------------------------------------------------
 
 
-(setq org-latex-to-pdf-process '("pdflatex %f"))
+;(setq org-latex-to-pdf-process '("pdflatex %f"))
 
 
 (defun flyspell-ignore-tex ()
   "Tell flyspell to ignore latex commands when spell checking."
   (interactive)
   (set (make-variable-buffer-local 'ispell-parser) 'tex))
-;(add-to-list 'auto-mode-alist '("\\.org$" . flyspell-ignore-tex))
+
