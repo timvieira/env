@@ -3,7 +3,6 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
 # pass aliases through sudo ... don't know if the really works...
-#alias sudo="sudo " # space triggers alias substitution
 
 ENV=~/projects/env
 PROJECTS=~/projects
@@ -339,7 +338,7 @@ function fv {
 #    fi
 #    matches=`f "$pattern" "$directory" | ignore-filter |filter.py $@`
 
-    matches=`find -type f | ignore-filter |filter.py $@ --on-unique 'v {match}'`
+    matches=`find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'`
 
     echo "$matches"
 #    echo "$matches" |xargs v
@@ -733,3 +732,24 @@ alias skid-dir='cd `python -c "import skid.config as c; print c.ROOT"`'
 source $ENV/bash/my-complete.bash
 
 alias gnome-do-restart='(pkill9 gnome-do && shutup-and-disown gnome-do) >& /dev/null'
+
+
+
+_complete_bibkeys ()
+{
+    X="/home/timv/.skid/bibkeys"
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        hist-complete.py $X ) )
+}
+alias bibkeys='/home/timv/projects/skid/utils/bibkeys.py complete'
+complete -F _complete_bibkeys   bibkeys
+
+
+function mtime {
+    python -c "
+from datetime import datetime
+from path import path
+print datetime.fromtimestamp(path('$1').mtime)"
+}
