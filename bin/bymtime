@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+from datetime import datetime
+from path import path
+from sys import stdin, argv
+
+files = list(stdin) if '-' in argv else argv[1:]
+files = map(path, filter(None, map(str.strip, files)))
+
+def t(x):
+    return datetime.fromtimestamp(x.mtime)
+
+fs = [(t(x), x) for x in files]
+fs.sort(reverse=True)
+
+print '\n'.join(map('%s\t%s'.__mod__, fs))
