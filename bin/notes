@@ -7,7 +7,7 @@ function yellow { echo -e "\e[33m$@\e[0m"; }
 
 COMP_NOTES=/home/timv/projects/notes/.index/files
 
-matches=`cat $COMP_NOTES |/home/timv/projects/env/bin/filter.py $@`
+matches=`cat $COMP_NOTES |bymtime - |cut -f2 |/home/timv/projects/env/bin/filter.py $@`
 retcode="$?"
 
 echo "$matches"
