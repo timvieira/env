@@ -77,7 +77,12 @@ function update {
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
     # project directories
-    projname=$(echo $PROJECTS/*/working $PROJECTS/*/*/working $PROJECTS/* |sed 's/ /\n/g')
+    projname=$( echo \
+        $PROJECTS/*/working \
+        $PROJECTS/*/*/working \
+        $PROJECTS/* \
+        $PROJECTS/self/* \
+        |sed 's/ /\n/g')
 
     # courses
     courses=`find $PROJECTS/courses -type d`
@@ -99,7 +104,12 @@ $courses
 $vcroots
 $everythingelse"
 
-    echo "$matches" |ignore-filter |grep -v bdslss/reviews |grep -v '/data/' > $COMP_PROJECTS
+    echo "$matches" |ignore-filter \
+        |grep -v bdslss/reviews    \
+        |grep -v '/data/'          \
+        |grep -v hw7-xfst/xfsm_api \
+        |grep -v '~$'              \
+        > $COMP_PROJECTS
 }
 
 
