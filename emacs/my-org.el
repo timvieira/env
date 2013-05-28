@@ -119,6 +119,8 @@
 \\newcommand{\\softmin}{{\\text{{softmin}}}}
 \\newcommand{\\softmax}{{\\text{{softmax}}}}
 
+\\newcommand{\\Expect}[2]{\\mathbb{E}_{#1}\\left[#2\\right]}
+
 \\newcommand{\\loss}[1]{ \\mathcal{L}\\left( #1 \\right) }
 \\newcommand{\\indicator}[1]{ \\textbf{1}\\left[ #1 \\right] }
 
@@ -196,6 +198,8 @@
 ;  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
   ;(flyspell-start)
+  (flyspell-ignore-tex)
+
 )
 
 (setq org-startup-with-inline-images nil)
