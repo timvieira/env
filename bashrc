@@ -321,7 +321,7 @@ function ff {
 }
 
 function ignore-filter {
-    grep -v '\(.class\|.pyc\)$' |grep -v '.hg\|.git'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
 }
 
 # fv ("flexible visit" or "find and visit") opens recursively searches for a
@@ -752,4 +752,10 @@ function mtime {
 from datetime import datetime
 from path import path
 print datetime.fromtimestamp(path('$1').mtime)"
+}
+
+function graphviz {
+  out=$1.svg
+  green output file: $out
+  cat $1 |dot -Tsvg > $out && google-chrome $out
 }
