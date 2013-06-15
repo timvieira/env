@@ -11,6 +11,11 @@
 #
 #  * might "break" if there are two shells writting to history
 #
+#  * history doesn't count (contiguous) duplicates, maybe this script should
+#    track the counts.
+#
+#  * should track hostname
+#
 function prompt_command {
 
   # timv: this seems to write to bash history
