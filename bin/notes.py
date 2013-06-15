@@ -118,7 +118,10 @@ def update():
 
     with ix.writer() as w, ix.searcher() as searcher:
 
-        for d in sorted(map(path, set(files())), key=lambda x: x.mtime, reverse=True):
+        fs = set(files())
+        fs = filter(os.path.exists, fs)
+
+        for d in sorted(map(path, fs), key=lambda x: x.mtime, reverse=True):
 
             # lookup document mtime in the index; don't add or extract info if
             # you don't need it.
