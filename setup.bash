@@ -14,7 +14,7 @@ add-link screenrc
 add-link ackrc
 add-link aspell.en.pws
 add-link emacs/emacs.el
-
+add-link hgrc
 
 ln -s `pwd`/texmf ~/texmf
 
