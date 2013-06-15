@@ -10,7 +10,7 @@ files = map(path, filter(None, map(str.strip, files)))
 def t(x):
     return datetime.fromtimestamp(x.mtime)
 
-fs = [(t(x), x) for x in files]
+fs = [(t(x), x) for x in files if x.exists()]
 fs.sort(reverse=True)
 
 print '\n'.join(map('%s\t%s'.__mod__, fs))
