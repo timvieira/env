@@ -1,0 +1,31 @@
+[ui]
+username = timv <tim.f.vieira@gmail.com>
+
+[web]
+allow_push = *
+push_ssl = false
+style = gitweb
+##
+# [2012-08-24 Fri] Ignore certificates. For example, today I had trouble
+#   cloning the followingrepository:
+#
+#  $ hg clone http://hg.furius.ca/public/nabu
+#  abort: error: _ssl.c:503: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+#
+cacerts =
+
+[extdiff]
+cmd.kdiff3 =
+cmd.diff = colordiff
+opts.diff = -uprN
+
+[merge-tools]
+kdiff3.args = $base $local $other -o $output
+
+[extensions]
+hgext.extdiff =
+hgext.bookmarks =
+hggit =
+fetch =
+color =
+highlight =
