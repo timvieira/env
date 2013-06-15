@@ -3,9 +3,14 @@
 cd `dirname $0`
 
 function add-link {
-   absp=$(ls -d -1 $PWD/$1)
-   base=`basename $absp`
-   ln -s $absp ~/.$base
+    local absp=$(ls -d -1 $PWD/$1)
+    local base=`basename $absp`
+    local dest="~/.$base"
+    if [ -f $dest ]; then
+        ln -s $absp $dest
+    else
+        echo "Skipping $dest, already exists"
+    fi
 }
 
 add-link bashrc
@@ -16,8 +21,9 @@ add-link aspell.en.pws
 add-link emacs/emacs.el
 add-link hgrc
 
-ln -s `pwd`/texmf ~/texmf
-
+if [ -f ~/texmf ]; then
+    ln -s `pwd`/texmf ~/texmf
+fi
 
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
