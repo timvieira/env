@@ -94,6 +94,7 @@ function add-jars-to-classpath {
 #export EDITOR=emacs
 export EDITOR=visit
 export HGEDITOR='emacs -nw'
+export GIT_EDITOR=$HGEDITOR
 
 function pkill9 {
   ps aux |grep "$@"
@@ -323,6 +324,7 @@ function ff {
 function ignore-filter {
     grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
 }
+
 
 # fv ("flexible visit" or "find and visit") opens recursively searches for a
 # file path matching specified pattern. Opens the file if a unique match is
@@ -757,5 +759,6 @@ print datetime.fromtimestamp(path('$1').mtime)"
 function graphviz {
   out=$1.svg
   green output file: $out
-  cat $1 |dot -Tsvg > $out && google-chrome $out
+  cat $1 |dot -Tsvg > $out
+  shutup-and-disown "google-chrome $out"
 }

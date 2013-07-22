@@ -1,4 +1,4 @@
-personal_ws-1.1 en 289 
+personal_ws-1.1 en 298 
 preterminals
 sigmoidal
 jammer
@@ -23,6 +23,7 @@ MCMC
 EMNLP
 CKY
 analyses
+PageRank
 uninstalled
 argmax
 majorization
@@ -41,6 +42,7 @@ epipole
 DLM
 semirings
 versa
+RSS
 emacs
 exponentiate
 DBLP
@@ -78,6 +80,7 @@ unmodeled
 coindexing
 Prolog
 SEARN
+memoization
 backend
 adjoints
 nand
@@ -104,6 +107,7 @@ Prolog's
 facebook
 Peano
 backprop
+unary
 aggregators
 unmemoized
 pretrained
@@ -121,6 +125,7 @@ Tetris
 decomposablility
 Earley
 nondeterminism
+SampleRank
 equational
 ILP
 Topicalization
@@ -184,6 +189,7 @@ disambiguates
 CPLEX
 overfit
 Ew
+aggregator
 nondifferentiable
 toolkits
 discretized
@@ -204,6 +210,7 @@ Nelder
 MLNs
 MLN
 Pearlmutter
+functor
 subderivation
 resample
 Kinect
@@ -232,8 +239,10 @@ Sudoku
 Champaign
 metadata
 dualdecomp
+ICML
 overcounting
 subproblems
+backchained
 Roark
 Hollingshead
 automata

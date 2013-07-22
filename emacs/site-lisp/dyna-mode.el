@@ -111,7 +111,7 @@
     ;; ("(\\([^()]+\\))"         1 'font-lock-type-face)
 
     ;; operators +, =, *
-    ("\\(\\(log\\+\\|min\\|max\\|[=:!\\|\\+\\-\\*]\\)?=\\)"         1 'font-lock-keyword-face)
+    ("\\(\\(log\\+\\|argm[ai][nx]\\|m[ai][nx]\\|[=:!\\|\\+\\-\\*]\\)?=\\)"         1 'font-lock-keyword-face)
     ("\\([\\+\\-\\*\\&]\\)"         1 'font-lock-type-face)
     ("\\(\\.\\)[ \t]*$"         1 'font-lock-type-face)
     ;; ("\\(\\(if\\|whenever\\|&\\)\\)"         1 'font-lock-keyword-face)
