@@ -5,11 +5,12 @@ cd `dirname $0`
 function add-link {
     local absp=$(ls -d -1 $PWD/$1)
     local base=`basename $absp`
-    local dest="~/.$base"
+    local dest=~/.$base
     if [ -f $dest ]; then
-        ln -s $absp $dest
-    else
         echo "Skipping $dest, already exists"
+    else
+        ln -s $absp $dest
+        echo "added $dest."
     fi
 }
 
@@ -20,6 +21,7 @@ add-link ackrc
 add-link aspell.en.pws
 add-link emacs/emacs.el
 add-link hgrc
+add-link gitconfig
 
 if [ -f ~/texmf ]; then
     ln -s `pwd`/texmf ~/texmf
