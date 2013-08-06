@@ -70,3 +70,5 @@
 
 ;; Set as a minor mode for python
 (add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+
+

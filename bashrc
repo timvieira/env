@@ -455,6 +455,12 @@ source $ENV/bash/quick-edit.bash
 
 # open todo lists
 function t {
+
+    if [[ "$#" -eq 0 ]]; then
+        visit "~/Dropbox/todo/todo.org"
+        return
+    fi
+
     files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
 
     matches=`echo "$files" |filter.py "$@" --on-unique 'visit {match}'`
@@ -556,7 +562,11 @@ function o {
 function push-public-key {
     publickey=`cat ~/.ssh/id_rsa.pub`
     # make sure you set the appropriate permissions!
-    ssh "$1" "mkdir -p ~/.ssh/ && touch .ssh/authorized_keys && chmod 600 .ssh/authorized_keys && echo $publickey >> .ssh/authorized_keys && cat .ssh/authorized_keys"
+    ssh "$1" "mkdir -p ~/.ssh/
+              && touch .ssh/authorized_keys
+              && chmod 600 .ssh/authorized_keys
+              && echo $publickey >> .ssh/authorized_keys
+              && cat .ssh/authorized_keys"
 }
 
 alias tetris='shutup-and-disown google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
@@ -757,8 +767,33 @@ print datetime.fromtimestamp(path('$1').mtime)"
 }
 
 function graphviz {
-  out=$1.svg
-  green output file: $out
-  cat $1 |dot -Tsvg > $out
-  shutup-and-disown "google-chrome $out"
+    out=$1.svg
+    green output file: $out
+    cat $1 |dot -Tsvg > $out
+    shutup-and-disown "google-chrome $out"
 }
+
+function nocolor {
+    python -c 'import sys, re; [sys.stdout.write(re.sub("\033\[[0-9;]*m","",x)) for x in sys.stdin]'
+}
+
+function disable-touchpad {
+    xinput list \
+        |grep -i touchpad \
+        |linepy '
+[x] = re.findall("id=(\d+)", line)
+os.system("xinput set-prop %s \"Device Enabled\" 0" % x)'
+}
+
+function enable-touchpad {
+    xinput list \
+        |grep -i touchpad \
+        |linepy '
+[x] = re.findall("id=(\d+)", line)
+os.system("xinput set-prop %s \"Device Enabled\" 1" % x)'
+}
+
+# TODO: remove newline characters
+#function paste-bash-command {
+#   xsel |tr '\n' '\\' |xsel -i | xdotool click 2
+#}

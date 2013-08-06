@@ -12,7 +12,7 @@ Interactively select a single file
 
 INSTALL:
 
-   $ sudo easy_install selenium
+   $ sudo pip install -U selenium
 
 """
 

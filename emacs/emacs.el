@@ -522,7 +522,7 @@
   "skid tag search."
   (interactive)
   (switch-to-buffer (make-temp-name "Skid"))
-  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --pager none --top  " query)))
+  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --no-open --pager none --top  " query " &")))
   (beginning-of-buffer)
   (org-mode))
 
@@ -534,6 +534,12 @@
 (org-add-link-type "notes" 'notes)
 
 
+;;------------------------------------------------------------------------------
+
+;; org-mode links to dyna issue tracker
+(org-add-link-type "dyna" '(lambda (x)
+                             (browse-url (concat "https://github.com/nwf/dyna/issues/"
+                                                 (substring x 1)))))
 
 ;;------------------------------------------------------------------------------
 
@@ -545,4 +551,3 @@
   "Tell flyspell to ignore latex commands when spell checking."
   (interactive)
   (set (make-variable-buffer-local 'ispell-parser) 'tex))
-
