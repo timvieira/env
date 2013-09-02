@@ -95,10 +95,8 @@
   ;; additional expressions to highlight
   '(
 
-    ("^\\(.*[Bb]inariz\\(ation help\\)?er.*\\)"         1 'dyna-binarization-face)
-
     ;; highlight text between ' and '
-    ("\\('[^']*'\\)"         1 'font-lock-string-face)
+    ("\\('[^']*'\\)"            1 'font-lock-string-face)
 
 ;;    ("[- \t]\\(query\\|item\\|retractable\\|iterable\\|operator\\|cname\\|retractable\\|pragma\\|structure\\|trainable\\|foreign\\|computed\\|gradient\\|union\\)"
 ;;     1 'font-lock-keyword-face)
@@ -112,15 +110,14 @@
 
     ;; operators +, =, *
     ("\\(\\(log\\+\\|argm[ai][nx]\\|m[ai][nx]\\|[=:!\\|\\+\\-\\*]\\)?=\\)"         1 'font-lock-keyword-face)
-    ("\\([\\+\\-\\*\\&]\\)"         1 'font-lock-type-face)
+    ("\\([\\+\\-\\*\\&]\\)"     1 'font-lock-type-face)
     ("\\(\\.\\)[ \t]*$"         1 'font-lock-type-face)
-    ;; ("\\(\\(if\\|whenever\\|&\\)\\)"         1 'font-lock-keyword-face)
+    ("\\(for\\)"                1 'font-lock-keyword-face)
     ("^[ \t]*\\(:-\\)"          1 'font-lock-type-face)
 
     ;; ("\\(\\(^\\|=\\|*\\)[ \t]*[A-Za-z_]+[ \t]*\\)\\((\\|[+*-]\\)"         1 'font-lock-variable-name-face)
-    ("[\[, (]\\([A-Z0-9_][A-Za-z0-9_]*[ \t]*\\)"         1 'font-lock-variable-name-face)
-    ("\\([a-z][A-Za-z0-9_]*[ \t]*\\)[ \t]*\\([,() ]\\)"         1 'font-lock-function-name-face)
-
+    ("[\[, (]\\([A-Z0-9_][A-Za-z0-9_]*[ \t]*\\)"        1 'font-lock-variable-name-face)
+    ("\\([a-z][A-Za-z0-9_]*[ \t]*\\)[ \t]*\\([,() ]\\)" 1 'font-lock-function-name-face)
 
     )
 
