@@ -50,7 +50,7 @@
 (add-path "")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
-(add-path "site-lisp/scala-mode")
+;(add-path "site-lisp/scala-mode")
 ;(add-path "site-lisp/protobuf-mode.el")
 ;(add-path "site-lisp/zimpl-mode.el")
 ;(add-path "site-lisp/writegood-mode.el")
@@ -116,7 +116,7 @@
 (require 'filecache)
 (require 'protobuf-mode)
 (require 'writegood-mode)
-(require 'scala-mode-auto)
+;(require 'scala-mode-auto)
 ;(require 'zimpl-mode)
 
 
@@ -551,3 +551,22 @@
   "Tell flyspell to ignore latex commands when spell checking."
   (interactive)
   (set (make-variable-buffer-local 'ispell-parser) 'tex))
+
+
+
+
+
+
+
+
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+(unless (package-installed-p 'scala-mode2)
+  (package-refresh-contents) (package-install 'scala-mode2))
+
+
+
+
+
