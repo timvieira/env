@@ -23,7 +23,10 @@ add-link emacs/emacs.el
 add-link hgrc
 add-link gitconfig
 
-if [ -f ~/texmf ]; then
+if [ ! -f ~/texmf ]; then
+    echo "Skipping ~/texmf, already exists."
+else
+    echo "added ~/texmf"
     ln -s `pwd`/texmf ~/texmf
 fi
 
