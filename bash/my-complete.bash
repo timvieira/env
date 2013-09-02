@@ -32,6 +32,12 @@ _complete_notes ()
         hist-complete.py $X ) )
 }
 
+#_complete_es ()
+#{
+#    arg=`python -c "print '$COMP_LINE'[2:]"`
+#    COMPREPLY=$(compgen -c |grep $arg |sort |uniq)
+#}
+
 _complete_p ()
 {
     X=$COMP_PROJECTS
@@ -66,7 +72,22 @@ COMP_ENV="/home/timv/.completions/env"
 COMP_NOTES='/home/timv/projects/notes/.index/files'
 COMP_PROJECTS="/home/timv/.completions/projects"
 
+function ensuredirs {
+  for x in `echo $@`; do
+      d=`dirname $x`
+      if [ ! -f $d ]; then
+          mkdir -p $d
+      fi
+  done
+}
+
+ensuredirs \
+    $COMP_ENV \
+    $COMP_NOTES \
+    $COMP_PROJECTS
+
 function update {
+
     yellow "Updating completions"
 
     # notes files
@@ -136,3 +157,4 @@ complete -F _complete_notes notes
 complete -F _complete_p     p
 complete -F _complete_t     t
 complete -F _complete_vpy   vpy
+#complete -F _complete_es    es
