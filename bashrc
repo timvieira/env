@@ -59,7 +59,7 @@ fi
 add-path $JAVA_HOME/bin
 add-path ~/inst/bin                   # local install
 add-path $PROJECTS/env/bin            # my misc scripts
-add-path ~/software/visualvm_133/bin
+#add-path ~/software/visualvm_133/bin
 add-path ~/software/eclps/bin/x86_64_linux   # ECLiPSe constraint solver
 add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
 add-path ~/.cabal/bin                        # Haskell executables
@@ -144,7 +144,7 @@ alias space2newline="sed 's/ /\n/g'"
 
 # vanilla emacs
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
-alias visualvm='shutup-and-disown visualvm'
+#alias visualvm='shutup-and-disown visualvm'
 alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 
 
@@ -158,6 +158,13 @@ alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 
 bind "'\C-o': '\C-e 2>&1 |less -R'"      # append "2>&1 |less" to end of line
 bind "'\C-f': '\C-ustty sane\n\r\C-l'"   # some times terminal get broken...
+
+#bind '"\C-j": history-search-backward'
+#bind '"\C-k": history-search-forward'
+
+# up/down arrows search bash history for prefix of what you've typed
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
 
 #______________________________________________________________________________
 # Bash History
@@ -237,7 +244,7 @@ fi
 if [ "$color_prompt" = yes ]; then
     # prints user@host:cwd$
     #PS1='\[\033[01;32m\]\u@\h\[\033[00m\]\$ '
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[03;32m\]\u@\h\[\033[00m\] \[\033[03;34m\]\w\[\033[00m\]\n\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[32m\]\u@\h\[\033[00m\] \[\033[34m\]\w\[\033[00m\]\n\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -251,6 +258,7 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
 
 # Enable bash completion.
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
@@ -291,7 +299,7 @@ export PAGER='less -RSimw'
 #alias vinci8='ssh timv@vinci8.cs.umass.edu'
 #alias dali='ssh timv@dalisrv.cs.umass.edu'
 #alias loki='ssh timv@loki.cs.umass.edu'
-alias ugradx='ssh timv@ugradx.cs.jhu.edu'
+#alias ugradx='ssh timv@ugradx.cs.jhu.edu'
 alias clsp='ssh timv@login.clsp.jhu.edu'
 
 #______________________________________________________________________________
@@ -317,9 +325,9 @@ function f {
     find $2 -type f |ignore-filter |grep -i "$1"
 }
 
-function ff {
-    find $2 -type f -iname '*'$1'*' |ignore-filter
-}
+#function ff {
+#    find $2 -type f -iname '*'$1'*' |ignore-filter
+#
 
 function ignore-filter {
     grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
@@ -330,20 +338,7 @@ function ignore-filter {
 # file path matching specified pattern. Opens the file if a unique match is
 # found.
 function fv {
-    pattern="$1"
-#    directory="$2"
-    if [[ "$#" -eq "0" ]]; then
-        return
-    fi
-#    if [[ "$#" -eq "1" ]]; then
-#        directory="src"
-#    fi
-#    matches=`f "$pattern" "$directory" | ignore-filter |filter.py $@`
-
-    matches=`find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'`
-
-    echo "$matches"
-#    echo "$matches" |xargs v
+    find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'
 }
 
 #______________________________________________________________________________
