@@ -1,4 +1,4 @@
-personal_ws-1.1 en 300 
+personal_ws-1.1 en 302 
 preterminals
 sigmoidal
 jammer
@@ -34,8 +34,8 @@ Bottou
 timvieira
 backpointer
 checksum
-SPC
 Tim
+SPC
 CRF
 Kaelbling
 epipole
@@ -87,6 +87,7 @@ nand
 Dykstra's
 deduplication
 hyperedge
+unpruned
 Yanif
 autodiff
 superset
@@ -177,6 +178,7 @@ satisfiability
 Minka
 vieira
 BUGFIX
+unpronounced
 online
 Prewitt
 scriptable
