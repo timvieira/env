@@ -49,6 +49,7 @@
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
+
 (add-to-list 'org-export-latex-classes
              '("article"
 ;               (format "%s" org-latex-header)
@@ -125,11 +126,11 @@
 \\newcommand{\\indicator}[1]{ \\textbf{1}\\left[ #1 \\right] }
 
 \\newcommand{\\gradtheta}[1]{\\nabla_\\theta \\left[ #1 \\right] }
-\\renewcommand{\\vec}[1]{\\boldsymbol{#1}}
 \\renewcommand{\\|}{\\textrm{~}\\arrowvert\\textrm{~}}
 
 \\newcommand{\\R}{\\ensuremath{\\mathbb{R}}}
 
+\\DeclareMathOperator*{\\Eee}{\\mathbb{E}}
 \\DeclareMathOperator*{\\argmax}{arg\\,max}
 \\DeclareMathOperator*{\\argmin}{arg\\,min}
 "
@@ -174,7 +175,6 @@
    (quote ((emacs-lisp . t)
            (dot . t)
            (python . t)
-           (gnuplot . t)
            (sh . t)
            (org . t)
            (latex . t))))
@@ -201,6 +201,57 @@
   (flyspell-ignore-tex)
 
 )
+
+
+
+
+
+
+;;------------------------------------------------------------------------------
+;; Support for skid links
+;;
+;; USAGE:
+;;
+;; The link directive 'skid'
+;;
+;;  [[skid:author:"Jason Eisner"][Jason Eisner]]
+;;
+;; Programmatic
+;;
+;;  (skid-search "tags:related:discrete-backprop")
+;;  (skid-search "machine learning")
+;;
+;; org-mode reference http://orgmode.org/org.html#Adding-hyperlink-types
+
+(require 'org)
+
+(org-add-link-type "skid" 'skid-search)
+
+(defun skid-search (query)
+  "skid tag search."
+  (interactive)
+  (switch-to-buffer (make-temp-name "Skid"))
+  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --no-open --pager none --top  " query " &")))
+  (beginning-of-buffer)
+  (org-mode))
+
+(defun notes (query)
+  (async-shell-command (concat "/home/timv/projects/env/bin/notes " query)))
+; (notes "gumbel")
+
+(org-add-link-type "bash" 'async-shell-command)
+(org-add-link-type "notes" 'notes)
+
+
+;;------------------------------------------------------------------------------
+
+;; org-mode links to dyna issue tracker
+(org-add-link-type "dyna" '(lambda (x)
+                             (browse-url (concat "https://github.com/nwf/dyna/issues/"
+                                                 (substring x 1)))))
+
+
+
 
 (setq org-startup-with-inline-images nil)
 (add-hook 'org-mode-hook
