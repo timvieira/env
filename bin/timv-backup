@@ -25,7 +25,7 @@ set -e # abort script immediately if any command fails
 
 TODAY=`date '+%F'`
 
-HD="/media/gluttony"
+HD="/media/timv/gluttony"
 BACKUP="$HD/backups"
 NEW="$BACKUP/new"
 
