@@ -3,3 +3,5 @@
         email = tim.f.vieira@gmail.com
 [color]
         diff = always
+[push]
+	default = simple
