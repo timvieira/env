@@ -65,7 +65,8 @@ add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
 add-path ~/.cabal/bin                        # Haskell executables
 
 # CPLEX license file
-export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
+#export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
+export ILOG_LICENSE_FILE=~/software/cplex/access.ilm
 
 # Python
 add-pypath \
@@ -159,9 +160,6 @@ alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 bind "'\C-o': '\C-e 2>&1 |less -R'"      # append "2>&1 |less" to end of line
 bind "'\C-f': '\C-ustty sane\n\r\C-l'"   # some times terminal get broken...
 
-#bind '"\C-j": history-search-backward'
-#bind '"\C-k": history-search-forward'
-
 # up/down arrows search bash history for prefix of what you've typed
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
@@ -180,7 +178,7 @@ shopt -s cmdhist
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=10000000000
 export HISTFILESIZE=100000000000
-export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
+export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"   # todo: how do I add "stty sane" to this list?
 export HISTTIMEFORMAT='%F %T '
 
 # append to the history file, don't overwrite it
@@ -564,7 +562,8 @@ function push-public-key {
               && cat .ssh/authorized_keys"
 }
 
-alias tetris='shutup-and-disown google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
+#alias tetris='shutup-and-disown google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
+alias tetris='shutup-and-disown google-chrome /home/timv/tetris.swf 2>/dev/null'
 
 function jhu-library {
     o "http://proxy.library.jhu.edu/login?url=$1"
