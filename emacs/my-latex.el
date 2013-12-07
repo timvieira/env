@@ -5,7 +5,7 @@
 ;;  - we hardcode the use of evince as pdf viewer
 ;;
 ;;  - assumes bibtex file has same prefix (e.g. mydoc.tex and mydoc.bib)
-;; 
+;;
 ;; INSTALLATION:
 ;;
 ;;  - put this code in your .emacs file or in it's own file (e.g. my-latex.el)
@@ -27,32 +27,52 @@
   (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
       (message "pdflatex failed")
     (progn
-      (message "pdflatex succeeded")
+      ;(message "pdflatex succeeded")
       (delete-other-windows))))
 
+
+;; might need to edit configuration:
+;; $ sudo emacs -nw /usr/share/texlive/texmf/web2c/texmf.cnf
+;; change 'openout_any = p' to 'a' or 'r'
 (defun run-bibtex (f)
-  (if (= 1 (shell-command (concat "bibtex " f)))
+  (if (= 1 (shell-command (concat "bibtex " f ".aux")))
       (message "bibtex failed")
     (progn
-      (message "bibtex succeeded")
+      ;(message "bibtex succeeded")
       (delete-other-windows))))
 
+(defun run-make-latex (f)
+  (if (= 1 (shell-command (concat "/home/timv/projects/env/bin/make-latex " f)))
+      (message "make-latex failed")
+    (progn
+      (delete-other-windows))))
+
+
 ; todo: "make clean" first: sometimes deleting aux file fixes compile issues
+;; (defun latex-thing ()
+;;   (interactive)
+;;   (let ((tex (buffer-file-name)))
+;;     (let ((base (substring tex 0 -4)))  ; filename with out extension
+;;       (let ((pdf (concat base ".pdf")))
+;;         ;(let ((bib (car (directory-files "." nil ".*\\.bib"))))  ; todo: what if there's no bib
+;;         (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
+;;         (run-pdflatex tex)
+;;         ;(if (file-exists-p bib)
+;;         ;    (progn
+;;         (run-bibtex base)
+;;         ;; run latex twice -- bibtex is weird like that
+;;         (run-pdflatex tex)
+;;         (run-pdflatex tex)))
+;;    ))
+
+
 (defun latex-thing ()
   (interactive)
   (let ((tex (buffer-file-name)))
     (let ((base (substring tex 0 -4)))  ; filename with out extension
-      (let ((pdf (concat base ".pdf")))
-        (let ((bib (car (directory-files "." nil ".*\\.bib"))))  ; todo: what if there's no bib
-          (if (file-exists-p pdf) (delete-file pdf))  ; delete old pdf
-          (run-pdflatex tex)
-          (if (file-exists-p bib)
-              (progn
-                (run-bibtex base)
-                ;; run latex twice -- bibtex is weird like that
-                (run-pdflatex tex)
-                (run-pdflatex tex)))
-   )))))
+      (run-make-latex base)
+   )))
+
 
 (defun latex-open-this-pdf ()
   (interactive)
