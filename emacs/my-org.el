@@ -198,12 +198,7 @@
 ;  (font-lock-add-keywords nil '(("[\-\\*] \\(.*?\\):$" 1 '(:foreground "orange") t)))
 
   ;(flyspell-start)
-  (flyspell-ignore-tex)
-
-)
-
-
-
+  (flyspell-ignore-tex))
 
 
 
@@ -227,21 +222,28 @@
 
 (org-add-link-type "skid" 'skid-search)
 
-(defun skid-search (query)
+(defun skid-search-results (query)
   "skid tag search."
   (interactive)
   (switch-to-buffer (make-temp-name "Skid"))
-  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --no-open --pager none --top  " query " &")))
+  (insert (shell-command-to-string (concat "python -m skid search --format org --limit 0 --no-open --pager none " query " &")))
   (beginning-of-buffer)
   (org-mode))
 
+(defun skid-search (query)
+  "skid tag search."
+  (interactive)
+  (call-process-shell-command "/usr/local/bin/skid" nil 0 nil "search" "--top" query "2>/dev/null" "&")
+  (delete-other-windows))
+
+;;------------------------------------------------------------------------------
+
 (defun notes (query)
-  (async-shell-command (concat "/home/timv/projects/env/bin/notes " query)))
-; (notes "gumbel")
+  (shell-command (concat "/home/timv/projects/env/bin/notes " query)))
+; (notes "gumbel max")
 
 (org-add-link-type "bash" 'async-shell-command)
 (org-add-link-type "notes" 'notes)
-
 
 ;;------------------------------------------------------------------------------
 
