@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+pdflatex -halt-on-error $1
+
+# might need to edit configuration:
+# $ sudo emacs -nw /usr/share/texlive/texmf/web2c/texmf.cnf
+# change 'openout_any = p' to 'a' or 'r'
+bibtex $1
+pdflatex -halt-on-error $1
+pdflatex -halt-on-error $1
+#nohup gnome-open $1.pdf 2>/dev/null &

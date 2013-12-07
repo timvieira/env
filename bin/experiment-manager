@@ -36,7 +36,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import formatdate
 
-from daemon import daemonize
+from arsenal.daemon import daemonize
 
 
 # TODO: create a config file for stuff like this.
@@ -92,12 +92,12 @@ def fix_carriage_returns(x):
 def email(mailto, msg):
     m = MIMEMultipart()
     m['To'] = mailto
-    m['From'] = 'timv@cs.umass.edu'
+    m['From'] = 'timv@cs.jhu.edu'
     m['Date'] = formatdate(localtime=True)
     m['Subject'] = 'Experiment'
     m.attach(MIMEText(msg, 'html'))
 
-    s = smtplib.SMTP('loki.cs.umass.edu')
+    s = smtplib.SMTP('smtp.cs.jhu.edu')
     s.sendmail(m['From'], m['To'], m.as_string())
     s.quit()
 
