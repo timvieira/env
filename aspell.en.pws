@@ -1,6 +1,7 @@
-personal_ws-1.1 en 336 
+personal_ws-1.1 en 364 
 preterminals
 sigmoidal
+wildcard
 jammer
 workflows
 noncommutativity
@@ -50,6 +51,7 @@ emacs
 exponentiate
 DBLP
 noncommutative
+tokenization
 HMMs
 hyperparameter
 decomposability
@@ -66,6 +68,7 @@ inliner
 linux
 workflow
 monads
+differentiable
 plaintext
 Gaussians
 JSON
@@ -93,9 +96,11 @@ compositional
 backend
 adjoints
 ERM
+newswire
 projective
 nand
 Dykstra's
+instantiations
 unpruned
 deduplication
 hyperedge
@@ -108,6 +113,7 @@ submatrix
 matplotlib
 collineation
 acyclic
+variational
 lookup
 multimodal
 Makefile
@@ -117,6 +123,7 @@ backtrace
 canonicalize
 preprocessing
 Prolog's
+parsers
 facebook
 Peano
 backprop
@@ -135,7 +142,8 @@ Theano
 gmail
 munge
 runtime
-Nonlinearity
+defeasible
+nonlinearity
 hypergraphs
 Tetris
 Hobbsian
@@ -176,11 +184,13 @@ backpropagation
 priori
 Jiarong
 LDP
+optimality
 Searchable
 clsp
 probit
 counterfactual
 webpage
+variates
 uncommenting
 BibTeX
 symlink
@@ -191,6 +201,7 @@ BP
 Homographies
 html
 internet
+Gricean
 MBR
 rsync
 satisfiability
@@ -204,6 +215,7 @@ dyna
 Prewitt
 scriptable
 MDP
+covary
 hyperedges
 indices
 EP
@@ -213,6 +225,7 @@ CPLEX
 overfit
 nwf's
 Ew
+nonmonotonic
 backchaining
 aggregator
 nondifferentiable
@@ -238,6 +251,7 @@ MLN
 Pearlmutter
 functor
 Pearlmutter's
+dimensionality
 subderivation
 resample
 Kinect
@@ -252,7 +266,9 @@ datasets
 resamples
 google
 softmin
+Immanant
 timv
+Multiobjective
 approximators
 subtree
 RL
@@ -266,13 +282,16 @@ Aspectual
 Mathematica
 Sudoku
 Champaign
+TimeML
 metadata
+piecewise
 dualdecomp
 ICML
 exponentiated
 overcounting
 subproblems
 backchained
+instantiation
 Roark
 Hollingshead
 automata
@@ -287,9 +306,12 @@ nonstationary
 REPL
 regex
 Charniak's
+univariate
+Bodenstab
 github
 constituent's
 might've
+parametrized
 OOV
 traversable
 Jiarong's
@@ -307,6 +329,7 @@ acyclicity
 hyperparameters
 webpages
 counterfactuals
+nondecomposable
 coindexed
 ANF
 Viterbi
@@ -320,18 +343,23 @@ bigram
 PCFG
 reprioritization
 algorithmically
+PTB
 API
 sbt
 subconstituents
 CGI
+Wallstreet
 regressor
 subgraph
 invertible
+decomposable
 discretization
 SGD
 todo
+sigmoid
 antiderivative
 DAGs
 adjoint
 advisor
+whitespace
 subtrees
