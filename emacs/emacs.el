@@ -55,6 +55,9 @@
 ;(add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")
 (add-path "site-lisp/haskell-mode")
+(add-path "site-lisp/cython-mode")
+
+(require 'cython-mode)
 
 ;(add-path "site-lisp/color-theme")
 ;(add-path "site-lisp/emacs-color-theme-solarized")
@@ -560,9 +563,3 @@
 ; '(org-link ((t (:foreground "cyan"))))
 ; '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
 ; '(rst-level-2-face ((t (:foreground "Purple2"))) t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
