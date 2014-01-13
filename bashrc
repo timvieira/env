@@ -353,23 +353,24 @@ function pyclean {
 
 # TODO: remove executables associate with file... e.g. hw4.hs has {hw4.hi, hw4.0, hw4}
 function haskell-clean {
-    rm -f `find -name "*.hi"`
-    rm -f `find -name "*.o"`
+    find -name '*.hi' -exec rm -f {} \;
+    find -name '*.o'  -exec rm -f {} \;
 }
 
 # remove org-mode's LaTeX output files
 function org-clean {
-    rm -f `org-export-files`
+    org-export-files | xargs -0 rm -f
 }
 
 function org-export-files {
-    find -name '*.pdf' |xargs ack --files-with-matches 'Creator\(Emacs Org-mode version 7.8.03\)'
-    find -name '*.tex' |xargs ack --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'
+    find . -name '*.pdf' -print0 |xargs -0 ack --print0 --files-with-matches 'Creator\(Emacs Org-mode version 7.8.03\)'
+    find . -name '*.tex' -print0 |xargs -0 ack --print0 --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'
 }
 
 # clean up tex derived files
+# TODO: do we want this to be recursive? I suppose tex projects rarely are?
 function tex-clean {
-    rm -f *.log *.aux *.blg *.bbl *.dvi
+    rm -f "*.log" "*.aux" "*.blg" "*.bbl" "*.dvi"
 }
 
 # clean up derived files.
@@ -575,7 +576,7 @@ function ghetto-refresh {
         return
     fi
     while [ 1 ]; do
-        echo `$2`
+        $2
         sleep $1
         clear
     done
@@ -721,11 +722,16 @@ function m4a2mp3 {
 # convert {ppt, odf} to pdf
 alias to-pdf='libreoffice --headless --invisible --convert-to pdf'
 
+# convert djvu to pdf
+function djvu2pdf {
+    ddjvu -format=pdf -quality=85 -verbose "$1" "$1.pdf"
+}
+
 # concatenate pdfs
 function concat-pdfs {
-  out='output.pdf'
-  gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$out" -dBATCH "$@"
-  echo "wrote to $out"
+    out='output.pdf'
+    gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE="$out" -dBATCH "$@"
+    echo "wrote to $out"
 }
 
 
