@@ -1,4 +1,4 @@
-personal_ws-1.1 en 364 
+personal_ws-1.1 en 369 
 preterminals
 sigmoidal
 wildcard
@@ -41,6 +41,7 @@ checksum
 Tim
 SPC
 CRF
+minima
 Kaelbling
 epipole
 DLM
@@ -56,6 +57,7 @@ HMMs
 hyperparameter
 decomposability
 anaphor
+Wallach
 subphrases
 Datalog
 subgraphs
@@ -155,12 +157,14 @@ equational
 ILP
 Topicalization
 Multi
+infeasible
 repropagated
 Boyan
 reachability
 reranking
 clitics
 nominalizations
+maxima
 JHU
 scala
 nondeterministically
@@ -327,6 +331,7 @@ rollouts
 RANSAC
 acyclicity
 hyperparameters
+unresolvable
 webpages
 counterfactuals
 nondecomposable
