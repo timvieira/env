@@ -75,7 +75,7 @@ def words(x):
 
     """
     x = camel_space(x)
-    return re.findall('\w+', x)
+    return re.findall(r'\w+', x)
 
 
 def main(filters, lines, color=True):
@@ -84,7 +84,7 @@ def main(filters, lines, color=True):
     lines = [l.strip() for l in lines]
 
     colors = [red, green, yellow, blue, magenta, cyan]
-    filters = [re.compile('\\b' + f, re.I) for f in filters]
+    filters = [re.compile(r'\b' + f, re.I) for f in filters]
 
     for line in unique(lines):
 
@@ -142,7 +142,7 @@ if __name__ == '__main__':
 
     if len(matches) == 1 or args.top:
         if args.on_unique:
-            Popen(args.on_unique.format(match=re.sub('\\033\[.*?m', '', matches[0])),
+            Popen(args.on_unique.format(match=re.sub(r'\033\[.*?m', '', matches[0])),
                   stdout=PIPE,
                   stdin=PIPE,
                   stderr=PIPE,
