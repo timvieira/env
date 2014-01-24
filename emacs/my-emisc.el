@@ -10,6 +10,7 @@
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
     (goto-char p)))
 
+;; TODO: why does this need to be run multiple times sometimes?
 (defun ascii-fy ()
   (interactive)
   (replace-string " " " ")
