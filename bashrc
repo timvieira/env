@@ -331,7 +331,6 @@ function ignore-filter {
     grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
 }
 
-
 # fv ("flexible visit" or "find and visit") opens recursively searches for a
 # file path matching specified pattern. Opens the file if a unique match is
 # found.
