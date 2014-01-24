@@ -54,10 +54,19 @@
              '("article"
 ;               (format "%s" org-latex-header)
 
-"\\documentclass{article}
+"%\\documentclass{article}
+\\documentclass[pdftex, a4paper, 12pt, openbib, ]{article}
+
+%\input{/home/timv/Dropbox/todo/timv}
+
 \\setlength\\parindent{0pt}   % no paragraph indentation
 \\usepackage{fullpage}
-\\setlength{\\parskip}{.35cm plus4mm minus3mm}
+\\setlength{\\parskip}{.4cm plus4mm minus3mm}
+
+\\usepackage{lmodern}
+\\usepackage[T1]{fontenc}   % fontenc is oriented to output, that is, what fonts to use for printing characters.
+                            % http://tex.stackexchange.com/questions/44694/fontenc-vs-inputenc
+                            % http://tex.stackexchange.com/questions/664/why-should-i-use-usepackaget1fontenc
 
 \\usepackage{fancybox}
 \\usepackage{pgf}
@@ -82,6 +91,7 @@
 \\usepackage{xspace}
 \\usepackage{url}
 \\usepackage{algorithm2e}
+
 
 \\usepackage{color}
 \\usepackage{xcolor}
@@ -130,9 +140,25 @@
 
 \\newcommand{\\R}{\\ensuremath{\\mathbb{R}}}
 
+\\newcommand{\\Ebb}[1]{\\mathbb{E} \\left[ #1 \\right] }
+
 \\DeclareMathOperator*{\\Eee}{\\mathbb{E}}
-\\DeclareMathOperator*{\\argmax}{arg\\,max}
-\\DeclareMathOperator*{\\argmin}{arg\\,min}
+\\DeclareMathOperator*{\\argmax}{argmax}
+\\DeclareMathOperator*{\\argmin}{argmin}
+
+\\newcommand{\\E}[2]{ \\mathop{\\mathbb{E}}_{#1} \\Big[ #2 \\Big] }
+\\newcommand{\\EE}[2]{ \\mathop{\\mathbb{E}}_{#1} \\left[ #2 \\right] }
+
+\\usepackage{hyperref}
+\\hypersetup{
+  colorlinks=true,
+  allcolors=blue
+}
+
+\\usepackage{bm}             % load after all math to give access to bold math
+\\usepackage[utf8]{inputenc} % inputenc allows the user to input accented characters directly from the keyboard;
+                             % utf8x : much broader but less compatible ; latin1 : old?
+                             % http://tex.stackexchange.com/questions/44694/fontenc-vs-inputenc
 "
                ("\\section*{%s}" . "\\section*{%s}")
                ("\\subsection*{%s}" . "\\subsection*{%s}"))
