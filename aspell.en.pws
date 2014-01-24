@@ -1,4 +1,4 @@
-personal_ws-1.1 en 369 
+personal_ws-1.1 en 375 
 preterminals
 sigmoidal
 wildcard
@@ -35,9 +35,11 @@ memoized
 subsumption
 subgradient
 Bottou
+subdifferentiability
 timvieira
 backpointer
 checksum
+Keshet
 Tim
 SPC
 CRF
@@ -89,6 +91,7 @@ McCallum
 unmodeled
 formalisms
 coindexing
+McAllester
 Comcast
 Prolog
 SEARN
@@ -126,6 +129,7 @@ canonicalize
 preprocessing
 Prolog's
 parsers
+subdifferentiable
 facebook
 Peano
 backprop
@@ -152,12 +156,13 @@ Hobbsian
 decomposablility
 Earley
 nondeterminism
+unregularized
 SampleRank
 equational
 ILP
+infeasible
 Topicalization
 Multi
-infeasible
 repropagated
 Boyan
 reachability
@@ -348,6 +353,7 @@ bigram
 PCFG
 reprioritization
 algorithmically
+differentiability
 PTB
 API
 sbt
