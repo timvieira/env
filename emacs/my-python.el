@@ -1,10 +1,36 @@
-;; (load-library "pylint")
+;;(load-library "site-lisp/pylint.el")
 ;; (load-library "site-lisp/flymake-cursor")
 
 (defcustom py-python-command "python"
   "*Shell command used to start Python interpreter."
   :type 'string
   :group 'python)
+
+;(when (load "flymake" t)
+;  (defun flymake-pylint-init ()
+;    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;                       'flymake-create-temp-inplace))
+;           (local-file (file-relative-name
+;                        temp-file
+;                        (file-name-directory buffer-file-name))))
+;      (list "epylint" (list local-file))))
+;  (add-to-list 'flymake-allowed-file-name-masks
+;               '("\\.py\\'" flymake-pylint-init)))
+
+
+;; Configure flymake for Python
+;???; (setq pylint "epylint")
+;???; (when (load "flymake" t)
+;???;   (defun flymake-pylint-init ()
+;???;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;???;                        'flymake-create-temp-inplace))
+;???;            (local-file (file-relative-name
+;???;                         temp-file
+;???;                         (file-name-directory buffer-file-name))))
+;???;       (list (expand-file-name pylint "") (list local-file))))
+;???;   (add-to-list 'flymake-allowed-file-name-masks
+;???;                '("\\.py\\'" flymake-pylint-init)))
+
 
 ;; new ;; (defun my-python-documentation (w)
 ;; new ;;   "Launch PyDOC on the Word at Point"
@@ -21,7 +47,6 @@
 ;; new ;;   (shell-command (concat py-python-command " -c \"from pydoc import help; help(\'" w "\')\"") "*PYDOCS*")
 ;; new ;;   (view-buffer-other-window "*PYDOCS*" t 'kill-buffer-and-window))
 
-;;;; general init-cleanup and helper routines
 (defun tim-flymake-create-temp-inplace (file-name prefix)
   (unless (stringp file-name)
     (error "Invalid file-name"))
@@ -34,7 +59,7 @@
     (flymake-log 3 "create-temp-inplace: file=%s temp=%s" file-name temp-name)
     temp-name))
 
-;; Configure flymake for python
+; Configure flymake for python
 (when (load "flymake" t)
   (defun flymake-pylint-init ()
     (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -46,19 +71,16 @@
   (add-to-list 'flymake-allowed-file-name-masks
                '("\\.py\\'" flymake-pylint-init)))
 
-
-;; Configure flymake for Python
-;???; (setq pylint "epylint")
-;???; (when (load "flymake" t)
-;???;   (defun flymake-pylint-init ()
-;???;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;???;                        'flymake-create-temp-inplace))
-;???;            (local-file (file-relative-name
-;???;                         temp-file
-;???;                         (file-name-directory buffer-file-name))))
-;???;       (list (expand-file-name pylint "") (list local-file))))
-;???;   (add-to-list 'flymake-allowed-file-name-masks
-;???;                '("\\.py\\'" flymake-pylint-init)))
+;(when (load "flymake" t)
+;  (defun flymake-pylint-init ()
+;    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;                       'flymake-create-temp-inplace))
+;           (local-file (file-relative-name
+;                        temp-file
+;                        (file-name-directory buffer-file-name))))
+;      (list "epylint" (list local-file))))
+;  (add-to-list 'flymake-allowed-file-name-masks
+;               '("\\.py\\'" flymake-pylint-init)))
 
 (defun show-fly-err-at-point ()
   "If the cursor is sitting on a flymake error, display the message in the minibuffer"
