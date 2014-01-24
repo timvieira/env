@@ -126,6 +126,10 @@
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 
+; save minibuffer history
+(require 'savehist)
+(savehist-mode t)
+
 ;; Common lisp
 (require 'cl)
 (require 'ido)
@@ -135,7 +139,6 @@
 (require 'protobuf-mode)
 (require 'writegood-mode)
 ;(require 'zimpl-mode)
-
 
 
 ;; Highlight current line
@@ -164,32 +167,6 @@
       (set-frame-position (selected-frame) 622 0)
       ; rows instead of pixels => imperfect
       (set-frame-size (selected-frame) 119 49))))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
- '(current-language-environment "Latin-1")
- '(cursor-in-nonselected-windows nil)
- '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
- '(custom-safe-themes (quote ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
- '(default-input-method "latin-1-prefix")
- '(fci-rule-color "#efefef")
- '(global-font-lock-mode t nil (font-lock))
- '(ibuffer-saved-filter-groups nil)
- '(icomplete-mode nil nil (icomplete))
- '(inhibit-startup-screen t)
- '(mouse-wheel-mode t nil (mwheel))
- '(show-paren-mode t nil (paren))
- '(transient-mark-mode t)
- '(truncate-lines t)
- '(vc-annotate-background nil)
- '(vc-annotate-color-map (quote ((20 . "#c82829") (40 . "#f5871f") (60 . "#eab700") (80 . "#718c00") (100 . "#3e999f") (120 . "#4271ae") (140 . "#8959a8") (160 . "#c82829") (180 . "#f5871f") (200 . "#eab700") (220 . "#718c00") (240 . "#3e999f") (260 . "#4271ae") (280 . "#8959a8") (300 . "#c82829") (320 . "#f5871f") (340 . "#eab700") (360 . "#718c00"))))
- '(vc-annotate-very-old-color nil)
- '(visible-cursor nil))
 
 
 (defun dark-colors ()
@@ -536,18 +513,44 @@
   (set (make-variable-buffer-local 'ispell-parser) 'tex))
 
 
-;(custom-set-faces
-; ;; custom-set-faces was added by Custom.
-; ;; If you edit it by hand, you could mess it up, so be careful.
-; ;; Your init file should contain only one such instance.
-; ;; If there is more than one, they won't work right.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector [         default     bold    shadow    italic  underline      bold  bold-italic       bold])
+ '(ansi-color-names-vector (vector "#4d4d4c" "#c82829" "#718c00" "#eab700"  "#4271ae" "#8959a8"    "#3e999f" "#ffffff"))
+ '(current-language-environment "Latin-1")
+ '(cursor-in-nonselected-windows nil)
+ '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
+ '(custom-safe-themes (quote ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
+ '(default-input-method "latin-1-prefix")
+ '(fci-rule-color "#efefef")
+ '(global-font-lock-mode t nil (font-lock))
+ '(ibuffer-saved-filter-groups nil)
+ '(icomplete-mode nil nil (icomplete))
+ '(inhibit-startup-screen t)
+ '(mouse-wheel-mode t nil (mwheel))
+ '(show-paren-mode t nil (paren))
+ '(transient-mark-mode t)
+ '(truncate-lines t)
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map (quote ((20 . "#c82829") (40 . "#f5871f") (60 . "#eab700") (80 . "#718c00") (100 . "#3e999f") (120 . "#4271ae") (140 . "#8959a8") (160 . "#c82829") (180 . "#f5871f") (200 . "#eab700") (220 . "#718c00") (240 . "#3e999f") (260 . "#4271ae") (280 . "#8959a8") (300 . "#c82829") (320 . "#f5871f") (340 . "#eab700") (360 . "#718c00"))))
+ '(vc-annotate-very-old-color nil)
+ '(visible-cursor nil))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
 ; '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :height 100 :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
 ; '(bold ((t (:weight extra-bold))))
 ; '(button ((t (:foreground "cyan"))))
-; '(comint-highlight-prompt ((t (:foreground "light blue"))))
-; '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
-; '(flymake-errline ((((class color)) (:underline "red"))))
-; '(flymake-warnline ((((class color)) (:underline "yellow4"))))
+ '(comint-highlight-prompt ((t (:foreground "light blue"))))
+ '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
+ '(flymake-errline ((((class color)) (:underline "red"))))
+ '(flymake-warnline ((((class color)) (:underline "yellow4"))))
 ; '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
 ; '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
 ; '(font-lock-function-name-face ((t (:foreground "blue"))))
@@ -562,4 +565,5 @@
 ; '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
 ; '(org-link ((t (:foreground "cyan"))))
 ; '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
-; '(rst-level-2-face ((t (:foreground "Purple2"))) t))
+; '(rst-level-2-face ((t (:foreground "Purple2"))) t)
+)
