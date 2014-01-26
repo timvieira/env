@@ -206,7 +206,6 @@
    '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
    '(org-link ((t (:foreground "cyan"))))
    '(button ((t (:foreground "cyan"))))
-
    '(rst-level-2-face ((t (:foreground "Purple2"))))
   )
 )
