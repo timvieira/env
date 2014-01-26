@@ -18,24 +18,40 @@ TODO:
 
 import re, os, sys
 
-sys.path.append('/home/timv/projects')
-
-from arsenal.terminal import red, green, yellow, blue, magenta, cyan
 from sys import stdin
 from itertools import cycle
 from subprocess import Popen, PIPE
-from arsenal.iterextras import unique
+
+
+colors = red, green, yellow, blue, magenta, cyan = \
+    ['\033[3%sm%%s\033[0m' % i for i in xrange(1,7)]
+
+
+def unique(iterable):
+    """ List unique elements, preserving order. Remember all elements ever seen. """
+    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
+    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+    seen = set()
+    seen_add = seen.add
+    for element in iterable:
+        if element not in seen:
+            seen_add(element)
+            yield element
+
 
 def filter1(f):
-    f = f.strip()
-    if not os.path.exists(f):   # XXX: can't apply filter to nonfiles or nonexistent files (e.g. out-of-date input)
-        return True
-    f = f.strip()
-    if f.endswith('.tex'):
-        # filter org-mode tex export files.
-        for line in file(f):
-            if 'Emacs Org-mode version' in line:
-                return False
+#    f = f.strip()
+
+    # XXX: can't apply filter to nonfiles or nonexistent files (e.g. out-of-date input)
+#    if not os.path.exists(f):
+#        return True
+
+#    f = f.strip()
+#    if f.endswith('.tex'):
+#        # filter org-mode tex export files.
+#        for line in file(f):
+#            if 'Emacs Org-mode version' in line:
+#                return False
 #    [_, ext] = os.path.splitext(f)
 #    ext = ext[1:]  # drop period.
 #    if ext not in ['', 'tex', 'org', 'txt', 'rst', 'md', 'markdown',
@@ -43,6 +59,7 @@ def filter1(f):
 #        return False
 #    return True
     return True
+
 
 def camel_space(x):
     """
@@ -59,6 +76,7 @@ def camel_space(x):
 
     """
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
+
 
 def words(x):
     """
@@ -83,7 +101,6 @@ def main(filters, lines, color=True):
     # cleanup.
     lines = [l.strip() for l in lines]
 
-    colors = [red, green, yellow, blue, magenta, cyan]
     filters = [re.compile(r'\b' + f, re.I) for f in filters]
 
     for line in unique(lines):
