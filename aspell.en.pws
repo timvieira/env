@@ -1,4 +1,4 @@
-personal_ws-1.1 en 376 
+personal_ws-1.1 en 381 
 preterminals
 sigmoidal
 wildcard
@@ -6,6 +6,7 @@ jammer
 workflows
 noncommutativity
 UMass
+covariates
 mentorship
 hypergraph
 RPC
@@ -73,6 +74,7 @@ linux
 workflow
 monads
 differentiable
+Spirakis
 plaintext
 Gaussians
 JSON
@@ -129,6 +131,7 @@ backtrace
 canonicalize
 preprocessing
 Prolog's
+parser's
 parsers
 subdifferentiable
 facebook
@@ -209,6 +212,7 @@ compositionality
 unnormalized
 BP
 Homographies
+iteratively
 html
 internet
 Gricean
@@ -221,6 +225,7 @@ BUGFIX
 covariance
 unpronounced
 online
+Efraimidis
 dyna
 Prewitt
 scriptable
