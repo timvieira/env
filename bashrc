@@ -158,7 +158,7 @@ alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 # Keybindings
 
 bind "'\C-o': '\C-e 2>&1 |less -R'"      # append "2>&1 |less" to end of line
-bind "'\C-f': '\C-ustty sane\n\r\C-l'"   # some times terminal get broken...
+bind "'\C-f': '\C-u stty sane\n\r\C-l'"  # some times terminal get broken
 
 # up/down arrows search bash history for prefix of what you've typed
 bind '"\e[A": history-search-backward'
@@ -169,7 +169,7 @@ bind '"\e[B": history-search-forward'
 
 # don't put duplicate lines in the history. See bash(1) for more options don't
 # overwrite.
-export HISTCONTROL=ignoredups,ignoreboth
+export HISTCONTROL=ignoredups:ignoreboth:ignorespace
 
 # cmdhist: If set, Bash attempts to save all lines of a multiple-line command in
 #    the same history entry. This allows easy re-editing of multi-line commands.
@@ -178,7 +178,7 @@ shopt -s cmdhist
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 export HISTSIZE=10000000000
 export HISTFILESIZE=100000000000
-export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"   # todo: how do I add "stty sane" to this list?
+export HISTIGNORE="&:ls:[bf]g:exit:clear:pwd:ll"
 export HISTTIMEFORMAT='%F %T '
 
 # append to the history file, don't overwrite it
@@ -744,7 +744,6 @@ source $ENV/bash/my-complete.bash
 alias gnome-do-restart='(pkill9 gnome-do && shutup-and-disown gnome-do) >& /dev/null'
 
 
-
 _complete_bibkeys ()
 {
     X="/home/timv/.skid/bibkeys"
@@ -765,7 +764,7 @@ print datetime.fromtimestamp(path('$1').mtime)"
 }
 
 
-function filter-org-crap {
+function filter-org-export {
     python -c "
 import os, sys
 
@@ -789,7 +788,7 @@ for f in sys.stdin:
 }
 
 function filter-file-exists {
-    python -c"
+    python -c "
 import os, sys
 
 for f in sys.stdin:

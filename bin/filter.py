@@ -39,28 +39,6 @@ def unique(iterable):
             yield element
 
 
-def filter1(f):
-#    f = f.strip()
-
-    # XXX: can't apply filter to nonfiles or nonexistent files (e.g. out-of-date input)
-#    if not os.path.exists(f):
-#        return True
-
-#    f = f.strip()
-#    if f.endswith('.tex'):
-#        # filter org-mode tex export files.
-#        for line in file(f):
-#            if 'Emacs Org-mode version' in line:
-#                return False
-#    [_, ext] = os.path.splitext(f)
-#    ext = ext[1:]  # drop period.
-#    if ext not in ['', 'tex', 'org', 'txt', 'rst', 'md', 'markdown',
-#                   'py', 'scala', 'java', 'bash', 'el', 'nb', 'ipynb']:
-#        return False
-#    return True
-    return True
-
-
 def camel_space(x):
     """
     Insert spaces implied by camel case.
@@ -88,8 +66,8 @@ def words(x):
     >>> words('McDonald')
     ['Mc', 'Donald']
 
-    >>> words('thisIsAWordInCamelCaseWord')
-    ['this', 'Is', 'A', 'Word', 'In', 'Camel', 'Case', 'Word']
+    >>> words('thisIsAWordInCamelCase')
+    ['this', 'Is', 'A', 'Word', 'In', 'Camel', 'Case']
 
     """
     x = camel_space(x)
@@ -111,8 +89,7 @@ def main(filters, lines, color=True):
 
         if not all(f.findall(line) for f in filters) and not all(f.findall(line2) for f in filters):
             continue
-        if not filter1(line):   # XXX: not everything is a file, should add an cmdline option
-            continue
+
         if color:
             for f, c in zip(filters, cycle(colors)):
                 line = f.sub(lambda m: c % m.group(0), line)
