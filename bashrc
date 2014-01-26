@@ -151,7 +151,7 @@ alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
 
 ############################################################
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+#[ -z "$PS1" ] && return
 ############################################################
 
 #______________________________________________________________________________
@@ -331,9 +331,8 @@ function ignore-filter {
     grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
 }
 
-# fv ("flexible visit" or "find and visit") opens recursively searches for a
-# file path matching specified pattern. Opens the file if a unique match is
-# found.
+# fv ("flexible visit" or "find and visit") recursively searches for a file path
+# matching specified pattern. Opens the file if a unique match is found.
 function fv {
     find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'
 }

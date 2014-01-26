@@ -408,7 +408,7 @@
   ;(windmove-default-keybindings 'super)
 
   ;; lists functions, jump to begining of definition
-  (global-set-key (kbd "M-i") 'ido-goto-symbol)
+  ;(global-set-key (kbd "M-i") 'ido-goto-symbol)
 )
 
 (my-keys)
