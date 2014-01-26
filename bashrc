@@ -605,7 +605,7 @@ function find-note-files {
 }
 
 function org-export-filter {
-    ack --files-without-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}' $@
+    ack --files-without-matches 'pdfcreator={Emacs Org-mode' $@
 }
 
 # grep notes for patterns
@@ -754,7 +754,7 @@ _complete_bibkeys ()
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
         hist-complete.py $X ) )
 }
-alias bibkeys='/home/timv/projects/skid/utils/bibkeys.py complete'
+alias bibkeys='python -m skid.utils.bibkeys complete'
 complete -F _complete_bibkeys   bibkeys
 
 
@@ -763,6 +763,44 @@ function mtime {
 from datetime import datetime
 from path import path
 print datetime.fromtimestamp(path('$1').mtime)"
+}
+
+
+function filter-org-crap {
+    python -c "
+import os, sys
+
+for f in sys.stdin:
+    f = f.strip()
+
+    if not os.path.exists(f):
+        continue
+
+    if f.endswith('.tex'):
+        # filter org-mode tex export.
+        if any(('Emacs Org-mode version' in l) for l in file(f)):
+            continue
+
+    if f.endswith('.pdf'):
+        # filter org-mode pdf export.
+        if any(('Creator(Emacs Org-mode version' in l) for l in file(f)):
+            continue
+    print f
+"
+}
+
+function filter-file-exists {
+    python -c"
+import os, sys
+
+for f in sys.stdin:
+    f = f.strip()
+
+    if not os.path.exists(f):
+        continue
+
+    print f
+"
 }
 
 function graphviz {
