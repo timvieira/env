@@ -1,4 +1,4 @@
-personal_ws-1.1 en 381 
+personal_ws-1.1 en 384
 preterminals
 sigmoidal
 wildcard
@@ -41,8 +41,8 @@ timvieira
 backpointer
 checksum
 Keshet
-SPC
 Tim
+SPC
 CRF
 minima
 Kaelbling
@@ -236,6 +236,7 @@ indices
 EP
 matchings
 disambiguates
+nonhomogeneous
 CPLEX
 overfit
 nwf's
@@ -300,6 +301,7 @@ Champaign
 TimeML
 metadata
 piecewise
+inhomogeneous
 dualdecomp
 ICML
 exponentiated
