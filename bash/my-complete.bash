@@ -112,7 +112,7 @@ function update {
     # else they'll get filtered out
     vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
 
-    # TODO: why did I have this filter "grep -v '/projects/notes/'" above
+    # TODO: why did I have this filter "grep -v '/projects/notes/'" above?
 
     # sort vc roots so that prefixes come first
     vcroots=`echo "$vcroots" |sort`
