@@ -20,46 +20,48 @@ from whoosh.analysis import KeywordAnalyzer
 
 from arsenal.terminal import cyan, red, yellow, magenta
 from arsenal.fsutils import find
-
+from arsenal.iterextras import unique
 
 # globals
 DIRECTORY = path('/home/timv/projects/notes/.index')
 TRACKED = DIRECTORY / 'files'
 NAME = 'index'
 
-from env.bin.filter import filter1
+
+def org_export_tex(f):
+    "Is `f` a path to an org-mode tex export files?"
+    return os.path.exists(f) \
+        and f.endswith('.tex') \
+        and any(('Emacs Org-mode version' in line) for line in file(f))
+
 
 def dump_files():
+    with file(TRACKED, 'wb') as f:
+        for x in unique(find_notes()):
+            print >> f, x
+
+
+def find_notes():
     p = '(.*\.(org|tex)$|.*\\b(TODO|NOTES|LOG)\\b.*)'
     r = ['/home/timv/projects/notes',
          '/home/timv/projects/learn',
          '/home/timv/projects',
          '/home/timv/projects/ldp/write/working/',
          '/home/timv/Dropbox/todo']
-    with file(TRACKED, 'wb') as f:
 
-        # add python and mathematica scripts notes directory
-        for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb)$'):
-            f.write(x)
-            f.write('\n')
+    # add python and mathematica scripts notes directory
+    for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb)$'):
+        yield x
 
-        for d in r:
-            for x in sorted(find(d, regex=p)):
-                if filter1(x) and not re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/)', x) and not x.endswith('~'):
-                    f.write(x)
-                    f.write('\n')
+    for d in r:
+        for x in sorted(find(d, regex=p)):
+            if not (not path(x).exists() \
+                    or x.endswith('~')
+                    or re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/)', x)
+                    or org_export_tex(x)):
+                yield x
 
-"""
-def files():
-    p = '(.*\.org$|TODO|NOTES|LOG)'
-    d = ['/home/timv/projects/notes',
-         '/home/timv/projects/learn',
-         '/home/timv/projects',
-         '/home/timv/Dropbox/todo']
-    for x in d:
-        for f in find(x, regex=p):
-            yield f
-"""
+
 def files():
     for f in file(TRACKED):
         f = f.strip()
