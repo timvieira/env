@@ -599,10 +599,6 @@ function todos {
 #      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
 #}
 
-function find-note-files {
-    cat $COMP_NOTES
-}
-
 function org-export-filter {
     ack --files-without-matches 'pdfcreator={Emacs Org-mode' $@
 }
@@ -610,8 +606,7 @@ function org-export-filter {
 # grep notes for patterns
 # TODO: generalize to keyword search
 function notes-ack {
-    find-note-files ~/projects | xargs ack -i "$@"
-    find-note-files ~/Dropbox | xargs ack -i "$@"
+    cat $COMP_NOTES | xargs ack -i "$@"
     echo ~/.skid/marks/*.d/notes.org | xargs ack -i "$@"
 }
 
