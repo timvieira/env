@@ -87,6 +87,10 @@
 
 (package-initialize)
 
+;; auctex
+;(setq TeX-auto-save t)
+;(setq TeX-parse-self t)
+;(setq-default TeX-master nil)
 
 ;; TODO: configure anything.el
 ;;  - http://emacs-fu.blogspot.com/2011/09/finding-just-about-anything.html
@@ -286,7 +290,6 @@
 ;; TODO: does this make hippie expand more usable?
 (delete 'try-expand-line hippie-expand-try-functions-list)
 (delete 'try-expand-list hippie-expand-try-functions-list)
-
 
 ;;; ido: "Interactively do" things (switch buffers, open files)
 (require 'ido)
