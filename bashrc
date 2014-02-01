@@ -287,6 +287,8 @@ if [ -x /usr/bin/dircolors ]; then
     alias tree='tree -C'
 fi
 
+alias tree='tree -I "*.pyc"'
+
 alias less='less -RSimw'
 export PAGER='less -RSimw'
 
@@ -328,7 +330,7 @@ function f {
 #
 
 function ignore-filter {
-    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git\|.ipynb_checkpoints'
 }
 
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
@@ -351,8 +353,8 @@ function pyclean {
 
 # TODO: remove executables associate with file... e.g. hw4.hs has {hw4.hi, hw4.0, hw4}
 function haskell-clean {
-    find -name '*.hi' -exec rm -f {} \;
-    find -name '*.o'  -exec rm -f {} \;
+    find . -name '*.hi' -exec rm -f {} \;
+    find . -name '*.o'  -exec rm -f {} \;
 }
 
 # remove org-mode's LaTeX output files
@@ -361,8 +363,8 @@ function org-clean {
 }
 
 function org-export-files {
-    find . -name '*.pdf' -print0 |xargs -0 ack --print0 --files-with-matches 'Creator\(Emacs Org-mode version 7.8.03\)'
-    find . -name '*.tex' -print0 |xargs -0 ack --print0 --files-with-matches 'pdfcreator={Emacs Org-mode version 7.8.03}}'
+    find . -name '*.pdf' -print0 |xargs -0 ack --print0 --files-with-matches 'Creator\(Emacs Org-mode version'
+    find . -name '*.tex' -print0 |xargs -0 ack --print0 --files-with-matches 'pdfcreator=\{Emacs Org-mode version'
 }
 
 # clean up tex derived files
@@ -384,8 +386,8 @@ function clean {
 
 # todo: use locate instead.
 function find-repos {
-    find ~/ -name ".hg" -type d -exec dirname {} \;
-    find ~/ -name ".git" -type d -exec dirname {} \;
+    locate "*/.hg"
+    locate "*/.git"
 }
 
 # try to find repositories which have changes which might need to be pushed
