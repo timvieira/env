@@ -123,7 +123,7 @@ as point as well."
       (setq linecount (1- linecount)))
     (beginning-of-line)))
 
-(defun kill-superfluous-buffers()
+(defun kill-superfluous-buffers ()
   (interactive)
   (mapcar '(lambda(buffer)
        (let ((blength (length (buffer-name buffer)))
@@ -203,3 +203,10 @@ as point as well."
           (delete-file filename))
       (message (concat "Word Count: " result))
       )))
+
+(defun make-file-executable ()
+  "Makes the file being visited by the current buffer executable"
+  (interactive)
+  (if (= (shell-command (concat "chmod u+x " (buffer-file-name)))
+         0)
+      (message (format "%s now executable" (buffer-file-name)))))
