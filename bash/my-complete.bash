@@ -111,6 +111,8 @@ function update {
     # version controlled project roots -- be sure to strip off hg directories or
     # else they'll get filtered out
     vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
+    #locate "*/.hg"
+    #locate "*/.git"
 
     # TODO: why did I have this filter "grep -v '/projects/notes/'" above?
 
