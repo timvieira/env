@@ -1,13 +1,11 @@
-\C-o: '\C-e 2>&1 |less -R'      # append "2>&1 |less" to end of line
-\C-f: '\C-u stty sane\n\r\C-l'  # some times terminal get broken
-
-# up/down arrows search bash history for prefix of what you've typed
-\e[A: history-search-backward
-\e[B: history-search-forward
-
-# If 'on', words with more than one completion cause the matches to be
-# listed immediately instead of ringing the bell. Default 'off'.
 set show-all-if-ambiguous on
 
 # case insensitive
 set completion-ignore-case on
+
+'\C-o': '\C-e 2>&1 |less -R'      # append "2>&1 |less" to end of line
+'\C-f': '\C-u stty sane\n\r\C-l'  # some times terminal get broken
+
+# up/down arrows search bash history for prefix of what you've typed
+"\e[A": history-search-backward
+"\e[B": history-search-forward

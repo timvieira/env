@@ -15,3 +15,9 @@ function add-classpath {
     done
 }
 
+# recursively add jars in directory to classpath (temporary)
+function add-jars-to-classpath {
+    jars=`find -name '*.jar'`
+    add-classpath $jars
+    echo "$CLASSPATH"
+}
