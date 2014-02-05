@@ -49,3 +49,8 @@ alias freq='sort | uniq -c |sort -nr'
 
 # remove ansi escapes
 alias nocolor="python -c 'import sys, re; [sys.stdout.write(re.sub(\"\033\[[0-9;]*m\",\"\",x)) for x in sys.stdin]'"
+
+# "alert" using system notifier. Useful for long running commands.
+# For example:
+#     $ sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

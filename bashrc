@@ -22,6 +22,9 @@ source $ENV/bash/prompt.bash
 source $ENV/bash/history.bash
 source $ENV/bash/alias.bash
 source $ENV/bash/projects.bash
+source $ENV/bash/find.bash
+source $ENV/bash/misc.bash
+source $ENV/bash/python.bash
 
 source $ENV/bash/util/path.bash
 source $ENV/bash/util/ssh.bash
@@ -69,26 +72,14 @@ export HGEDITOR='emacs -nw'
 export GIT_EDITOR=$HGEDITOR
 
 #______________________________________________________________________________
-# Shortcuts for annoying deep directories (like Java source code).
-
-# grep filenames recursive file listing
-function f {
-    find $2 -type f |ignore-filter |grep -i "$1"
-}
-
-#function ff {
-#    find $2 -type f -iname '*'$1'*' |ignore-filter
 #
-
+# filter lines containing filepaths I am rarely interested in -- mainly
+# compiled/binary file extensions (e.g., *.pyc, *.o) and version control
+# directories.
+#
 # TODO: should probably filter all hidden directories.
 function ignore-filter {
-    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\.hg\|\.git\|\.ipynb_checkpoints\|build'
-}
-
-# fv ("flexible visit" or "find and visit") recursively searches for a file path
-# matching specified pattern. Opens the file if a unique match is found.
-function fv {
-    find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build'
 }
 
 #______________________________________________________________________________
@@ -124,47 +115,6 @@ $(ls -x $ENV/emacs/*.el)"
     echo "$matches"
 }
 
-#______________________________________________________________________________
-# Python tricks
-
-# ack thru all the python code on my hard drive
-function pysearch {
-    locate -0 '*.py' |xargs -0 ack --color --group "$@"
-}
-
-# Show pythonpath
-alias pypath="python -c 'import sys; print sys.path' | tr ',' '\n' | grep -v 'egg'"
-
-# cd to the directory containing specified python module
-function cdpy {
-    cd `python -c "import os; import $1; print os.path.dirname($1.__file__)"`
-}
-
-# edit python module by name
-function vpy {
-    python -m arsenal.debug.edit "$@"
-}
-
-#______________________________________________________________________________
-# Misc bash function
-
-# deprecated: use browser extension instead.
-#function jhu-library {
-#    o "http://proxy.library.jhu.edu/login?url=$1"
-#}
-
-function ghetto-refresh {
-    if [[ "$#" -ne "2" ]]; then
-        echo "ghetto-refresh <rate> <cmd>"
-        return
-    fi
-    while [ 1 ]; do
-        $2
-        sleep $1
-        clear
-    done
-}
-
 #_______________________________________________________________________________
 # Finding notes quickly
 
@@ -184,20 +134,6 @@ function notes-ack {
 #_______________________________________________________________________________
 #
 
-function red    { echo -e "\e[31m$@\e[0m"; }
-function yellow { echo -e "\e[33m$@\e[0m"; }
-function green  { echo -e "\e[32m$@\e[0m"; }
-function blue   { echo -e "\e[34m$@\e[0m"; }
-function purple { echo -e "\e[35m$@\e[0m"; }
-function cyan   { echo -e "\e[36m$@\e[0m"; }
-
-# kill a process after a number of seconds
-# usage: doalarm <seconds to wait> program arg arg ...
-function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # print one file on remove server "loki.cs.umass.edu"
 #function print-loki {
@@ -211,136 +147,47 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 #  done
 #}
 
-function compare-lines {
-    hs=""
-    for f in `echo $@`; do
-        h=/tmp/`pyhash $f`
-        hs="$hs $h"
-        cat $f |sort > $h   # timv: option for uniq (i.e. set difference)?
-    done
-    kdiff3 $hs
-}
-
-function compare-uniq-lines {
-    hs=""
-    for f in `echo $@`; do
-        h=/tmp/`pyhash $f`
-        hs="$hs $h"
-        cat $f |sort |uniq > $h
-    done
-    kdiff3 $hs
-}
-
-alias pyhash="python -c 'import sys, hashlib; print hashlib.sha1(str().join(sys.argv[1:]) or raw_input()).hexdigest()'"
 
 
-#_______________________________________________________________________________
-# Generally useful utils for working with filepaths
+#alias mtime='python -c "
+#import sys
+#from datetime import datetime
+#from path import path
+#print datetime.fromtimestamp(path(sys.argv[1]).mtime)"'
 
-function mtime {
-    python -c "
-from datetime import datetime
-from path import path
-print datetime.fromtimestamp(path('$1').mtime)"
-}
-
-
-function filter-org-export {
-    python -c "
-import os, sys
-
-for f in sys.stdin:
-    f = f.strip()
-
-    if not os.path.exists(f):
-        continue
-
-    if f.endswith('.tex'):
-        # filter org-mode tex export.
-        if any(('Emacs Org-mode version' in l) for l in file(f)):
-            continue
-
-    if f.endswith('.pdf'):
-        # filter org-mode pdf export.
-        if any(('Creator(Emacs Org-mode version' in l) for l in file(f)):
-            continue
-    print f
-"
-}
-
-function filter-file-exists {
-    python -c "
-import os, sys
-
-for f in sys.stdin:
-    f = f.strip()
-
-    if not os.path.exists(f):
-        continue
-
-    print f
-"
-}
-
-#_______________________________________________________________________________
-# wrappers around other programs
-
-function graphviz {
-    out=$1.svg
-    green output file: $out
-    cat $1 |dot -Tsvg > $out
-    shutup-and-disown "google-chrome $out"
-}
-
-alias gnome-do-restart='(pkill9 gnome-do && shutup-and-disown gnome-do) >& /dev/null'
-
-function extract {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xvjf $1   ;;
-      *.tar.gz)    tar xvzf $1   ;;
-      *.bz2)       tar xjfv $1   ;;
-      *.rar)       unrar x $1    ;;
-      *.gz)        gunzip $1     ;;
-      *.tar)       tar xvf $1    ;;
-      *.tbz2)      tar xvjf $1   ;;
-      *.tgz)       tar xvzf $1   ;;
-      *.zip)       unzip $1      ;;
-      *.Z)         uncompress $1 ;;
-      *.7z)        7z x $1       ;;
-      *)           echo "'$1' cannot be extracted via >extract<" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-function o {
-    # gnome-open; xdg-open    # unity equivalent of gnome-open
-    xdg-open "$@" 2>/dev/null >/dev/null
-}
-
-alias tetris='shutup-and-disown google-chrome /home/timv/tetris.swf 2>/dev/null'
-
-function pkill9 {
-  ps aux |grep "$@"
-  kill -9 `pgrep $@`
-}
-
-alias poweroff-display='sleep 1 && xset dpms force off'
-
-function disable-touchpad {
-    xinput list \
-        |grep -i touchpad \
-        |linepy '
-[x] = re.findall("id=(\d+)", line)
-os.system("xinput set-prop %s \"Device Enabled\" 0" % x)'
-}
-
-function enable-touchpad {
-    xinput list \
-        |grep -i touchpad \
-        |linepy '
-[x] = re.findall("id=(\d+)", line)
-os.system("xinput set-prop %s \"Device Enabled\" 1" % x)'
-}
+#function filter-org-export {
+#    python -c "
+#import os, sys
+#
+#for f in sys.stdin:
+#    f = f.strip()
+#
+#    if not os.path.exists(f):
+#        continue
+#
+#    if f.endswith('.tex'):
+#        # filter org-mode tex export.
+#        if any(('Emacs Org-mode version' in l) for l in file(f)):
+#            continue
+#
+#    if f.endswith('.pdf'):
+#        # filter org-mode pdf export.
+#        if any(('Creator(Emacs Org-mode version' in l) for l in file(f)):
+#            continue
+#    print f
+#"
+#}
+#
+#function filter-file-exists {
+#    python -c "
+#import os, sys
+#
+#for f in sys.stdin:
+#    f = f.strip()
+#
+#    if not os.path.exists(f):
+#        continue
+#
+#    print f
+#"
+#}
