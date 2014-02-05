@@ -1,14 +1,17 @@
 #
-# Utilities for the compulsive bash configuration enthusiast
+# Utilities for the compulsive bash configuration enthusiast.
 #
+# TODO: (low priority) bash completion
+# TODO: (low priority) fall-back for aliases?
 
 alias source-bashrc='source ~/.bashrc'
 alias sb='source-bashrc'
-alias edit-script='es'
+alias es='edit-script'
 
-# TODO: (low priority) bash completion for things on path!
-# TODO: (low priority) fall-back for aliases?
-function es {
+# turn on bash's extended debugging options
+shopt -s extdebug
+
+function edit-script {
     if [[ "$#" -eq "0" ]]; then  # list files
         v ~/.bashrc
         return 0
@@ -22,15 +25,8 @@ function es {
     fi
 }
 
-# turn on bash's extended debugging options
-shopt -s extdebug
-
-
 # Edit file defining some bash function; we'll even jump to the line number.
 function edit-bash-function {
-
-    # we'll need to temporarily enable bash's extended debugging
-#    shopt -s extdebug
 
     out=`declare -F "$@"`
 
@@ -63,7 +59,4 @@ function edit-bash-function {
     # recenter window
     ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
 
-    # Turn off extended shell debugging (should check if it was enabled before
-    # in which case, we don't want to disable)
-#    shopt -u extdebug
 }

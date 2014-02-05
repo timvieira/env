@@ -1,4 +1,4 @@
-personal_ws-1.1 en 392 
+personal_ws-1.1 en 402 
 nonhomogeneous
 ANF
 google
@@ -13,6 +13,7 @@ github
 Pearlmutter
 dyna
 Urbana
+IPython
 discretize
 collineation
 regularizer
@@ -40,12 +41,14 @@ MLNs
 DLM
 BibTeX
 counterfactual
+DNF
 infeasible
 multimodal
 DAgger
 optimizers
 Kinect
 backchaining
+centroid
 rsync
 workflow
 Earley
@@ -125,6 +128,7 @@ hyperparameter
 Bodenstab
 Pearlmutter's
 Dyna's
+unpruning
 epipole
 discriminatively
 LDP
@@ -162,8 +166,8 @@ MLE
 Topicalization
 Wallstreet
 tradeoff
-parsers
 parser's
+parsers
 backend
 semirings
 MLN
@@ -178,6 +182,7 @@ acyclicity
 pdf
 NLP
 traversable
+linesearch
 noogie
 nonprojective
 reranking
@@ -216,6 +221,7 @@ lookup
 html
 sbt
 disambiguates
+hypercube
 pseudocode
 maxima
 SGD
@@ -238,10 +244,11 @@ Jiarong's
 TimeML
 wiki
 scriptable
+Domke's
 unpruned
-Tim
-SPC
 RSM
+SPC
+Tim
 minimizer
 notational
 RSS
@@ -281,6 +288,7 @@ REPL
 subsequences
 subsumptive
 inliner
+Domke
 aggregators
 arity
 Prewitt
@@ -350,6 +358,7 @@ LBFGS
 deduplication
 hyperedges
 eisner
+Numpy
 unnormalized
 probit
 advisor
@@ -365,6 +374,7 @@ nand
 nonsingularity
 RL
 Mathematica
+MERT
 adjoints
 uninstall
 versa

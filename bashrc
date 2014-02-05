@@ -329,8 +329,9 @@ function f {
 #    find $2 -type f -iname '*'$1'*' |ignore-filter
 #
 
+# TODO: should probably filter all hidden directories.
 function ignore-filter {
-    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '.hg\|.git\|.ipynb_checkpoints'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\.hg\|\.git\|\.ipynb_checkpoints\|build'
 }
 
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
@@ -348,7 +349,7 @@ function tmpfiles {
 
 function pyclean {
     rm -f `find . -name "*.pyc"`
-    rm -f `find . -name "*$py.class"`
+    rm -f `find . -name "*$py.class"`  # jython
 }
 
 # TODO: remove executables associate with file... e.g. hw4.hs has {hw4.hi, hw4.0, hw4}
@@ -391,38 +392,33 @@ function find-repos {
 }
 
 # try to find repositories which have changes which might need to be pushed
-function hg-changed-repos {
-    cd
-    repos=`find -name '.hg' -type d -exec dirname {} \;`
-    for line in $repos; do
-        cd $line
-        echo -n "$line -- "
-        MODIFIED=$(hg st -m)
-        if [ "$MODIFIED" != "" ]; then
-            red modified
-        else
-            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
-            if [[ $outgoing != "no changes found" ]]; then
-                cyan outgoing
-            else
-                yellow ok
-            fi
-        fi
-        cd ~
-    done
-}
-
-## hg for sandboxed repos
-#alias hg="sudo -u vc hg"
-#alias hg-chown-vc="sudo chown -R vc .hg; sudo chgrp -R vc .hg"
-#alias hg-chown-me="sudo chown -R timv .hg; sudo chgrp -R timv .hg"
+#function hg-changed-repos {
+#    cd
+#    repos=`find -name '.hg' -type d -exec dirname {} \;`
+#    for line in $repos; do
+#        cd $line
+#        echo -n "$line -- "
+#        MODIFIED=$(hg st -m)
+#        if [ "$MODIFIED" != "" ]; then
+#            red modified
+#        else
+#            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
+#            if [[ $outgoing != "no changes found" ]]; then
+#                cyan outgoing
+#            else
+#                yellow ok
+#            fi
+#        fi
+#        cd ~
+#    done
+#}
 
 # more on log formatting http://hgbook.red-bean.com/read/customizing-the-output-of-mercurial.html
-alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
+#alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
 alias hgchangelog="hg log --style changelog"
 alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
-alias hg-dummy-ci='hg ci -m "()"'
-alias hg-dummy-push='hg ci -m "()" && hg push'
+#alias hg-dummy-ci='hg ci -m "()"'
+#alias hg-dummy-push='hg ci -m "()" && hg push'
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
