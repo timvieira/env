@@ -27,5 +27,25 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 alias tree='tree -I "*.pyc"'
-
 alias less='less -RSimw'
+
+# recursively list files sorted by biggest first.
+alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
+
+# emacs with out any of my configuration
+alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
+
+# fire-up a webserver for cwd and open it in the browser
+alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
+
+# remove empty lines
+alias remove-empty-lines='grep -v "^\s*$"'
+
+# convert spaces to newlines
+alias space2newline="sed 's/ /\n/g'"
+
+# order lines by frequency (most frequent first).
+alias freq='sort | uniq -c |sort -nr'
+
+# remove ansi escapes
+alias nocolor="python -c 'import sys, re; [sys.stdout.write(re.sub(\"\033\[[0-9;]*m\",\"\",x)) for x in sys.stdin]'"

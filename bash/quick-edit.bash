@@ -37,7 +37,8 @@ function edit-bash-function {
             # TODO: could try the fallback strategy of grepping config files for
             # the name of this alleged alias.
 
-            echo "'$@' appears to be an alias. You're on your own for this one."
+            echo "Sorry, aliases are not indexed."
+            echo `alias $1`
             return 1
         fi
 

@@ -13,36 +13,39 @@ shopt -s globstar
 shopt -s checkwinsize
 
 
-source $ENV/bash/util/path.bash
-
+source $ENV/bash/quick-edit.bash
+source $ENV/bash/notes.bash
+source $ENV/bash/skid.bash
+source $ENV/bash/my-complete.bash
+source $ENV/bash/cleanup.bash
+source $ENV/bash/prompt.bash
 source $ENV/bash/history.bash
 source $ENV/bash/alias.bash
+source $ENV/bash/projects.bash
 
+source $ENV/bash/util/path.bash
+source $ENV/bash/util/ssh.bash
+source $ENV/bash/util/pdf.bash
+source $ENV/bash/util/audio.bash
+source $ENV/bash/util/version-control.bash
 
 #______________________________________________________________________________
 # Environment variables
 
 #export BIBINPUTS=/home/timv/projects/env/timv.bib:$BIBINPUTS
 
-if [ -e ~/jdk1.6.0_31/bin ]; then
-    add-path ~/jdk1.6.0_31/bin   # local install
-    export JAVA_HOME=~/jdk1.6.0_31
-else
-    export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
-fi
-
+#if [ -e ~/jdk1.6.0_31/bin ]; then
+#    add-path ~/jdk1.6.0_31/bin   # local install
+#    export JAVA_HOME=~/jdk1.6.0_31
+#else
+#    export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+#fi
 
 # The Path
-add-path $JAVA_HOME/bin
-add-path ~/inst/bin                   # local install
-add-path $PROJECTS/env/bin            # my misc scripts
-#add-path ~/software/visualvm_133/bin
-add-path ~/software/eclps/bin/x86_64_linux   # ECLiPSe constraint solver
-add-path ~/software/ziboptsuite-2.1.1/*/bin  # zimpl, scip
+add-path $ENV/bin            # my scripts
 add-path ~/.cabal/bin                        # Haskell executables
 
 # CPLEX license file
-#export ILOG_LICENSE_FILE=~/software/CPLEX/access.ilm
 export ILOG_LICENSE_FILE=~/software/cplex/access.ilm
 
 # Python
@@ -64,52 +67,6 @@ export EDITOR=visit
 export PAGER='less -RSimw'
 export HGEDITOR='emacs -nw'
 export GIT_EDITOR=$HGEDITOR
-
-#_______________________________________________________________________________
-#
-
-function pkill9 {
-  ps aux |grep "$@"
-  kill -9 `pgrep $@`
-}
-
-# order lines by frequency (most frequent first).
-alias freq='sort | uniq -c |sort -nr'
-
-#_______________________________________________________________________________
-#
-
-alias remove-empty-lines='grep -v "^\s*$"'
-alias space2newline="sed 's/ /\n/g'"
-
-function nocolor {
-    python -c 'import sys, re; [sys.stdout.write(re.sub("\033\[[0-9;]*m","",x)) for x in sys.stdin]'
-}
-
-#_______________________________________________________________________________
-#
-
-# vanilla emacs
-alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
-alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
-
-#______________________________________________________________________________
-#
-
-# timv: seems to happens by default now
-# make less friendlier for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-
-#______________________________________________________________________________
-# Find stuff in current directory:
-
-# use +1GB for file larger than 1 gig.
-function find-files-by-size {
-    find -size "$1" -exec ls -lh {} \;
-}
-
-alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 
 #______________________________________________________________________________
 # Shortcuts for annoying deep directories (like Java source code).
@@ -136,8 +93,6 @@ function fv {
 
 #______________________________________________________________________________
 # Shortcuts for jumping around
-
-source $ENV/bash/quick-edit.bash
 
 # open todo lists
 function t {
@@ -167,53 +122,6 @@ function e {
 $(ls -x $ENV/emacs/*.el)"
     matches=`echo "$files" | ignore-filter |filter.py $@ --on-unique 'v {match}'`
     echo "$matches"
-}
-
-
-# Jump to project directory
-function p {
-    # calling with no arguments lands you in the projects directory.
-    if [[ "$#" -eq 0 ]]; then
-        cd $PROJECTS
-        return
-    fi
-
-    # TODO: in order to get some shortcircuiting/lazy evaluation, break the
-    # search process up by project sources {courses, vcroots, everythingelse}
-    # rather than accumulating the lists up front as we do here, make separate
-    # calls to a utility which tries to find a match on success goes there -
-    # short-circuiting the search process.
-
-    # TODO: cache the output of these functions try searching the cache first -
-    # whenever we find something which is "broken" or "missing" we can
-    # regenerate it.
-
-    # TODO: add directories of recently modified files to the list of things we
-    # search
-
-    # TODO: utility which searches recent files from the command-line (such a
-    # tool must already exist!)
-
-    matches=`cat $COMP_PROJECTS`
-
-    #echo "$matches" |filter.py $@
-
-    matches=`echo "$matches" |filter.py -C $@`
-
-    # TODO: repos with more overlap with name should come first
-    # e.g.
-    #     $ p pdfhacks
-    #
-    # should prefer ~/projects/pdfhacks over
-    #  ~/projects/pdfhacks/bibtex-as-annotation, but doesn't at the moment
-    #  simply because of directory ordering.
-
-    for d in $matches; do
-        # might want to iterate thru this set..
-        cd "$d"
-        return
-    done
-    red "failed to find match for project $1"
 }
 
 #______________________________________________________________________________
@@ -414,8 +322,10 @@ function o {
 
 alias tetris='shutup-and-disown google-chrome /home/timv/tetris.swf 2>/dev/null'
 
-#_______________________________________________________________________________
-#
+function pkill9 {
+  ps aux |grep "$@"
+  kill -9 `pgrep $@`
+}
 
 alias poweroff-display='sleep 1 && xset dpms force off'
 
@@ -434,17 +344,3 @@ function enable-touchpad {
 [x] = re.findall("id=(\d+)", line)
 os.system("xinput set-prop %s \"Device Enabled\" 1" % x)'
 }
-
-#_______________________________________________________________________________
-#
-
-source $ENV/bash/notes.bash
-source $ENV/bash/skid.bash
-source $ENV/bash/my-complete.bash
-source $ENV/bash/cleanup.bash
-source $ENV/bash/prompt.bash
-
-source $ENV/bash/util/ssh.bash
-source $ENV/bash/util/pdf.bash
-source $ENV/bash/util/audio.bash
-source $ENV/bash/util/version-control.bash
