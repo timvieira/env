@@ -9,3 +9,11 @@ set completion-ignore-case on
 # up/down arrows search bash history for prefix of what you've typed
 "\e[A": history-search-backward
 "\e[B": history-search-forward
+
+# jump over words
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
