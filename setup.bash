@@ -22,6 +22,7 @@ add-link aspell.en.pws
 add-link emacs/emacs.el
 add-link hgrc
 add-link gitconfig
+add-link inputrc
 
 if [ ! -f ~/texmf ]; then
     echo "Skipping ~/texmf, already exists."

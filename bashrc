@@ -8,21 +8,7 @@ ENV=~/projects/env
 PROJECTS=~/projects
 JAVAEXTRAS=$PROJECTS/extras/java
 
-## function _gnome-do-logged {
-##     while true; do
-##         echo "starting gnome-do"
-##         gnome-do 2>&1 >> ~/gnome-do.log
-##         if [ "$?" -ne "0" ]; then
-##             notify-send --urgency=low --icon=gnome-do "GNOME-Do has crashed." \
-##                 "The cause of the crash has been logged to ~/.gnome-do.log."
-##         else
-##             break
-##         fi
-##     done
-## }
-## function gnome-do-logged {
-##     shutup-and-disown gnome-do-logged
-## }
+source $ENV/bash/util/path.bash
 
 
 #______________________________________________________________________________
@@ -30,22 +16,6 @@ JAVAEXTRAS=$PROJECTS/extras/java
 
 export BIBINPUTS=/home/timv/projects/env/timv.bib:$BIBINPUTS
 
-# prepend to path environment variable
-function add-path {
-    for d in `echo $@`; do
-        export PATH=$d:$PATH
-    done
-}
-function add-pypath {
-    for d in `echo $@`; do
-        export PYTHONPATH=$d:$PYTHONPATH
-    done
-}
-function add-classpath {
-    for d in `echo $@`; do
-        export CLASSPATH=$d:$CLASSPATH
-    done
-}
 
 if [ -e ~/jdk1.6.0_31/bin ]; then
     add-path ~/jdk1.6.0_31/bin   # local install
@@ -123,46 +93,12 @@ alias remove-empty-lines='grep -v "^\s*$"'
 alias space2newline="sed 's/ /\n/g'"
 
 
-#--------------------------
-# potentially useful
-#alias grepall="grep -RIn" # recursive grep on non-binary files; a lot like ac
-#
-## highlighter
-#function hl() {
-#  grep -E --color=always $1'|$'
-#}
-#
-## grep paragraphs
-#function grepp {
-#  pattern=$1
-#  file=$2
-#  awk 'BEGIN{RS="";ORS="\n\n";FS="\n"}/'$pattern'/' $file | hl $pattern
-#}
-#--------------------------
-
-
 #-------------
 
 # vanilla emacs
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 #alias visualvm='shutup-and-disown visualvm'
 alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
-
-
-############################################################
-# If not running interactively, don't do anything
-#[ -z "$PS1" ] && return
-############################################################
-
-#______________________________________________________________________________
-# Keybindings
-
-bind "'\C-o': '\C-e 2>&1 |less -R'"      # append "2>&1 |less" to end of line
-bind "'\C-f': '\C-u stty sane\n\r\C-l'"  # some times terminal get broken
-
-# up/down arrows search bash history for prefix of what you've typed
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
 
 #______________________________________________________________________________
 # Bash History
@@ -550,6 +486,10 @@ function o {
 }
 
 function push-public-key {
+    if [[ "$#" -ne "2" ]]; then
+        echo -e "usage: push-public-key <user@dest>"
+        return
+    fi
     publickey=`cat ~/.ssh/id_rsa.pub`
     # make sure you set the appropriate permissions!
     ssh "$1" "mkdir -p ~/.ssh/
@@ -559,12 +499,12 @@ function push-public-key {
               && cat .ssh/authorized_keys"
 }
 
-#alias tetris='shutup-and-disown google-chrome /home/timv/public_html/tetris.swf 2>/dev/null'
 alias tetris='shutup-and-disown google-chrome /home/timv/tetris.swf 2>/dev/null'
 
-function jhu-library {
-    o "http://proxy.library.jhu.edu/login?url=$1"
-}
+# deprecated: use browser extension instead.
+#function jhu-library {
+#    o "http://proxy.library.jhu.edu/login?url=$1"
+#}
 
 function ghetto-refresh {
     if [[ "$#" -ne "2" ]]; then
@@ -587,22 +527,12 @@ function todos {
     ack -i '(TODO|XXX|FIXME|FIX|timv|HACK|REFACTOR):|XXX[ ]' $@
 }
 
-#function find-note-files {
-#    find "$@" -type f -name 'TODO*' -o -name 'NOTE*' -o -name 'LOG*' -o -name "*.tex" -o -name "*.org" \
-#      |grep -v '~\|#'  \
-#      |grep -v '/env/' \
-#      |grep -v '/export/' \
-#      |grep -v 'site-lisp' \
-#      |grep -v 'incoming/' \
-#      |grep -iv '\.\(pdf\|log\)$'  # lets assume we want to edit the notes, not view
-#}
-
 function org-export-filter {
     ack --files-without-matches 'pdfcreator={Emacs Org-mode' $@
 }
 
 # grep notes for patterns
-# TODO: generalize to keyword search
+# TODO: generalize to multiple keyword search (filter by multiple regexps)
 function notes-ack {
     cat $COMP_NOTES | xargs ack -i "$@"
     echo ~/.skid/marks/*.d/notes.org | xargs ack -i "$@"
