@@ -144,68 +144,7 @@ shopt -s checkwinsize
 # make less friendlier for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned off
-# by default to not distract the user: the focus in a terminal window should be
-# on the output of commands, not on the prompt
-force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
-    else
-        color_prompt=
-    fi
-fi
-
-# Awesome prompt ideas: http://maketecheasier.com/8-useful-and-interesting-bash-prompts/2009/09/04
-#PROMPT_COMMAND='PS1="\[\033[0;33m\][\!]\`if [[ \$? = "0" ]]; then echo "\\[\\033[32m\\]"; else echo "\\[\\033[31m\\]"; fi\`[\u.\h: \`if [[ `pwd|wc -c|tr -d " "` > 18 ]]; then echo "\\W"; else echo "\\w"; fi\`]\$\[\033[0m\] "; echo -ne "\033]0;`hostname -s`:`pwd`\007"'
-
-
-# http://www.gnu.org/software/bash/manual/bashref.html
-if [ "$color_prompt" = yes ]; then
-    # prints user@host:cwd$
-    #PS1='\[\033[01;32m\]\u@\h\[\033[00m\]\$ '
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[32m\]\u@\h\[\033[00m\] \[\033[34m\]\w\[\033[00m\]\n\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
-
-# Enable bash completion.
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-
-    # If 'on', words with more than one completion cause the matches to be
-    # listed immediately instead of ringing the bell. Default 'off'.
-    bind "set show-all-if-ambiguous on"
-
-    # case insensitive
-    bind "set completion-ignore-case on"
-fi
-
+source $ENV/bash/prompt.bash
 
 #______________________________________________________________________________
 # Aliases
@@ -227,16 +166,6 @@ alias tree='tree -I "*.pyc"'
 
 alias less='less -RSimw'
 export PAGER='less -RSimw'
-
-# ssh aliases
-#alias gargamel='ssh tvieira2@gargamel.cs.uiuc.edu'
-#alias smeagol='ssh tvieira2@smeagol.cs.uiuc.edu'
-#alias jasper='ssh timv@jasper.cs.umass.edu'
-#alias vinci8='ssh timv@vinci8.cs.umass.edu'
-#alias dali='ssh timv@dalisrv.cs.umass.edu'
-#alias loki='ssh timv@loki.cs.umass.edu'
-#alias ugradx='ssh timv@ugradx.cs.jhu.edu'
-alias clsp='ssh timv@login.clsp.jhu.edu'
 
 #______________________________________________________________________________
 # bash functions
@@ -279,103 +208,16 @@ function fv {
 #______________________________________________________________________________
 # Clean up
 
-function tmpfiles {
-    find $1 -name '*~'
-}
-
-function pyclean {
-    rm -f `find . -name "*.pyc"`
-    rm -f `find . -name "*$py.class"`  # jython
-}
-
-# TODO: remove executables associate with file... e.g. hw4.hs has {hw4.hi, hw4.0, hw4}
-function haskell-clean {
-    find . -name '*.hi' -exec rm -f {} \;
-    find . -name '*.o'  -exec rm -f {} \;
-}
-
-# remove org-mode's LaTeX output files
-function org-clean {
-    org-export-files | xargs -0 rm -f
-}
-
-function org-export-files {
-    find . -name '*.pdf' -print0 |xargs -0 ack --print0 --files-with-matches 'Creator\(Emacs Org-mode version'
-    find . -name '*.tex' -print0 |xargs -0 ack --print0 --files-with-matches 'pdfcreator=\{Emacs Org-mode version'
-}
-
-# clean up tex derived files
-# TODO: do we want this to be recursive? I suppose tex projects rarely are?
-function tex-clean {
-    rm -f "*.log" "*.aux" "*.blg" "*.bbl" "*.dvi"
-}
-
-# clean up derived files.
-function clean {
-    tex-clean
-    org-clean
-    pyclean
-    haskell-clean
-}
+source $ENV/bash/cleanup.bash
 
 #______________________________________________________________________________
 # Version control tricks
 
-# todo: use locate instead.
-function find-repos {
-    locate "*/.hg"
-    locate "*/.git"
-}
+source $ENV/bash/util/version-control.bash
 
-# try to find repositories which have changes which might need to be pushed
-#function hg-changed-repos {
-#    cd
-#    repos=`find -name '.hg' -type d -exec dirname {} \;`
-#    for line in $repos; do
-#        cd $line
-#        echo -n "$line -- "
-#        MODIFIED=$(hg st -m)
-#        if [ "$MODIFIED" != "" ]; then
-#            red modified
-#        else
-#            outgoing=$(doalarm 3 hg outgoing |grep "no changes found")
-#            if [[ $outgoing != "no changes found" ]]; then
-#                cyan outgoing
-#            else
-#                yellow ok
-#            fi
-#        fi
-#        cd ~
-#    done
-#}
-
-# more on log formatting http://hgbook.red-bean.com/read/customizing-the-output-of-mercurial.html
-#alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
-alias hgchangelog="hg log --style changelog"
-alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
-#alias hg-dummy-ci='hg ci -m "()"'
-#alias hg-dummy-push='hg ci -m "()" && hg push'
-
-# run pop open kdiff3 and open editor
-function hg-diff-ci {
-    for f in $(hg st -m -n $(hg root)); do   # use relative paths
-        echo $f
-        hg kdiff3 $f 2>/dev/null &
-        hg ci $f
-    done
-}
-alias gittree='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %s %cr"'
-alias gittree-who='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %cr"'
-alias gittree-when='git log --graph --full-history --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20 %cn %s %ci"'
-##
-#function get_git_branch {
-#    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\ \[\1\]/'
-#}
-#PS1="\h:\W \u\[\033[0;32m\]\$(get_git_branch) \[\033[0m\]\$ "
-##
 
 #______________________________________________________________________________
-# Shortcuts for jump around
+# Shortcuts for jumping around
 
 source $ENV/bash/quick-edit.bash
 
@@ -483,20 +325,6 @@ function vpy {
 function o {
     # gnome-open; xdg-open    # unity equivalent of gnome-open
     xdg-open "$@" 2>/dev/null >/dev/null
-}
-
-function push-public-key {
-    if [[ "$#" -ne "2" ]]; then
-        echo -e "usage: push-public-key <user@dest>"
-        return
-    fi
-    publickey=`cat ~/.ssh/id_rsa.pub`
-    # make sure you set the appropriate permissions!
-    ssh "$1" "mkdir -p ~/.ssh/
-              && touch .ssh/authorized_keys
-              && chmod 600 .ssh/authorized_keys
-              && echo $publickey >> .ssh/authorized_keys
-              && cat .ssh/authorized_keys"
 }
 
 alias tetris='shutup-and-disown google-chrome /home/timv/tetris.swf 2>/dev/null'
@@ -794,3 +622,6 @@ function notes {
 
     fi
 }
+
+
+source $ENV/bash/util/ssh.bash

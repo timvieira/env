@@ -4,3 +4,10 @@
 # up/down arrows search bash history for prefix of what you've typed
 \e[A: history-search-backward
 \e[B: history-search-forward
+
+# If 'on', words with more than one completion cause the matches to be
+# listed immediately instead of ringing the bell. Default 'off'.
+set show-all-if-ambiguous on
+
+# case insensitive
+set completion-ignore-case on
