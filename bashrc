@@ -19,8 +19,8 @@ source $ENV/bash/skid.bash
 source $ENV/bash/my-complete.bash
 source $ENV/bash/cleanup.bash
 source $ENV/bash/prompt.bash
-source $ENV/bash/history.bash
 source $ENV/bash/alias.bash
+source $ENV/bash/history.bash  # deps on alias
 source $ENV/bash/projects.bash
 source $ENV/bash/find.bash
 source $ENV/bash/misc.bash
@@ -77,9 +77,10 @@ export GIT_EDITOR=$HGEDITOR
 # compiled/binary file extensions (e.g., *.pyc, *.o) and version control
 # directories.
 #
-# TODO: should probably filter all hidden directories.
+# TODO: consider filtering all hidden directories.
+# TODO: directory filter skips substring matches
 function ignore-filter {
-    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\(\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build\|dist\|tmp\)'
 }
 
 #______________________________________________________________________________
