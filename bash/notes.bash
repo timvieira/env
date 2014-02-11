@@ -31,8 +31,8 @@ function notes {
             $EDITOR "$match"
         fi
 
-        bash   # sigh. Changing directory worked for bash function, but not for
-               # this script version...
+        #bash   # sigh. Changing directory worked for bash function, but not for
+        #       # this script version...
 
     else
         yellow "pick a file or be more specific."
