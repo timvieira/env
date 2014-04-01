@@ -164,7 +164,7 @@
 ;;------------------------------------------------------------------------------
 
 (defun notes (query)
-  (shell-command (concat "/home/timv/projects/env/bin/notes " query)))
+  (shell-command (concat "source /home/timv/projects/env/bash/notes.bash && notes " query)))
 ; (notes "gumbel max")
 
 (org-add-link-type "bash" 'async-shell-command)
