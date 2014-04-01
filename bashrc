@@ -80,7 +80,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: consider filtering all hidden directories.
 # TODO: directory filter skips substring matches
 function ignore-filter {
-    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\(\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build\|dist\|tmp\)'
+    grep -v '\(.class\|.pyc\|.o\|.hi\)$' |grep -v '\(\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build\|dist\|tmp\|output\|third-party\)'
 }
 
 #______________________________________________________________________________
