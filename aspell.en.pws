@@ -1,4 +1,4 @@
-personal_ws-1.1 en 402 
+personal_ws-1.1 en 419 
 nonhomogeneous
 ANF
 google
@@ -86,7 +86,9 @@ unpronounced
 anaphor
 README
 subproblem
+enqueue
 PCFG
+renormalization
 GPS
 GPs
 DAGs
@@ -96,6 +98,7 @@ SampleRank
 regex
 BUGFIX
 instantiation
+stateful
 unimodular
 rollout
 nondeterministically
@@ -108,6 +111,7 @@ pdfs
 Makefile
 JHU
 dualdecomp
+binarize
 parallelization
 dymamic
 noncommutative
@@ -137,6 +141,7 @@ aggregator
 nonmonotonic
 datasets
 discretized
+nonconvexity
 covariance
 instantiations
 exponentiated
@@ -192,11 +197,13 @@ Datalog
 Peano
 Viterbi
 timvieira
+Lexicalization
 Dykstra's
 backpointer
 Javascript
 antiderivative
 RANSAC
+hypernym
 sidenote
 iteratively
 optimality
@@ -209,6 +216,7 @@ intuiton
 clsp
 canonicalized
 Yanif
+outliers
 initializers
 PageRank
 subsequence
@@ -227,6 +235,7 @@ maxima
 SGD
 piecewise
 scala
+hypernyms
 covariates
 reachability
 McAllester
@@ -256,6 +265,7 @@ hypergraph
 subtrees
 CRFs
 declaratively
+discriminative
 blackbox
 Efraimidis
 compositionality
@@ -284,6 +294,7 @@ Immanant
 discontiguous
 backpropagation
 variational
+scalability
 REPL
 subsequences
 subsumptive
@@ -311,6 +322,7 @@ repropagation
 analyses
 Wishlist
 pragma
+thresholding
 submatrix
 adjoint
 emacs
@@ -322,6 +334,7 @@ workflows
 superset
 checksum
 MCMC
+interpretable
 BP
 memoization
 Davidsonian
@@ -329,6 +342,7 @@ vertices
 nondecomposable
 Keshet
 memoized
+nonterminals
 Aspectual
 softmax
 dimensionality
@@ -374,6 +388,7 @@ nand
 nonsingularity
 RL
 Mathematica
+monotonicity
 MERT
 adjoints
 uninstall
@@ -386,8 +401,10 @@ Szeliski
 normalizer
 simulative
 SEARN
+affine
 webpages
 subderivations
+exponentiating
 matchings
 argmin
 Bottou's
