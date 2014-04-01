@@ -18,8 +18,12 @@ shopt -s histappend
 source $ENV/bash/dir-history.bash
 
 # list top commands in bash history
-function top-commands () {
+function top-commands {
     history |linepy 'print " ".join(line.split()[3:])' | freq
+}
+
+function h {
+    history |grep "$@"
 }
 
 source $ENV/bash/dir-history.bash
