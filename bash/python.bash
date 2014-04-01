@@ -19,3 +19,25 @@ function cdpy {
 function vpy {
     python -m arsenal.debug.edit "$@"
 }
+
+
+function prof-callgraph {
+
+  name="/tmp/prof-callgraph"
+  python -m cProfile -o "$name.pstats" "$@"
+  gprof2dot.py -f pstats "$name.pstats" | dot -Tsvg -o "$name.svg"
+  shutup-and-disown google-chrome "$name.svg"
+
+  echo
+  yellow "how to read results"
+  yellow "==================="
+  echo "
++----------------------------------+
+|   function name : module name    |
+| total time including sub-calls % |  total time including sub-calls %
+|    (self execution time %)       |------------------------------------>
+|  total number of self calls      |
++----------------------------------+
+"
+
+}
