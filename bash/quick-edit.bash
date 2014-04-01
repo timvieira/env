@@ -34,8 +34,18 @@ function edit-bash-function {
 
         if [[ $(alias $1) ]]; then
 
-            # TODO: could try the fallback strategy of grepping config files for
-            # the name of this alleged alias.
+            # TODO: (better strategy below) could try the fallback strategy of
+            # grepping config files for the name of this alleged alias.
+
+            # TODO: type -a provides some information about aliases
+            #
+            #   $ type -a es
+            #   es is aliased to `edit-script
+            #
+            # similar informaiton provided by alias
+            #
+            #   $ alias es
+            #   alias es='edit-script'
 
             echo "Sorry, aliases are not indexed."
             echo `alias $1`
