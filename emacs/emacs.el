@@ -30,6 +30,7 @@
 
 ;; TODO: easily search google for word-at-point or phrase-in-region
 
+
 ;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs.el"))))
