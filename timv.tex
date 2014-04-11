@@ -97,7 +97,6 @@
 \newcommand{\softmin}{{\text{{softmin}}}}
 \newcommand{\softmax}{{\text{{softmax}}}}
 
-\newcommand{\Expect}[2]{\mathbb{E}_{#1}\left[#2\right]}
 
 \newcommand{\Var}{\mathrm{Var}}
 \newcommand{\Cov}{\mathrm{Cov}}
@@ -110,14 +109,23 @@
 
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
 
-\newcommand{\Ebb}[1]{\mathbb{E} \left[ #1 \right] }
+\newcommand{\Expect}[2]{\mathbb{E}_{#1}\left[#2\right]}
+\newcommand{\Ebb}{\mathbb{E}}
 
-\DeclareMathOperator*{\Eee}{\mathbb{E}}
+\newcommand{\ExpectA}[0]{\mathbb{E}}
+\newcommand{\ExpectB}[1]{\mathbb{E}\left[ #1 \right]}
+\newcommand{\ExpectC}[2]{\mathbb{E}_{#1}\left[ #2 \right]}
+
+%\newcommand{\Ebb}[1]{\mathbb{E} \left[ #1 \right] }
+%\DeclareMathOperator*{\Eee}{\mathbb{E}}
+%\newcommand{\E}[2]{  \mathop{\mathbb{E}}_{#1} \Big[ #2 \Big] }
+%\newcommand{\EE}[2]{ \mathop{\mathbb{E}}_{#1} \left[ #2 \right] }
+
+\newcommand{\tcdot}{\! \cdot\! }
+
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
-\newcommand{\E}[2]{ \mathop{\mathbb{E}}_{#1} \Big[ #2 \Big] }
-\newcommand{\EE}[2]{ \mathop{\mathbb{E}}_{#1} \left[ #2 \right] }
 
 \newcommand{\g}{\,|\,}
 \newcommand{\teq}{\!=\!}
