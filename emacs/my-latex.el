@@ -84,6 +84,10 @@
         (delete-other-windows))
       )))
 
+
+;(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+
 (defun latex-setup ()
   (interactive)
   (latex-mode)
@@ -97,4 +101,3 @@
   (flyspell-start)
   ;(longlines-mode t)
 )
-
