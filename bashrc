@@ -32,6 +32,11 @@ source $ENV/bash/util/pdf.bash
 source $ENV/bash/util/audio.bash
 source $ENV/bash/util/version-control.bash
 
+# enabled default bash completions
+if [ -f /etc/bash_completion ]; then
+ . /etc/bash_completion
+fi
+
 #______________________________________________________________________________
 # Environment variables
 
