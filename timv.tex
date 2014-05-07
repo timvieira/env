@@ -1,4 +1,3 @@
-
 \setlength\parindent{0pt}   % no paragraph indentation
 \usepackage{fullpage}
 \setlength{\parskip}{.4cm plus4mm minus3mm}
@@ -104,7 +103,6 @@
 \newcommand{\loss}[1]{ \mathcal{L}\left( #1 \right) }
 \newcommand{\indicator}[1]{ \textbf{1}\left[ #1 \right] }
 
-\newcommand{\gradtheta}[1]{\nabla_{\theta} \left[ #1 \right] }
 \renewcommand{\|}{\textrm{~}\arrowvert\textrm{~}}
 
 \newcommand{\R}{\ensuremath{\mathbb{R}}}
@@ -132,3 +130,9 @@
 
 \newcommand{\bphi}{\boldsymbol{\phi}}
 \newcommand{\btheta}{\boldsymbol{\theta}}
+
+
+\newcommand{\grad}[2]{\nabla_{\! #1}\! \left[ #2 \right]}
+
+\newcommand{\gradtheta}[1]{\grad{\theta}{ #1 }}
+\newcommand{\gradx}[1]{\grad{x}{ #1 }}
