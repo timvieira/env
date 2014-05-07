@@ -26,7 +26,7 @@ function org-export-files {
 # clean up tex derived files
 # TODO: do we want this to be recursive? I suppose tex projects rarely are?
 function tex-clean {
-    rm -f "*.log" "*.aux" "*.blg" "*.bbl" "*.dvi"
+    rm -f *.log *.aux *.blg *.bbl *.dvi
 }
 
 # clean up derived files.
