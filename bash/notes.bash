@@ -2,6 +2,8 @@
 # My system for quickly finding/editing notes.
 #
 
+function yellow { echo -e "\e[33m$@\e[0m"; }
+
 function notes {
 
     # TODO: search skid as well.
