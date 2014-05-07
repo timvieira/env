@@ -97,9 +97,12 @@ function t {
 
     files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
 
-    matches=`echo "$files" |filter.py "$@" --on-unique 'visit {match}'`
-
+    matches=`echo "$files" |filter.py "$@"`
     retcode="$?"
+
+    if [[ $retcode -eq 0 ]]; then
+        v `echo $matches | nocolor`
+    fi
 
     echo "$matches"
 }
