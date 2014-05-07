@@ -127,12 +127,13 @@ $courses
 $vcroots
 $everythingelse"
 
+    echo "/home/timv/Dropbox/todo" > $COMP_PROJECTS
     echo "$matches" |ignore-filter \
         |grep -v bdslss/reviews    \
         |grep -v '/data/'          \
         |grep -v hw7-xfst/xfsm_api \
         |grep -v '~$'              \
-        > $COMP_PROJECTS
+        >> $COMP_PROJECTS
 }
 
 
@@ -158,5 +159,5 @@ complete -F _complete_e     e
 complete -F _complete_notes notes
 complete -F _complete_p     p
 complete -F _complete_t     t
-complete -F _complete_vpy   vpy
+#complete -F _complete_vpy   vpy
 #complete -F _complete_es    es
