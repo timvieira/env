@@ -1,4 +1,4 @@
-personal_ws-1.1 en 419 
+personal_ws-1.1 en 429 
 nonhomogeneous
 ANF
 google
@@ -24,6 +24,7 @@ Minka
 nonconvex
 Gaussians
 tradeoffs
+dev
 Champaign
 BP's
 treewidth
@@ -107,6 +108,8 @@ nondifferentiable
 todo
 coindexing
 ILP
+combinatorial
+Hoeffding
 pdfs
 Makefile
 JHU
@@ -167,6 +170,7 @@ preterminal
 hacky
 subdifferentiability
 rollouts
+trie
 MLE
 Topicalization
 Wallstreet
@@ -176,6 +180,7 @@ parsers
 backend
 semirings
 MLN
+LSE
 unmemoized
 univariate
 Boyan
@@ -192,12 +197,14 @@ noogie
 nonprojective
 reranking
 semiring
+parallelizable
+parallelize
 cyclicity
 Datalog
 Peano
 Viterbi
-timvieira
 Lexicalization
+timvieira
 Dykstra's
 backpointer
 Javascript
@@ -209,6 +216,7 @@ iteratively
 optimality
 invertible
 OOV
+disjunction
 nonstationary
 overfitting
 Sobel
@@ -273,6 +281,7 @@ Epipolar
 revisitation
 complementizer
 dataset
+rescaled
 SVD
 hyperparameters
 exponentiate
@@ -294,6 +303,7 @@ Immanant
 discontiguous
 backpropagation
 variational
+uncentered
 scalability
 REPL
 subsequences
@@ -354,7 +364,7 @@ Hobbsian
 binarization
 Ew
 resamples
-Multiobjective
+multiobjective
 perceptron
 variates
 clitics
