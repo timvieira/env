@@ -2,7 +2,7 @@
 # Shortcuts for finding and editing stuff if those annoying deep directories
 # (e.g., Java projects).
 #
-# Requirements: 
+# Requirements:
 #
 #   ignore-filter must be defined
 #
@@ -16,5 +16,5 @@ function f {
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
 # matching specified pattern. Opens the file if a unique match is found.
 function fv {
-    find -type f | ignore-filter | bymtime - | cut -f2 | filter.py $@ --on-unique 'v {match}'
+    find -type f | ignore-filter | bymtime - | cut -f2 | grep -v '\.\(pdf\)$' | filter.py $@ --on-unique 'v {match}'
 }
