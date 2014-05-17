@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# TODO:
+#
+#  Cute idea for adhoc bash "help"
+#
+#   - show previous invocations of a command (maybe the output?)
+#
+#   - include any comments written about bash functions, e.g. comments directly
+#     above the function definition in the source code.
+#
+
 ENV=~/projects/env
 PROJECTS=~/projects
 
@@ -119,7 +129,7 @@ function e {
         cd $ENV
         return
     fi
-    files="$(find $ENV |grep -iv '.hg\|site-lisp')
+    files="$(find $ENV |grep -iv '.hg\|site-lisp\|texmf')
 $(ls -x $ENV/emacs/*.el)"
     matches=`echo "$files" | ignore-filter |filter.py $@ --on-unique 'v {match}'`
     echo "$matches"
