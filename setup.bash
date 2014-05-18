@@ -2,16 +2,21 @@
 
 cd `dirname $0`
 
-function add-link {
+function add-link2 {
     local absp=$(ls -d -1 $PWD/$1)
-    local base=`basename $absp`
-    local dest=~/.$base
-    if [ -f $dest ]; then
+    local dest=$2
+    if [ -e $dest ]; then
         echo "Skipping $dest, already exists"
     else
         ln -s $absp $dest
-        echo "added $dest."
+        echo "added $dest"
     fi
+}
+
+function add-link {
+    local absp=$(ls -d -1 $PWD/$1)
+    local base=`basename $absp`
+    add-link2 $1 ~/.$base
 }
 
 add-link bashrc
@@ -30,6 +35,11 @@ else
     echo "added ~/texmf"
     ln -s `pwd`/texmf ~/texmf
 fi
+
+# no dot in front of this destination.
+add-link2 texmf /home/timv/texmf
+
+add-link2 ipython_config.py ~/.config/ipython/profile_default/ipython_config.py
 
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
