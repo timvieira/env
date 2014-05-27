@@ -24,6 +24,7 @@ shopt -s globstar
 # of LINES and COLUMNS.
 shopt -s checkwinsize
 
+bind -f ~/.inputrc
 
 source $ENV/bash/quick-edit.bash
 source $ENV/bash/notes.bash
