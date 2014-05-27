@@ -13,6 +13,8 @@
 ENV=~/projects/env
 PROJECTS=~/projects
 
+export PATH=~/.local/bin:$PATH
+
 # globstar: If set, the pattern '**' used in a filename expansion context will
 #    match all files and zero or more directories and subdirectories. If the
 #    pattern is followed by a '/', only directories and subdirectories match.

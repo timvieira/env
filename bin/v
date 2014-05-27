@@ -13,11 +13,17 @@ function new-emacs {
 }
 
 if [[ `ps aux |grep emacs |grep -v grep |grep emacs` ]]; then
-    #echo "emacs already running; trying to use emacsclient"
-    # fallback incase the emacs process isn't running a server
-    if [[ `emacsclient -n $args 2>&1 >/dev/null &` ]]; then
-        #echo "emacsclient failed; starting new emacs process."
-        new-emacs
+    if [[ $args ]]; then
+        #echo "emacs already running; trying to use emacsclient"
+        # fallback incase the emacs process isn't running a server
+        if [[ `emacsclient -n $args 2>&1 >/dev/null &` ]]; then
+            #echo "emacsclient failed; starting new emacs process."
+            new-emacs
+        fi
+    else
+        if [[ `emacsclient -n ~/Dropbox/todo/todo.org 2>&1 >/dev/null &` ]]; then
+            new-emacs
+        fi
     fi
 else
     new-emacs
