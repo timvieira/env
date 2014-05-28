@@ -1,4 +1,4 @@
-personal_ws-1.1 en 433 
+personal_ws-1.1 en 434 
 nonhomogeneous
 ANF
 google
@@ -28,8 +28,8 @@ Gaussians
 tradeoffs
 dev
 Champaign
-BP's
 reproducibility
+BP's
 treewidth
 backprop
 CKY
@@ -179,8 +179,8 @@ MLE
 Topicalization
 Wallstreet
 tradeoff
-parsers
 parser's
+parsers
 backend
 semirings
 MLN
@@ -193,8 +193,8 @@ approximators
 gmail
 minima
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 noogie
@@ -267,9 +267,9 @@ wiki
 scriptable
 Domke's
 unpruned
-Tim
-SPC
 RSM
+SPC
+Tim
 minimizer
 notational
 RSS
@@ -289,6 +289,7 @@ dataset
 SVD
 hyperparameters
 exponentiate
+Occam's
 discretization
 UMD
 counterfactuals
