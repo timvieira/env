@@ -16,5 +16,4 @@ print df
 
 from viz.interact import PointBrowser, LassoBrowser
 
-
 from arsenal.debug import ip; ip()
