@@ -39,7 +39,7 @@ fi
 # no dot in front of this destination.
 add-link2 texmf /home/timv/texmf
 
-add-link2 ipython_config.py ~/.config/ipython/profile_default/ipython_config.py
+add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
 
 #sudo apt-get install python-dev python-setuptools python-numpy python-scipy
 #sudo apt-get install mercurial git
