@@ -54,9 +54,7 @@
              '("article"
 ;               (format "%s" org-latex-header)
 
-"%\\documentclass{article}
-\\documentclass[pdftex, a4paper, 12pt, openbib, ]{article}
-
+"\\documentclass[12pt]{article}
 \\input{/home/timv/projects/env/timv}
 "
                ("\\section*{%s}" . "\\section*{%s}")

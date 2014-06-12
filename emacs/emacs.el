@@ -1,4 +1,4 @@
-33;; -*- coding: utf-8 -*-
+;; -*- coding: utf-8 -*-
 ;;
 ;; Notes
 ;; =====
@@ -351,6 +351,8 @@
   (global-unset-key [(control ?x) (control ?z)])
   (global-unset-key [mouse-2])                   ;; disable middle-click paste
 
+  (global-set-key [(f5)] 'delete-other-windows)
+
   ;; Copy-Cut-Paste from clipboard
   (global-set-key (kbd "s-x") 'clipboard-kill-region)    ; cut
   (global-set-key (kbd "s-c") 'clipboard-kill-ring-save) ; copy
@@ -587,20 +589,20 @@
 ;       ;; Tell the command loop not to deactivate the mark
 ;       ;; for transient mark mode
 ;       (setq deactivate-mark nil))))
-; 
+;
 ; (defun shift-right ()
 ;   (interactive)
 ;   (shift-region 1))
-; 
+;
 ; (defun shift-left ()
 ;   (interactive)
 ;   (shift-region -1))
-; 
+;
 ; ;; Bind (shift-right) and (shift-left) function to your favorite keys. I use
-; ;; the following so that Ctrl-Shift-Right Arrow moves selected text one 
+; ;; the following so that Ctrl-Shift-Right Arrow moves selected text one
 ; ;; column to the right, Ctrl-Shift-Left Arrow moves selected text one
 ; ;; column to the left:
-; 
+;
 ; (global-set-key [C-S-right] 'shift-right)
 ; (global-set-key [C-S-left] 'shift-left)
 
