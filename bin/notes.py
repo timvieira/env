@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 """
-
-Very simple indexing files. I like to use it for my notes.
+Very simple indexing files. Used for searching my notes.
 
 This script extracts a small amount of metadata: title and tags. The title is
 taken to be the first line of the file. tags are specific in a comment
 
 (#|%|;) tags: tag1 tag2 tag3
-
 """
 
 import re, os
@@ -98,10 +96,12 @@ def _search(q, limit=None):
             yield hit
 
 
+from arsenal.humanreadable import datestr
+
 def search(*q):
     print
     for hit in _search(' '.join(q)):
-        print hit['title']
+        print hit['title'], magenta % '(%s)' % datestr(hit['mtime'])
         print cyan % 'file://%s' % hit['path']
         if hit['tags']:
             print magenta % ' '.join(hit['tags'])
@@ -176,8 +176,20 @@ def extract_title(d, x=None):
             title = title[0]
 
     if not title:
-        title = x.split('\n')[0]  # use first line of the file as title
-        title = re.sub('#\+title:', '', title)
+        lines = x.split('\n')
+
+        # use first (non-shebang) line of the file as title
+        title = lines[0]
+        for line in lines:
+            line = line.strip()
+
+            # remove org-mode markup or python doc string.
+            line = re.sub('^(#\+title:|""")', '', line)
+
+            if line:
+                if not line.startswith('#!'): # skip shebang
+                    title = line
+                    break
 
     return title.strip()
 
