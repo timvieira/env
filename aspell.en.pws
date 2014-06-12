@@ -1,4 +1,4 @@
-personal_ws-1.1 en 434 
+personal_ws-1.1 en 435 
 nonhomogeneous
 ANF
 google
@@ -179,8 +179,9 @@ MLE
 Topicalization
 Wallstreet
 tradeoff
-parser's
 parsers
+parser's
+regularizers
 backend
 semirings
 MLN
@@ -193,8 +194,8 @@ approximators
 gmail
 minima
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 noogie
@@ -267,9 +268,9 @@ wiki
 scriptable
 Domke's
 unpruned
-RSM
-SPC
 Tim
+SPC
+RSM
 minimizer
 notational
 RSS
@@ -288,8 +289,8 @@ rescaled
 dataset
 SVD
 hyperparameters
-exponentiate
 Occam's
+exponentiate
 discretization
 UMD
 counterfactuals
