@@ -3,7 +3,13 @@
 \setlength{\parskip}{.4cm plus4mm minus3mm}
 
 %\usepackage{lmodern}
-\usepackage[T1]{fontenc}   % fontenc is oriented to output, that is, what fonts to use for printing characters.
+
+% fontenc is oriented to output, that is, what fonts to use for printing characters.
+%\usepackage[T1]{fontenc}
+
+% inputenc allows the user to input accented characters directly from the keyboard;
+%\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
 
 \usepackage{fancybox}
 \usepackage{pgf}
@@ -66,12 +72,7 @@
 }
 
 \usepackage{bm}             % load after all math to give access to bold math
-\usepackage[utf8]{inputenc} % inputenc allows the user to input accented characters directly from the keyboard;
-                             % utf8x : much broader but less compatible ; latin1 : old?
-                             % http://tex.stackexchange.com/questions/44694/fontenc-vs-inputenc
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
 \usepackage{fixltx2e}
 \usepackage{graphicx}
 \usepackage{longtable}
