@@ -3425,7 +3425,7 @@ will be appended."
 ;; LaTeX exporter, which is why the name includes "export".
 (defcustom org-export-latex-default-packages-alist
   '(("AUTO" "inputenc"  t)
-    ("T1"   "fontenc"   t)
+;    ("T1"   "fontenc"   t)
     (""     "fixltx2e"  nil)
     (""     "graphicx"  t)
     (""     "longtable" nil)
