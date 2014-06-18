@@ -15,6 +15,7 @@
 ;(setq org-cycle-separator-lines 2)
 (setq org-cycle-separator-lines 1)
 
+(setq org-export-with-toc nil)
 
 ;; Links to emails, web pages, and other files are sprinkled all over my org
 ;; files. The following setting control how org-mode handles opening the link.
@@ -27,9 +28,7 @@
                                    (file . find-file))))
 
 (setq org-src-fontify-natively t)
-
 (setq org-return-follows-link t)
-
 
 (eval-after-load "org"
   '(progn
@@ -54,28 +53,19 @@
              '("article"
 ;               (format "%s" org-latex-header)
 
-"\\documentclass[12pt]{article}
+"
+%%%\\documentclass{article}
+%%%\\documentclass[12pt]{article}
+\\documentclass[pdftex, a4paper, 12pt, openbib, ]{article}
 \\input{/home/timv/projects/env/timv}
 "
-               ("\\section*{%s}" . "\\section*{%s}")
-               ("\\subsection*{%s}" . "\\subsection*{%s}"))
+
+("\\section*{%s}" . "\\section*{%s}")
+("\\subsection*{%s}" . "\\subsection*{%s}"))
+
 )
 
-
 (require 'org-publish)
-;(setq org-publish-project-alist
-;      '(
-;        ("org-notes"
-;         :base-directory "~/projects/notes"
-;         :base-extension "org"
-;         :publishing-directory "~/projects/notes/export"
-;         :recursive t
-;         :publishing-function org-publish-org-to-pdf
-;         :headline-levels 4             ; Just the default for this project.
-;         :auto-preamble t
-;         )
-;      ))
-
 
 (defun org-init ()
   (interactive)
@@ -174,9 +164,6 @@
 (org-add-link-type "dyna" '(lambda (x)
                              (browse-url (concat "https://github.com/nwf/dyna/issues/"
                                                  (substring x 1)))))
-
-
-
 
 (setq org-startup-with-inline-images nil)
 (add-hook 'org-mode-hook
