@@ -171,9 +171,11 @@ def extract_title(d, x=None):
 
     title = None
     if d.endswith('.tex'):
-        title = re.findall(r'\\title\{([\w\W]*?)\}', x)
+        title = re.findall(r'\\(?:icml)?title\{([\w\W]*?)\}', x)
         if title:
             title = title[0]
+            title = re.sub(r'\\\\\s+', '', title)
+            title = re.sub(r'\\thanks\{.*', '', title)
 
     if not title:
         lines = x.split('\n')
@@ -190,6 +192,8 @@ def extract_title(d, x=None):
                 if not line.startswith('#!'): # skip shebang
                     title = line
                     break
+
+    title = re.sub('\s\s+', ' ', title)
 
     return title.strip()
 
