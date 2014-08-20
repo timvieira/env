@@ -1,4 +1,4 @@
-personal_ws-1.1 en 435 
+personal_ws-1.1 en 438 
 nonhomogeneous
 ANF
 google
@@ -17,6 +17,7 @@ IPython
 encodings
 discretize
 collineation
+wallclock
 Domingos
 regularizer
 workspaces
@@ -32,6 +33,7 @@ reproducibility
 BP's
 treewidth
 backprop
+nonnegative
 CKY
 repropagated
 newswire
@@ -94,7 +96,6 @@ replicability
 enqueue
 PCFG
 renormalization
-GPS
 GPs
 DAGs
 subproblems
@@ -172,6 +173,7 @@ differentiable
 Wallach
 preterminal
 hacky
+composable
 subdifferentiability
 rollouts
 trie
@@ -341,6 +343,7 @@ pragma
 thresholding
 submatrix
 adjoint
+precomputed
 emacs
 covary
 symlink
