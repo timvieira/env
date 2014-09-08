@@ -16,9 +16,11 @@ from whoosh.fields import Schema, TEXT, ID, DATETIME
 from whoosh.qparser import QueryParser
 from whoosh.analysis import KeywordAnalyzer
 
-from arsenal.terminal import cyan, red, yellow, magenta
+from arsenal.terminal import cyan, yellow, magenta
 from arsenal.fsutils import find
 from arsenal.iterextras import unique
+from arsenal.humanreadable import datestr
+
 
 # globals
 DIRECTORY = path('/home/timv/projects/notes/.index')
@@ -37,6 +39,7 @@ def dump_files():
     with file(TRACKED, 'wb') as f:
         for x in unique(find_notes()):
             print >> f, x
+    print yellow % 'wrote tracked files to %s' % TRACKED
 
 
 def find_notes():
@@ -60,10 +63,12 @@ def find_notes():
                 yield x
 
 
-def files():
-    for f in file(TRACKED):
-        f = f.strip()
-        yield f
+#def files():
+#    for f in file(TRACKED):
+#        f = f.strip()
+#        yield f
+
+files = find_notes
 
 
 def create():
@@ -96,8 +101,6 @@ def _search(q, limit=None):
             yield hit
 
 
-from arsenal.humanreadable import datestr
-
 def search(*q):
     print
     for hit in _search(' '.join(q)):
@@ -109,7 +112,7 @@ def search(*q):
 
 
 def update():
-    "Rebuild index from scratch."
+    "re-index files which have change."
 
     # create index if it doesn't exist
     if not DIRECTORY.exists():
@@ -164,7 +167,10 @@ def update():
                               mtime = mtime,
                               tags = tags)
 
+
 def extract_title(d, x=None):
+    "Apply heuristics for extracting document titles."
+
     if x is None:
         with file(d) as f:
             x = unicode(f.read().decode('utf8', 'ignore'))
