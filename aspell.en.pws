@@ -1,4 +1,4 @@
-personal_ws-1.1 en 438 
+personal_ws-1.1 en 444 
 nonhomogeneous
 ANF
 google
@@ -35,6 +35,7 @@ treewidth
 backprop
 nonnegative
 CKY
+preconditioner
 repropagated
 newswire
 timeline
@@ -148,6 +149,7 @@ HMMs
 aggregator
 nonmonotonic
 datasets
+consequents
 discretized
 nonconvexity
 covariance
@@ -166,6 +168,7 @@ constituent's
 Theano
 Comcast
 regressor
+multinomial
 backchained
 subderivation
 stochastically
@@ -181,8 +184,8 @@ MLE
 Topicalization
 Wallstreet
 tradeoff
-parsers
 parser's
+parsers
 regularizers
 backend
 semirings
@@ -196,8 +199,8 @@ approximators
 gmail
 minima
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 noogie
@@ -270,9 +273,9 @@ wiki
 scriptable
 Domke's
 unpruned
-Tim
-SPC
 RSM
+SPC
+Tim
 minimizer
 notational
 RSS
@@ -306,6 +309,7 @@ parametrization
 decomposablility
 backpropagating
 Hollingshead
+convexified
 DAgger's
 Immanant
 discontiguous
@@ -330,6 +334,7 @@ optimizations
 whitespace
 underdetermined
 pretrained
+adaptively
 reprioritization
 Searchable
 differentiability
@@ -338,6 +343,7 @@ Roark
 decomposability
 repropagation
 analyses
+convexify
 Wishlist
 pragma
 thresholding
