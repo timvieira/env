@@ -180,8 +180,27 @@ def extract_title(d, x=None):
         title = re.findall(r'\\(?:icml)?title\{([\w\W]*?)\}', x)
         if title:
             title = title[0]
+
+            # remove common cruft from titles
+
+            # * LaTeX line breaks
             title = re.sub(r'\\\\\s+', '', title)
-            title = re.sub(r'\\thanks\{.*', '', title)
+
+            # * acknowledgment via \thanks{...}
+            title = re.sub(r'\\(footnote|thanks)\{.*', '', title)
+
+            #title = re.sub(r'\\[a-zA-Z]', '', title)
+
+            # * curly braces
+            #title = re.sub(r'[{}]', '', title)
+
+            # comment symbols
+            title = re.sub(r'#|//|/\*', '', title)
+
+            # remove excess whitespace
+            title = re.sub(r'\s+', ' ', title)
+
+
 
     if not title:
         lines = x.split('\n')
