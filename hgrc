@@ -15,12 +15,14 @@ style = gitweb
 cacerts =
 
 [extdiff]
-cmd.kdiff3 =
+cmd.meld =
+##cmd.kdiff3 =
 cmd.diff = colordiff
 opts.diff = -uprN
 
 [merge-tools]
-kdiff3.args = $base $local $other -o $output
+##kdiff3.args = $base $local $other -o $output
+meld.args = $base $local $other -o $output
 
 [extensions]
 hgext.extdiff =
