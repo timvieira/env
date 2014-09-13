@@ -393,3 +393,13 @@ c.InteractiveShellApp.exec_lines.append('pl.ion()')
 
 #
 # c.PlainTextFormatter.singleton_printers = {}
+
+
+c.TerminalIPythonApp.extensions = [
+    'line_profiler_ext',
+    'memory_profiler_ext',
+]
+c.InteractiveShellApp.extensions = [
+    'line_profiler_ext',
+    'memory_profiler_ext',
+]
