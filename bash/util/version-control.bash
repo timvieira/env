@@ -37,7 +37,7 @@ alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
 function hg-diff-ci {
     for f in $(hg st -m -n $(hg root)); do   # use relative paths
         echo $f
-        hg kdiff3 $f 2>/dev/null &
+        hg meld $f 2>/dev/null &
         hg ci $f
     done
 }
