@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-"""
-Usage:
+"""Usage:
 
 Print multiple files
 
@@ -13,6 +12,9 @@ Interactively select a single file
 INSTALL:
 
    $ sudo pip install -U selenium
+
+Note: Web browsers are frequently updated and thus so is selenium. If this
+script ever fails to manipulate the browser consider updating selenium.
 
 """
 
