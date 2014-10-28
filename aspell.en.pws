@@ -1,4 +1,4 @@
-personal_ws-1.1 en 451 
+personal_ws-1.1 en 460 
 nonhomogeneous
 ANF
 google
@@ -55,6 +55,7 @@ multimodal
 DAgger
 optimizers
 Kinect
+modularity
 backchaining
 centroid
 rsync
@@ -78,8 +79,8 @@ renormalize
 noncommutativity
 ERM
 satisfiability
-backtrace
 Lipschitz
+backtrace
 plaintext
 anaphors
 sigmoid
@@ -94,6 +95,7 @@ matplotlib
 unpronounced
 anaphor
 README
+Chernoff
 subproblem
 replicability
 enqueue
@@ -119,6 +121,8 @@ coindexing
 ILP
 combinatorial
 Hoeffding
+additively
+Blackwellization
 pdfs
 Makefile
 JHU
@@ -187,8 +191,8 @@ MLE
 Topicalization
 Wallstreet
 tradeoff
-parser's
 parsers
+parser's
 regularizers
 backend
 semirings
@@ -197,15 +201,15 @@ LSE
 unmemoized
 univariate
 Boyan
-summand
 Jacobian
+summand
 approximators
 parameterizes
 gmail
 minima
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 noogie
@@ -227,12 +231,14 @@ antiderivative
 RANSAC
 hypernym
 sidenote
+Rao
 iteratively
 optimality
 invertible
 OOV
 backpropagates
 disjunction
+vowpal
 nonstationary
 overfitting
 Sobel
@@ -240,6 +246,7 @@ intuiton
 clsp
 canonicalized
 Yanif
+multiline
 outliers
 initializers
 PageRank
@@ -280,9 +287,9 @@ wiki
 scriptable
 Domke's
 unpruned
-RSM
-SPC
 Tim
+SPC
+RSM
 minimizer
 notational
 RSS
@@ -316,6 +323,7 @@ decomposablility
 backpropagating
 Hollingshead
 convexified
+inlined
 DAgger's
 Immanant
 discontiguous
@@ -364,6 +372,7 @@ coreferent
 workflows
 superset
 checksum
+tuple
 MCMC
 interpretable
 BP
