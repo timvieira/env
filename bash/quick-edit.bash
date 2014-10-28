@@ -32,6 +32,23 @@ function edit-bash-function {
 
     if [[ -z "$out" ]]; then
 
+        # TODO: the `ack` search only covers personal config files, should
+        # probably extend to other configuration, e.g., stuff in `/etc`.
+
+        ackresults=$(ack --nogroup "^[^#]*\\b$1\\b" ~/projects/env/bash ~/projects/env/bashrc)
+
+        if [[ $ackresults ]]; then
+            green '============================================'
+            green 'ack results'
+            green '============================================'
+            # filters out lines which are commented out with a pound sign
+            echo "$ackresults"
+            green '============================================'
+        else
+            echo 'ack search failed'
+        fi
+
+
         if [[ $(alias $1) ]]; then
 
             # TODO: (better strategy below) could try the fallback strategy of
@@ -55,19 +72,21 @@ function edit-bash-function {
         echo "failed to find source for '$@'."
 
         return 1
+
+    else
+        echo $out
+
+        # convert output into a bash array
+        array=(`echo "$out"`)
+        lineno=${array[1]}
+        filename=${array[2]}
+
+        # open file at lineno with visit
+        visit +$lineno:0 "$filename"
+
+        # recenter window
+        ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
+
     fi
-
-    echo $out
-
-    # convert output into a bash array
-    array=(`echo "$out"`)
-    lineno=${array[1]}
-    filename=${array[2]}
-
-    # open file at lineno with visit
-    visit +$lineno:0 "$filename"
-
-    # recenter window
-    ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
 
 }
