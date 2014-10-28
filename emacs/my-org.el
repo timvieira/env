@@ -35,24 +35,12 @@
      ;; Change .pdf association directly within the alist
      (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")))
 
-(defun read-file (file)
-  "Return a list of lines in FILE."
-  (with-temp-buffer
-    (insert-file-contents file)
-    (buffer-string)))
-
-;(defvar org-latex-header)
-;(setq org-latex-header
- ;     (read-file "/home/timv/projects/env/emacs/org-latex-header.tex"))
-
 (require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
 
 (add-to-list 'org-export-latex-classes
              '("article"
-;               (format "%s" org-latex-header)
-
 "
 %%%\\documentclass{article}
 %%%\\documentclass[12pt]{article}
