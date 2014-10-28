@@ -58,7 +58,7 @@ def find_notes():
         for x in sorted(find(d, regex=p)):
             if not (not path(x).exists() \
                     or x.endswith('~')
-                    or re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/)', x)
+                    or re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/|timv\.tex)', x)
                     or org_export_tex(x)):
                 yield x
 
