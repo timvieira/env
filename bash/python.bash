@@ -22,8 +22,9 @@ function vpy {
 
 # run generated cython annotated document and open in browser
 function cython-a {
-    cython -a $1 && o "${1%.*}.html"
+    cython -a --cplus $1 && o "${1%.*}.html"
 }
+
 
 function prof-callgraph {
 
