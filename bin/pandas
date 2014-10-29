@@ -5,9 +5,33 @@ import sys
 import pylab as pl
 pl.ion()
 
-[_, f] = sys.argv
+from argparse import ArgumentParser
 
-df = pandas.io.parsers.read_table(f)
+p = ArgumentParser()
+p.add_argument('filename', nargs=1)
+p.add_argument('--sep', help='separator for loading data.')
+p.add_argument('-x', help='x-axis for point browser.')
+p.add_argument('-y', help='y-axis for point browser.')
+p.add_argument('-I', action='store_true', help='non-interactive mode.')
+
+args = p.parse_args()
+
+[f] = args.filename
+
+if args.sep is None:
+    if f.endswith('csv'):
+        sep = ','
+    elif f.endswith('tsv'):
+        sep = '\t'
+    else:
+        print 'unrecognized file extension'
+        exit(1)
+else:
+    sep = args.sep
+
+#print 'separator: %r' % sep
+
+df = pandas.io.parsers.read_table(f,sep=sep)
 
 print df
 
@@ -16,4 +40,11 @@ print df
 
 from viz.interact import PointBrowser, LassoBrowser
 
-from arsenal.debug import ip; ip()
+if args.x is not None and args.y is not None:
+    br = PointBrowser(df, xcol=args.x, ycol=args.y)
+
+if not args.I:
+    from arsenal.debug import ip; ip()
+else:
+    pl.ioff()
+    pl.show()

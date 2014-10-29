@@ -73,9 +73,15 @@
 
 
 
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (package-initialize)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+
+;(require 'package)
+;(add-to-list 'package-archives
+;             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;(add-to-list 'package-archives
 ;             '("org" . "http://orgmode.org/elpa/") t)
 
@@ -87,6 +93,9 @@
 ;  (package-refresh-contents) (package-install 'org-plus-contrib))
 
 (package-initialize)
+
+)
+
 
 ;; auctex
 ;(setq TeX-auto-save t)
