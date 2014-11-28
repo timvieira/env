@@ -1,4 +1,4 @@
-personal_ws-1.1 en 460 
+personal_ws-1.1 en 463 
 nonhomogeneous
 ANF
 google
@@ -129,6 +129,7 @@ JHU
 dualdecomp
 binarize
 parallelization
+nonparametric
 dymamic
 noncommutative
 Jiarong
@@ -268,6 +269,7 @@ piecewise
 scala
 hypernyms
 covariates
+nonparametrics
 reachability
 McAllester
 vieira
@@ -292,6 +294,7 @@ SPC
 RSM
 minimizer
 notational
+tunable
 RSS
 hypergraph
 subtrees
@@ -440,7 +443,7 @@ inhomogeneous
 Szeliski
 normalizer
 simulative
-SEARN
+searn
 affine
 webpages
 subderivations
