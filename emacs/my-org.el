@@ -42,8 +42,6 @@
 (add-to-list 'org-export-latex-classes
              '("article"
 "
-%%%\\documentclass{article}
-%%%\\documentclass[12pt]{article}
 \\documentclass[pdftex, a4paper, 12pt, openbib, ]{article}
 \\input{/home/timv/projects/env/timv}
 "
@@ -53,7 +51,20 @@
 
 )
 
+(defun find-the-tex-file-and-kill-it ()
+  "Kill auto-generated buffer from org-export."
+  (interactive)
+  (let ((org (buffer-file-name)))
+    (let ((base (substring org 0 -4)))  ; filename with out extension
+      (let ((tex (concat base ".tex")))
+        (progn
+          (set-buffer (find-file tex))
+          (kill-current-buffer)))))
+)
+
+
 (require 'org-publish)
+
 
 (defun org-init ()
   (interactive)
@@ -61,15 +72,19 @@
 
   (load "my-latex")
 
-  (local-unset-key (kbd "s-e"))
   ;; export to pdf
   (fset 'my-org-export-pdf
         [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
 
-  (local-set-key (kbd "s-e") 'my-org-export-pdf) ; 'org-publish-current-file)
+  (local-unset-key (kbd "s-e"))
+  (local-set-key (kbd "s-e") '(lambda ()
+                                (interactive)
+                                (execute-kbd-macro 'my-org-export-pdf)
+                                (find-the-tex-file-and-kill-it)))
 
   (local-unset-key (kbd "s-o"))
   (local-set-key (kbd "s-o") 'latex-open-this-pdf)
+
 
   (org-babel-do-load-languages
    (quote org-babel-load-languages)
