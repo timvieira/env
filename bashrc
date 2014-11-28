@@ -75,12 +75,12 @@ export ILOG_LICENSE_FILE=~/software/cplex/access.ilm
 
 # Python
 add-pypath \
-    $PROJECTS \
-    $PROJECTS/ldp/code/working/lpldp \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
-    $PROJECTS/shelf/quantities \
-    ~/software/OpenCV-2.4.2/release/lib \
+    $PROJECTS
+#    $PROJECTS/ldp/code/working/lpldp \
+#    $PROJECTS/shelf/quantities \
+#    ~/software/OpenCV-2.4.2/release/lib
 
 # Classpath
 add-classpath .
@@ -218,3 +218,6 @@ function notes-ack {
 #    print f
 #"
 #}
+
+# added by Anaconda 2.1.0 installer
+export PATH="/home/timv/anaconda/bin:$PATH"
