@@ -1,4 +1,4 @@
-personal_ws-1.1 en 463 
+personal_ws-1.1 en 477 
 nonhomogeneous
 ANF
 google
@@ -12,6 +12,7 @@ CGI
 github
 Pearlmutter
 dyna
+submodularity
 Urbana
 IPython
 encodings
@@ -42,6 +43,7 @@ newswire
 timeline
 functor
 modality
+profiler
 subphrases
 subtree
 CRF
@@ -64,6 +66,7 @@ Earley
 Sudoku
 timv
 nonlinearity
+frequentists
 mentorship
 resample
 ICML
@@ -200,6 +203,7 @@ semirings
 MLN
 LSE
 unmemoized
+multilinear
 univariate
 Boyan
 Jacobian
@@ -209,8 +213,8 @@ parameterizes
 gmail
 minima
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 noogie
@@ -221,6 +225,8 @@ parallelizable
 parallelize
 cyclicity
 Datalog
+codegen
+Codegen
 Peano
 Viterbi
 Lexicalization
@@ -254,7 +260,9 @@ PageRank
 subsequence
 algorithmically
 POS
+unbinarized
 backpointers
+functionals
 PTB
 unresolvable
 lookup
@@ -276,8 +284,9 @@ vieira
 tokenization
 nwf's
 RPC
-Treebank
+treebank
 Gricean
+neuroscientists
 parametrized
 Nonlinearities
 overcounting
@@ -285,13 +294,14 @@ http
 Jiarong's
 TimeML
 parameterization
+runtimes
 wiki
 scriptable
 Domke's
 unpruned
-Tim
-SPC
 RSM
+SPC
+Tim
 minimizer
 notational
 tunable
@@ -337,6 +347,7 @@ scalability
 REPL
 subsequences
 subsumptive
+Daume
 inliner
 Domke
 aggregators
@@ -426,6 +437,7 @@ neuralnets
 backpropagate
 Tetris
 canonicalize
+unbinarize
 subgradients
 nand
 nonsingularity
@@ -438,6 +450,7 @@ uninstall
 versa
 compositional
 argmax
+neuroscience
 unmodeled
 inhomogeneous
 Szeliski
@@ -453,6 +466,7 @@ argmin
 Bottou's
 elisp
 Bottou
+substring
 preterminals
 acyclic
 subgraph
