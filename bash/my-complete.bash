@@ -92,6 +92,7 @@ function update {
 
     # notes files
     notes.py --files
+    notes.py --update
 
     # environment files
     find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
