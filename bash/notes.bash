@@ -29,8 +29,9 @@ function notes {
         cd `dirname $match`
 
         # dispatch to the appropriate opener; the text editor is the default
-        if [[ "$match" =~ .*\.(nb)$ ]]; then
+        if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
             gnome-open $match
+
         elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
             ipython notebook --pylab inline $match
         else
