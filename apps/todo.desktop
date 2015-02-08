@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=todo
+GenericName=Text Editor
+Comment="Open todo list in emacs."
+Exec=/home/timv/projects/env/bin/visit ~/Dropbox/todo/todo.org
+Icon=/home/timv/projects/env/apps/emacs24.svg
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;

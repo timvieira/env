@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=Calendar
+GenericName=Calendar
+Comment="Open Google calendar"
+MimeType=
+Exec=google-chrome "https://www.google.com/calendar/render"
+Icon=/home/timv/projects/env/apps/chrome.svg
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;

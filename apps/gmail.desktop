@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=GMail
+GenericName=Mail
+Comment="Open GMail in browser"
+MimeType=
+Exec=google-chrome "https://mail.google.com/mail"
+Icon=/home/timv/projects/env/apps/chrome.svg
+Type=Application
+Terminal=false
+Categories=Utility;Development;TextEditor;
