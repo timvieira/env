@@ -30,8 +30,8 @@ function find-repos {
 #alias hgtree="hg log --template '{rev} {node|short} {author|user}: {desc} ({date|age})\n'"
 alias hgchangelog="hg log --style changelog |less"
 alias hgserve="o http://localhost:8000 && hg serve"   # serve and open
-#alias hg-dummy-ci='hg ci -m "()"'
-#alias hg-dummy-push='hg ci -m "()" && hg push'
+#alias yolo='hg ci -m "()"'
+alias yolo='hg ci -m "#yolo" && hg push'
 
 # run pop open kdiff3 and open editor
 function hg-diff-ci {
