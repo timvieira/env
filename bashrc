@@ -117,7 +117,7 @@ function t {
         return
     fi
 
-    files=`find ~/Dropbox/todo -type f |grep -v '\.org_archive$' |ignore-filter`
+    files=`find ~/Dropbox/todo |grep -v '\.org_archive$' |ignore-filter`
 
     matches=`echo "$files" |filter.py "$@"`
     retcode="$?"
