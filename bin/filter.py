@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-"""
-TODO: probably want "smart case" filter
+"""Filter stdin line-by-line based on keyword filters.
 
-TODO: extend to key-value data: filter on key print values.
+TODO: Probably want "smart case" filter (if query includes caps, assume case
+sensitive; case insensitive otherwise.)
 
 TODO: Can't distinguish.
 
@@ -11,7 +11,9 @@ TODO: Can't distinguish.
   ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
   ./src/main/java/edu/jhu/nlp/parsing/grammar/ConvertSlavGrammar.java
 
-TODO:
+  [ update: `$ fv jhu nlp /Grammar.java` works. ]
+
+TODO: Handle complete paths
 
   $ fv ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
   no results
@@ -172,7 +174,10 @@ if __name__ == '__main__':
 
     if len(matches) == 1 or args.top:
         if args.on_unique:
-            Popen(args.on_unique.format(match=re.sub(r'\033\[.*?m', '', matches[0])),
+
+            cmd = args.on_unique.format(match=re.sub(r'\033\[.*?m', '', matches[0]))
+
+            Popen(cmd,
                   stdout=PIPE,
                   stdin=PIPE,
                   stderr=PIPE,
