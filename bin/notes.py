@@ -6,6 +6,13 @@ This script extracts a small amount of metadata: title and tags. The title is
 taken to be the first line of the file. tags are specific in a comment
 
 (#|%|;) tags: tag1 tag2 tag3
+
+TODO:
+
+ * add option for listing recently modified files.
+
+ * unify with skid
+
 """
 
 import re, os
@@ -43,15 +50,20 @@ def dump_files():
 
 
 def find_notes():
-    p = '(.*\.(org|tex)$|.*\\b(TODO|NOTES|LOG)\\b.*)'
+    p = '(.*\.(org|tex|md)$|.*\\b(TODO|NOTES|LOG|README)\\b.*)'
     r = ['/home/timv/projects/notes',
-         '/home/timv/projects/learn',
-         '/home/timv/projects',
+         '/home/timv/projects/papers',
+         '/home/timv/projects/shelf/tetris/thesis/',
+         '/home/timv/projects/temporal_ordering/write/',
+         '/home/timv/projects/blog/content',
+         '/home/timv/projects/courses',
+#         '/home/timv/projects',
+         '/home/timv/projects/same-size-word-o-nyms/',
          '/home/timv/projects/ldp/write/working/',
          '/home/timv/Dropbox/todo']
 
     # add python and mathematica scripts notes directory
-    for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb)$'):
+    for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb|odp)$'):
         yield x
 
     for d in r:
@@ -152,7 +164,6 @@ def update():
             with file(d) as f:
                 content = unicode(f.read().decode('utf8', 'ignore'))
 
-
             title = extract_title(d, content)
 
             # a line begining with a comment marker
@@ -176,7 +187,10 @@ def extract_title(d, x=None):
             x = unicode(f.read().decode('utf8', 'ignore'))
 
     title = None
-    if d.endswith('.tex'):
+    if d.endswith('.odp'):
+        title = d
+
+    elif d.endswith('.tex'):
         title = re.findall(r'\\(?:icml)?title\{([\w\W]*?)\}', x)
         if title:
             title = title[0]
@@ -199,7 +213,6 @@ def extract_title(d, x=None):
 
             # remove excess whitespace
             title = re.sub(r'\s+', ' ', title)
-
 
 
     if not title:
