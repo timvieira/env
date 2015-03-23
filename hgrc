@@ -20,6 +20,9 @@ cmd.meld =
 cmd.diff = colordiff
 opts.diff = -uprN
 
+cmd.wdiff = wdiff
+opts.wdiff =
+
 [merge-tools]
 ##kdiff3.args = $base $local $other -o $output
 meld.args = $base $local $other -o $output
