@@ -70,7 +70,7 @@ function compare-lines {
         hs="$hs $h"
         cat $f |sort > $h   # timv: option for uniq (i.e. set difference)?
     done
-    kdiff3 $hs
+    meld $hs
 }
 
 function compare-uniq-lines {
@@ -80,7 +80,7 @@ function compare-uniq-lines {
         hs="$hs $h"
         cat $f |sort |uniq > $h
     done
-    kdiff3 $hs
+    meld $hs
 }
 
 alias pyhash="python -c 'import sys, hashlib; print hashlib.sha1(str().join(sys.argv[1:]) or raw_input()).hexdigest()'"
@@ -110,3 +110,18 @@ function cyan   { echo -e "\e[36m$@\e[0m"; }
 # kill a process after a number of seconds
 # usage: doalarm <seconds to wait> program arg arg ...
 function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
+
+
+# quickly search the first page of multiple pdfs
+function ack-pdf {
+    q=$1; shift
+    # search the first page
+    for f in `echo $@`; do
+        out=$((pdftotext -l 1 "$f" - |ack "$q") 2>/dev/null)
+        if [[ $? -eq 0 ]]; then
+            green "$f"
+            echo "$out"
+            echo
+        fi
+    done
+}
