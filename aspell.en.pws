@@ -1,7 +1,8 @@
-personal_ws-1.1 en 477 
+personal_ws-1.1 en 497 
 nonhomogeneous
 ANF
 google
+tuples
 Multi
 eigenvectors
 subgraphs
@@ -25,6 +26,7 @@ workspaces
 reweighted
 parameterizations
 approximator
+robustify
 Minka
 nonconvex
 Gaussians
@@ -59,6 +61,7 @@ optimizers
 Kinect
 modularity
 backchaining
+Bagnell
 centroid
 rsync
 workflow
@@ -92,14 +95,17 @@ coindexed
 parallelizing
 frequentist
 Teichert
+hypergraph's
 hypergraphs
 Prolog
 matplotlib
 unpronounced
 anaphor
+unweighted
 README
 Chernoff
 subproblem
+quartile
 replicability
 enqueue
 PCFG
@@ -112,6 +118,7 @@ SampleRank
 regex
 BUGFIX
 instantiation
+quartiles
 stateful
 unimodular
 rollout
@@ -119,6 +126,7 @@ parameterizing
 nondeterministically
 uninstalled
 nondifferentiable
+precomputation
 todo
 coindexing
 ILP
@@ -166,6 +174,7 @@ nonconvexity
 covariance
 instantiations
 exponentiated
+precompute
 resampling
 nonterminal
 metadata
@@ -226,7 +235,6 @@ parallelize
 cyclicity
 Datalog
 codegen
-Codegen
 Peano
 Viterbi
 Lexicalization
@@ -263,6 +271,7 @@ POS
 unbinarized
 backpointers
 functionals
+binarized
 PTB
 unresolvable
 lookup
@@ -295,6 +304,7 @@ Jiarong's
 TimeML
 parameterization
 runtimes
+orthonormal
 wiki
 scriptable
 Domke's
@@ -332,6 +342,7 @@ overfit
 subsumption
 jammer
 bijective
+preprocess
 decomposablility
 backpropagating
 Hollingshead
@@ -373,6 +384,7 @@ repropagation
 analyses
 convexify
 Wishlist
+PSDP
 pragma
 thresholding
 submatrix
@@ -381,6 +393,7 @@ precomputed
 emacs
 covary
 symlink
+observability
 majorization
 coreferent
 workflows
@@ -391,6 +404,7 @@ MCMC
 interpretable
 BP
 memoization
+backchain
 Davidsonian
 vertices
 nondecomposable
@@ -423,6 +437,7 @@ JSON
 softmin
 preprocessing
 LBFGS
+embeddings
 deduplication
 hyperedges
 eisner
@@ -442,6 +457,7 @@ subgradients
 nand
 nonsingularity
 RL
+thresholded
 Mathematica
 monotonicity
 MERT
@@ -458,6 +474,8 @@ normalizer
 simulative
 searn
 affine
+conjunctively
+disjunctively
 webpages
 subderivations
 exponentiating
@@ -466,7 +484,9 @@ argmin
 Bottou's
 elisp
 Bottou
+changeprop's
 substring
+changeprop
 preterminals
 acyclic
 subgraph
