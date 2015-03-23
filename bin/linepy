@@ -42,6 +42,7 @@ CODE="
 import re, sys, os
 from collections import *
 from pprint import *
+from path import path
 try:
     from pandas import DataFrame
 except ImportError:
