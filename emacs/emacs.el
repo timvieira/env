@@ -534,11 +534,11 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector [         default     bold    shadow    italic  underline      bold  bold-italic       bold])
  '(ansi-color-names-vector (vector "#4d4d4c" "#c82829" "#718c00" "#eab700"  "#4271ae" "#8959a8"    "#3e999f" "#ffffff"))
- '(current-language-environment "Latin-1")
+; '(current-language-environment "Latin-1")
+; '(default-input-method "latin-1-prefix")
  '(cursor-in-nonselected-windows nil)
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes (quote ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
- '(default-input-method "latin-1-prefix")
  '(fci-rule-color "#efefef")
  '(global-font-lock-mode t nil (font-lock))
  '(ibuffer-saved-filter-groups nil)
@@ -616,3 +616,15 @@
 ; (global-set-key [C-S-left] 'shift-left)
 
 ;; </INDENTING TEXT>
+
+
+; utf-8 everywhere (http://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs)
+(setq utf-translate-cjk-mode nil) ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+(set-language-environment 'utf-8)
+(set-keyboard-coding-system 'utf-8-mac) ; For old Carbon emacs on OS X only
+(setq locale-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(unless (eq system-type 'windows-nt)
+  (set-selection-coding-system 'utf-8))
+(prefer-coding-system 'utf-8)
