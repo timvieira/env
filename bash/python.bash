@@ -26,9 +26,13 @@ function cython-a {
 }
 
 
-function prof-callgraph {
+function pyprof-callgraph {
 
-  name="/tmp/prof-callgraph"
+  name="/tmp/pyprof-callgraph"
+
+  rm -f "$name.pstats"
+  rm -f "$name.svg"
+
   python -m cProfile -o "$name.pstats" "$@"
   gprof2dot.py -f pstats "$name.pstats" | dot -Tsvg -o "$name.svg"
   shutup-and-disown google-chrome "$name.svg"
@@ -44,5 +48,6 @@ function prof-callgraph {
 |  total number of self calls      |
 +----------------------------------+
 "
+  red "wrote results to $name.pstats and $name.svg"
 
 }
