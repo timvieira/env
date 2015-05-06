@@ -28,6 +28,7 @@ add-link emacs/emacs.el
 add-link hgrc
 add-link gitconfig
 add-link inputrc
+add-link notesrc
 
 if [ ! -f ~/texmf ]; then
     echo "Skipping ~/texmf, already exists."
