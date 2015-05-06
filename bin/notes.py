@@ -28,18 +28,17 @@ from arsenal.fsutils import find
 from arsenal.iterextras import unique
 from arsenal.humanreadable import datestr
 
+from configparser import ConfigParser
+parser = ConfigParser(allow_no_value=True)
+parser.optionxform = unicode       # don't lower case keys
+parser.read(path('~/.notesrc').expand())
 
-# globals
-DIRECTORY = path('/home/timv/projects/notes/.index')
+# TODO: config file validation. Sources should be directories or
+# files. Include/exclude should be regular expressions. Add option for glob?
+
+DIRECTORY = path(parser.get('config', 'index')).expand()
 TRACKED = DIRECTORY / 'files'
 NAME = 'index'
-
-
-def org_export_tex(f):
-    "Is `f` a path to an org-mode tex export files?"
-    return os.path.exists(f) \
-        and f.endswith('.tex') \
-        and any(('Emacs Org-mode version' in line) for line in file(f))
 
 
 def dump_files():
@@ -50,37 +49,35 @@ def dump_files():
 
 
 def find_notes():
-    p = '(.*\.(org|tex|md)$|.*\\b(TODO|NOTES|LOG|README)\\b.*)'
-    r = ['/home/timv/projects/notes',
-         '/home/timv/projects/papers',
-         '/home/timv/projects/shelf/tetris/thesis/',
-         '/home/timv/projects/temporal_ordering/write/',
-         '/home/timv/projects/blog/content',
-         '/home/timv/projects/courses',
-#         '/home/timv/projects',
-         '/home/timv/projects/same-size-word-o-nyms/',
-         '/home/timv/projects/ldp/write/working/',
-         '/home/timv/Dropbox/todo']
-
-    # add python and mathematica scripts notes directory
-    for x in find('/home/timv/projects/notes/', regex='.*\.(py|nb|ipynb|odp)$'):
-        yield x
-
-    for d in r:
-        for x in sorted(find(d, regex=p)):
-            if not (not path(x).exists() \
-                    or x.endswith('~')
-                    or re.findall('(/incoming/|/site-lisp/|/texmf/|/.*~/|timv\.tex)', x)
-                    or org_export_tex(x)):
-                yield x
+    for d, _ in sorted(parser.items('sources')):
+        for x in sorted(find(path(d).expand())):
+            if not any(re.match(p, x) for p, _ in parser.items('include')):
+                continue
+            if any(exclude(p, x) for p, _ in parser.items('exclude')):
+                continue
+            yield x
 
 
-#def files():
-#    for f in file(TRACKED):
-#        f = f.strip()
-#        yield f
+def exclude(p, x):
+    if p.startswith('%'):  # magic filter function
+        if magic_filters[p](x):
+            return True
+    else:
+        if re.findall(p, x):
+            return True
 
-files = find_notes
+
+def org_export_tex(f):
+    "Is `f` a path to an org-mode tex export files?"
+    return (os.path.exists(f) \
+            and f.endswith('.tex') \
+            and any(('Emacs Org-mode version' in line) for line in file(f)))
+
+
+magic_filters = {
+    '%file_exists': lambda x: not path(x).exists(),
+    '%org_export_tex': org_export_tex,
+}
 
 
 def create():
@@ -135,7 +132,7 @@ def update():
 
     with ix.writer() as w, ix.searcher() as searcher:
 
-        fs = set(files())
+        fs = set(find_notes())
         fs = filter(os.path.exists, fs)
 
         for d in sorted(map(path, fs), key=lambda x: x.mtime, reverse=True):
@@ -243,9 +240,11 @@ def main():
     p = ArgumentParser()
     p.add_argument('query', nargs='*')
     p.add_argument('--rebuild', action='store_true',
-                   help='rebuild tracked files and index from scratch.')
-    p.add_argument('--update', action='store_true')
-    p.add_argument('--files', action='store_true')
+                   help='Rebuild indexed from scratch.')
+    p.add_argument('--update', action='store_true',
+                   help='Search for changes and update index.')
+    p.add_argument('--files', action='store_true',
+                   help='Cache tracked files.')
 
     args = p.parse_args()
 
