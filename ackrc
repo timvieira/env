@@ -22,3 +22,4 @@
 
 # ignore dirs
 --ignore-dir="/home/timv/projects/data"
+--ignore-dir=.ipynb_checkpoints
