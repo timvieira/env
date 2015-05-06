@@ -1,4 +1,4 @@
-personal_ws-1.1 en 497 
+personal_ws-1.1 en 505 
 nonhomogeneous
 ANF
 google
@@ -89,6 +89,7 @@ Lipschitz
 backtrace
 plaintext
 anaphors
+misspecification
 sigmoid
 facebook
 coindexed
@@ -120,6 +121,7 @@ BUGFIX
 instantiation
 quartiles
 stateful
+templating
 unimodular
 rollout
 parameterizing
@@ -262,6 +264,7 @@ clsp
 canonicalized
 Yanif
 multiline
+probabilistically
 outliers
 initializers
 PageRank
@@ -269,6 +272,7 @@ subsequence
 algorithmically
 POS
 unbinarized
+multiclass
 backpointers
 functionals
 binarized
@@ -316,6 +320,7 @@ minimizer
 notational
 tunable
 RSS
+underestimator
 hypergraph
 subtrees
 CRFs
@@ -464,12 +469,14 @@ MERT
 adjoints
 uninstall
 versa
+subvector
 compositional
 argmax
 neuroscience
 unmodeled
 inhomogeneous
 Szeliski
+Scalarizing
 normalizer
 simulative
 searn
@@ -490,6 +497,7 @@ changeprop
 preterminals
 acyclic
 subgraph
+suboptimal
 munge
 CPLEX
 projective
