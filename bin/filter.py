@@ -2,10 +2,10 @@
 
 """Filter stdin line-by-line based on keyword filters.
 
-TODO: Probably want "smart case" filter (if query includes caps, assume case
-sensitive; case insensitive otherwise.)
+- TODO: "smart case" filter --- if query includes caps -> case sensitive,
+  insensitive, otherwise.
 
-TODO: Can't distinguish.
+- TODO: Can't distinguish.
 
   $ fv jhu nlp Grammar.java
   ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
@@ -13,10 +13,14 @@ TODO: Can't distinguish.
 
   [ update: `$ fv jhu nlp /Grammar.java` works. ]
 
-TODO: Handle complete paths
+- TODO: Handle complete paths
 
   $ fv ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
   no results
+
+- TODO: underscore/lackof is a problem.
+
+  Neither 'two_line_search' or 'twolinesearch' match the query 'two line search'
 
 """
 
@@ -60,6 +64,7 @@ def camel_space(x):
     return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
 
 
+# Note: unused in completion script
 def words(x):
     """
     Extract words.
@@ -78,6 +83,8 @@ def words(x):
     return re.findall(r'\w+', x)
 
 
+# TODO: create a submodule with common filters so that we can use this in
+# notes.py
 def filter2(f):
     "Content-based file filters."
     # TODO: add to where ever org-mode export files are filtered
@@ -110,19 +117,30 @@ def main(filters, lines, color=True):
     # cleanup.
     lines = [l.strip() for l in lines]
 
-    # XXX: trial period. This version does not use regex filters.
-    # new:
-    filters = [re.compile(r'\b' + re.escape(f), re.I) for f in filters]
-    # old:
-    #filters = [re.compile(r'\b' + f, re.I) for f in filters]
+    # substring match -> higher recall
+    substring_match = 1
+    if substring_match:
+        filters = [re.compile(re.escape(f), re.I) for f in filters]
+    else:
+        # XXX: trial period. This version does not use regex filters.
+        # new:
+        filters = [re.compile(r'\b' + re.escape(f), re.I) for f in filters]
+        # old:
+        #filters = [re.compile(r'\b' + f, re.I) for f in filters]
 
     for line in unique(lines):
 
-        # XXX: is there a better way to do this? note that highlighting doesn't work.
-        line2 = camel_space(line)  # add spaces at camel case word boundaries
+        if substring_match:
+            if not all(f.findall(line) for f in filters):
+                continue
+        else:
+            # camel case expansion not needed for substring match.
 
-        if not all(f.findall(line) for f in filters) and not all(f.findall(line2) for f in filters):
-            continue
+            # XXX: is there a better way to do this? note that highlighting doesn't work.
+            line2 = camel_space(line)  # add spaces at camel case word boundaries
+            if not (all(f.findall(line) for f in filters) \
+                    or all(f.findall(line2) for f in filters)):
+                continue
 
         if not filter2(line):
             continue
