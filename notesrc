@@ -1,0 +1,34 @@
+[include]
+.*\.(org|tex|md|py|nb|ipynb|odp)$
+.*\\b(TODO|NOTES|LOG|README)\\b.*
+
+[sources]
+~/projects/notes
+~/projects/papers
+~/shelf/tetris/thesis
+~/projects/temporal_ordering/write
+~/projects/ddecomp-bp/
+~/projects/blog/content
+~/projects/courses
+~/projects/same-size-word-o-nyms
+~/projects/ldp/write/working
+~/Dropbox/todo
+
+[exclude]
+.*\.pdf
+.*~
+\.hg
+.*\.log$
+timv\.tex$
+.*/scrap/.*
+.*\.ipynb_checkpoints
+\.git
+
+# use org-export filter
+%org_export_tex
+
+# make sure file still exists
+%file_exists
+
+[config]
+index = ~/projects/notes/.index
