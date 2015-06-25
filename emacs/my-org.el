@@ -2,6 +2,11 @@
 ;; org-mode configuration goes here...
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'org)
+;(require 'ox-publish)
+;(require 'ox-latex)
+(require 'org-publish)
+(require 'org-latex)
 
 ;; -- Display images in org mode
 ;; enable image mode first
@@ -35,7 +40,6 @@
      ;; Change .pdf association directly within the alist
      (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s")))
 
-(require 'org-latex)
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
 
@@ -63,7 +67,11 @@
 )
 
 
-(require 'org-publish)
+(fset 'my-org-export-pdf
+      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
+
+;(fset 'my-org-export-pdf
+;      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t ?- ?d ?i ?s ?p ?a ?t ?c ?h return ?l ?l])
 
 
 (defun org-init ()
@@ -73,8 +81,6 @@
   (load "my-latex")
 
   ;; export to pdf
-  (fset 'my-org-export-pdf
-        [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
 
   (local-unset-key (kbd "s-e"))
   (local-set-key (kbd "s-e") '(lambda ()
@@ -134,8 +140,6 @@
 ;;
 ;; org-mode reference http://orgmode.org/org.html#Adding-hyperlink-types
 
-(require 'org)
-
 (org-add-link-type "skid" 'skid-search)
 
 (defun skid-search-results (query)
@@ -149,7 +153,7 @@
 (defun skid-search (query)
   "skid tag search."
   (interactive)
-  (call-process-shell-command "/usr/local/bin/skid" nil 0 nil "search" "--top" query "2>/dev/null" "&")
+  (call-process-shell-command "skid" nil 0 nil "search" "--top" query "2>/dev/null" "&")
   (delete-other-windows))
 
 ;;------------------------------------------------------------------------------
