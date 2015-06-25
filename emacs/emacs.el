@@ -39,6 +39,25 @@
 (global-unset-key [f4])
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
+
+;; Note: Install packages early. In some cases late installation is buggy
+;; (apparently the case with org-mode stuff -- must install before we load
+;; customizations)
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+(unless (package-installed-p 'scala-mode2)
+  (package-refresh-contents) (package-install 'scala-mode2))
+(unless (package-installed-p 'org-plus-contrib)
+  (package-refresh-contents) (package-install 'org-plus-contrib))
+(unless (package-installed-p 'org)
+  (package-refresh-contents) (package-install 'org))
+(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
+  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
+
+
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
@@ -54,47 +73,16 @@
 ;(add-path "site-lisp/protobuf-mode.el")
 ;(add-path "site-lisp/zimpl-mode.el")
 ;(add-path "site-lisp/writegood-mode.el")
-(add-path "site-lisp/org-7.8.03/lisp")
-(add-path "site-lisp/haskell-mode")
+(add-path "site-lisp/org-7.8.03/lisp")       ;; TODO: why do I still need this? shouldn't the elpa version suffice?
+;(add-path "site-lisp/haskell-mode")
 (add-path "site-lisp/cython-mode")
 
 (require 'cython-mode)
 
-;(add-path "site-lisp/color-theme")
-;(add-path "site-lisp/emacs-color-theme-solarized")
-;(require 'color-theme-solarized)
-;;(color-theme-solarized-light)
-;(color-theme-solarized-dark)
-
 ;;(add-path "site-lisp/dyna-mode.el")
-(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
-(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
-(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
-
-
-
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-
-;(require 'package)
-;(add-to-list 'package-archives
-;             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;(add-to-list 'package-archives
-;             '("org" . "http://orgmode.org/elpa/") t)
-
-(package-initialize)
-(unless (package-installed-p 'scala-mode2)
-  (package-refresh-contents) (package-install 'scala-mode2))
-
-;(unless (package-installed-p 'org-plus-contrib)
-;  (package-refresh-contents) (package-install 'org-plus-contrib))
-
-(package-initialize)
-
-)
+;(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
+;(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
+;(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
 
 
 ;; auctex
@@ -107,11 +95,10 @@
 ;;  - http://www.emacswiki.org/emacs/Anything
 ;;  - http://metasandwich.com/2010/07/30/what-can-i-get-for-10-dolla-anything-el/
 
-(add-path "site-lisp/anything-config.el")
-(add-path "site-lisp/anything-match-plugin.el")
-(require 'anything-match-plugin)
-(require 'anything-config)
-
+;(add-path "site-lisp/anything-config.el")
+;(add-path "site-lisp/anything-match-plugin.el")
+;(require 'anything-match-plugin)
+;(require 'anything-config)
 
 
 ;;(defun load-rudel ()
@@ -150,8 +137,8 @@
 (require 'parenface)
 (require 'dired+)
 (require 'filecache)
-(require 'protobuf-mode)
-(require 'writegood-mode)
+;(require 'protobuf-mode)
+;(require 'writegood-mode)
 ;(require 'zimpl-mode)
 
 
@@ -183,73 +170,72 @@
       (set-frame-size (selected-frame) 119 49))))
 
 
-(defun dark-colors ()
-  "Quicky change to custom dark color theme"
-  (interactive)
-  (custom-set-faces
-   '(default ((t (:stipple nil
-                  :background "black"
-                  :foreground "white"
-                  :inverse-video nil
-                  :box nil
-                  :strike-through nil
-                  :overline nil
-                  :underline nil
-                  :slant normal
-                  :height 100
-                  :foundry "bitstream"
-                  :family "Bitstream Vera Sans Mono"
-                  ))))
-   '(bold ((t (:weight extra-bold))))
-   '(comint-highlight-prompt ((t (:foreground "light blue"))))
-   '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
-   '(flymake-errline ((((class color)) (:underline "red"))))
-   '(flymake-warnline ((((class color)) (:underline "yellow4"))))
-   '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
-   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
-   '(font-lock-keyword-face ((t (:foreground "orange"))))
-   '(font-lock-string-face ((t (:foreground "forest green"))))
-   '(font-lock-function-name-face ((t (:foreground "blue"))))
-   '(font-lock-type-face ((t (:foreground "blue"))))
-   '(font-lock-warning-face ((t (:foreground "LightGoldenrod"))))
-   '(italic ((t (:foreground "Yellow1" :slant italic))))
-   '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
-   '(minibuffer-prompt ((t (:foreground "white"))))
-   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
-   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
-   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
-   '(org-link ((t (:foreground "cyan"))))
-   '(button ((t (:foreground "cyan"))))
-   '(rst-level-2-face ((t (:foreground "Purple2"))))
-  )
-)
-
-(defun light-colors ()
-  "Switch to a light color scheme."
-  (interactive)
-  (custom-set-faces
-   '(default ((t (:stipple nil
-                  :background "white"
-                  :foreground "black"
-                  :inverse-video nil
-                  :box nil
-                  :strike-through nil
-                  :overline nil
-                  :underline nil
-                  :slant normal
-                  :weight normal
-;                  :width  normal
-                  :foundry "bitstream"
-                  :family "Bitstream Vera Sans Mono"))))
-   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
-   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
-   '(minibuffer-prompt ((t (:foreground "black"))))
-   '(font-lock-keyword-face ((t (:foreground "orange3"))))
-   '(font-lock-function-name-face ((t (:foreground "royalblue"))))
-   '(font-lock-type-face ((t (:foreground "royalblue"))))
-  )
-)
-
+;(defun dark-colors ()
+;  "Quicky change to custom dark color theme"
+;  (interactive)
+;  (custom-set-faces
+;   '(default ((t (:stipple nil
+;                  :background "black"
+;                  :foreground "white"
+;                  :inverse-video nil
+;                  :box nil
+;                  :strike-through nil
+;                  :overline nil
+;                  :underline nil
+;                  :slant normal
+;                  :height 100
+;                  :foundry "bitstream"
+;                  :family "Bitstream Vera Sans Mono"
+;                  ))))
+;   '(bold ((t (:weight extra-bold))))
+;   '(comint-highlight-prompt ((t (:foreground "light blue"))))
+;   '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
+;   '(flymake-errline ((((class color)) (:underline "red"))))
+;   '(flymake-warnline ((((class color)) (:underline "yellow4"))))
+;   '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
+;   '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
+;   '(font-lock-keyword-face ((t (:foreground "orange"))))
+;   '(font-lock-string-face ((t (:foreground "forest green"))))
+;   '(font-lock-function-name-face ((t (:foreground "blue"))))
+;   '(font-lock-type-face ((t (:foreground "blue"))))
+;   '(font-lock-warning-face ((t (:foreground "LightGoldenrod"))))
+;   '(italic ((t (:foreground "Yellow1" :slant italic))))
+;   '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
+;   '(minibuffer-prompt ((t (:foreground "white"))))
+;   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
+;   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
+;   '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
+;   '(org-link ((t (:foreground "cyan"))))
+;   '(button ((t (:foreground "cyan"))))
+;   '(rst-level-2-face ((t (:foreground "Purple2"))))
+;  )
+;)
+;
+;(defun light-colors ()
+;  "Switch to a light color scheme."
+;  (interactive)
+;  (custom-set-faces
+;   '(default ((t (:stipple nil
+;                  :background "white"
+;                  :foreground "black"
+;                  :inverse-video nil
+;                  :box nil
+;                  :strike-through nil
+;                  :overline nil
+;                  :underline nil
+;                  :slant normal
+;                  :weight normal
+;;                  :width  normal
+;                  :foundry "bitstream"
+;                  :family "Bitstream Vera Sans Mono"))))
+;   '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
+;   '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
+;   '(minibuffer-prompt ((t (:foreground "black"))))
+;   '(font-lock-keyword-face ((t (:foreground "orange3"))))
+;   '(font-lock-function-name-face ((t (:foreground "royalblue"))))
+;   '(font-lock-type-face ((t (:foreground "royalblue"))))
+;  )
+;)
 
 (font-lock-add-keywords nil '(("\\<\\(FIX\\|TODO\\|FIXME\\|HACK\\|REFACTOR\\):" 1 '(:foreground "yellow") t)))
 
@@ -434,7 +420,7 @@
   (global-font-lock-mode t)
   (load-library "my-emisc")
   (load-library "my-python")
-  (load-library "my-haskell")
+  ;(load-library "my-haskell")
   (load-library "my-latex")
   (load-library "my-org")
 
@@ -532,13 +518,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector [         default     bold    shadow    italic  underline      bold  bold-italic       bold])
- '(ansi-color-names-vector (vector "#4d4d4c" "#c82829" "#718c00" "#eab700"  "#4271ae" "#8959a8"    "#3e999f" "#ffffff"))
-; '(current-language-environment "Latin-1")
-; '(default-input-method "latin-1-prefix")
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
  '(cursor-in-nonselected-windows nil)
- '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
- '(custom-safe-themes (quote ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" default)))
+ '(custom-safe-themes
+   (quote
+    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
  '(fci-rule-color "#efefef")
  '(global-font-lock-mode t nil (font-lock))
  '(ibuffer-saved-filter-groups nil)
@@ -548,9 +535,28 @@
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
- '(vc-annotate-background nil)
- '(vc-annotate-color-map (quote ((20 . "#c82829") (40 . "#f5871f") (60 . "#eab700") (80 . "#718c00") (100 . "#3e999f") (120 . "#4271ae") (140 . "#8959a8") (160 . "#c82829") (180 . "#f5871f") (200 . "#eab700") (220 . "#718c00") (240 . "#3e999f") (260 . "#4271ae") (280 . "#8959a8") (300 . "#c82829") (320 . "#f5871f") (340 . "#eab700") (360 . "#718c00"))))
- '(vc-annotate-very-old-color nil)
+; '(vc-annotate-background nil)
+; '(vc-annotate-color-map
+;   (quote
+;    ((20 . "#c82829")
+;     (40 . "#f5871f")
+;     (60 . "#eab700")
+;     (80 . "#718c00")
+;     (100 . "#3e999f")
+;     (120 . "#4271ae")
+;     (140 . "#8959a8")
+;     (160 . "#c82829")
+;     (180 . "#f5871f")
+;     (200 . "#eab700")
+;     (220 . "#718c00")
+;     (240 . "#3e999f")
+;     (260 . "#4271ae")
+;     (280 . "#8959a8")
+;     (300 . "#c82829")
+;     (320 . "#f5871f")
+;     (340 . "#eab700")
+;     (360 . "#718c00"))))
+; '(vc-annotate-very-old-color nil)
  '(visible-cursor nil))
 
 (custom-set-faces
@@ -558,29 +564,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-; '(default ((t (:stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :height 100 :foundry "bitstream" :family "Bitstream Vera Sans Mono"))))
-; '(bold ((t (:weight extra-bold))))
-; '(button ((t (:foreground "cyan"))))
  '(comint-highlight-prompt ((t (:foreground "light blue"))))
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
  '(flymake-errline ((((class color)) (:underline "red"))))
- '(flymake-warnline ((((class color)) (:underline "yellow4"))))
-; '(font-lock-builtin-face ((((class color) (min-colors 88) (background dark)) (:foreground "Purple2"))))
-; '(font-lock-comment-face ((t (:foreground "red" :slant italic))))
-; '(font-lock-function-name-face ((t (:foreground "blue"))))
-; '(font-lock-keyword-face ((t (:foreground "orange"))))
-; '(font-lock-string-face ((t (:foreground "forest green"))))
-; '(font-lock-type-face ((t (:foreground "blue"))))
-; '(font-lock-warning-face ((t (:foreground "LightGoldenrod"))))
-; '(italic ((t (:foreground "Yellow1" :slant italic))))
-; '(match ((((class color) (min-colors 88) (background light)) (:foreground "red"))))
-; '(minibuffer-prompt ((t (:foreground "white"))))
-; '(mode-line ((t (:background "blue" :foreground "white" :weight normal))))
-; '(mode-line-inactive ((default (:inherit mode-line)) (nil (:background "grey" :foreground "blue"))))
-; '(org-link ((t (:foreground "cyan"))))
-; '(outline-1 ((t (:inherit font-lock-function-name-face :foreground "purple"))))
-; '(rst-level-2-face ((t (:foreground "Purple2"))) t)
-)
+ '(flymake-warnline ((((class color)) (:underline "yellow4")))))
 
 
 
@@ -628,3 +615,19 @@
 (unless (eq system-type 'windows-nt)
   (set-selection-coding-system 'utf-8))
 (prefer-coding-system 'utf-8)
+
+
+; Note: We load theme late so that we tell emacs that it's "safe," which happens
+; somewhere in custom-set-variables.
+(require 'color-theme)
+(load-theme 'sanityinc-tomorrow-eighties)
+
+
+
+(require 'langtool)
+(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
+      langtool-mother-tongue "en"
+      langtool-disabled-rules '("WHITESPACE_RULE"
+                                "EN_UNPAIRED_BRACKETS"
+                                "COMMA_PARENTHESIS_WHITESPACE"
+                                "EN_QUOTES"))
