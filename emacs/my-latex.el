@@ -23,30 +23,22 @@
   (flyspell-buffer)
   (flyspell-mode))
 
-(defun run-pdflatex (file-name)
-  (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
-      (message "pdflatex failed")
-    (progn
-      ;(message "pdflatex succeeded")
-      (delete-other-windows))))
-
+;(defun run-pdflatex (file-name)
+;  (if (= 1 (shell-command (concat "pdflatex -halt-on-error " file-name)))
+;      (message "pdflatex failed")
+;    (progn
+;      ;(message "pdflatex succeeded")
+;      (delete-other-windows))))
 
 ;; might need to edit configuration:
 ;; $ sudo emacs -nw /usr/share/texlive/texmf/web2c/texmf.cnf
 ;; change 'openout_any = p' to 'a' or 'r'
-(defun run-bibtex (f)
-  (if (= 1 (shell-command (concat "bibtex " f ".aux")))
-      (message "bibtex failed")
-    (progn
-      ;(message "bibtex succeeded")
-      (delete-other-windows))))
-
-(defun run-make-latex (f)
-  (if (= 1 (shell-command (concat "/home/timv/projects/env/bin/make-latex " f)))
-      (message "make-latex failed")
-    (progn
-      (delete-other-windows))))
-
+;(defun run-bibtex (f)
+;  (if (= 1 (shell-command (concat "bibtex " f ".aux")))
+;      (message "bibtex failed")
+;    (progn
+;      ;(message "bibtex succeeded")
+;      (delete-other-windows))))
 
 ; todo: "make clean" first: sometimes deleting aux file fixes compile issues
 ;; (defun latex-thing ()
@@ -65,6 +57,11 @@
 ;;         (run-pdflatex tex)))
 ;;    ))
 
+(defun run-make-latex (f)
+  (if (= 1 (shell-command (concat "/home/timv/projects/env/bin/make-latex " f)))
+      (message "make-latex failed")
+    (progn
+      (delete-other-windows))))
 
 (defun latex-thing ()
   (interactive)
@@ -72,7 +69,6 @@
     (let ((base (substring tex 0 -4)))  ; filename with out extension
       (run-make-latex base)
    )))
-
 
 (defun latex-open-this-pdf ()
   (interactive)
@@ -84,9 +80,7 @@
         (delete-other-windows))
       )))
 
-
 ;(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-
 
 (defun latex-setup ()
   (interactive)
