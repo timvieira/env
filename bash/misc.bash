@@ -38,7 +38,7 @@ function o {
     xdg-open "$@" 2>/dev/null >/dev/null
 }
 
-alias tetris="shutup-and-disown google-chrome $ENV/tetris.swf 2>/dev/null"
+alias tetris="shutup-and-disown google-chrome $ENV/tetris.html 2>/dev/null"
 
 function pkill9 {
   ps aux |grep "$@"
