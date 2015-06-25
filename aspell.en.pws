@@ -1,4 +1,4 @@
-personal_ws-1.1 en 505 
+personal_ws-1.1 en 531 
 nonhomogeneous
 ANF
 google
@@ -20,6 +20,7 @@ encodings
 discretize
 collineation
 wallclock
+transduction
 Domingos
 regularizer
 workspaces
@@ -36,11 +37,13 @@ Champaign
 reproducibility
 BP's
 treewidth
+eigenfunctions
 backprop
 nonnegative
 CKY
 preconditioner
 repropagated
+Levenshtein
 newswire
 timeline
 functor
@@ -67,12 +70,14 @@ rsync
 workflow
 Earley
 Sudoku
+GBO
 timv
 nonlinearity
 frequentists
 mentorship
 resample
 ICML
+minibatch
 DSL
 Prolog's
 formalisms
@@ -96,8 +101,9 @@ coindexed
 parallelizing
 frequentist
 Teichert
-hypergraph's
+submodular
 hypergraphs
+hypergraph's
 Prolog
 matplotlib
 unpronounced
@@ -119,6 +125,7 @@ SampleRank
 regex
 BUGFIX
 instantiation
+Rastogi
 quartiles
 stateful
 templating
@@ -223,13 +230,16 @@ approximators
 parameterizes
 gmail
 minima
+deterministically
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
+invariants
 noogie
 nonprojective
+Cotterell
 reranking
 semiring
 parallelizable
@@ -241,6 +251,7 @@ Peano
 Viterbi
 Lexicalization
 timvieira
+Agarwal
 Dykstra's
 backpointer
 Javascript
@@ -263,8 +274,10 @@ intuiton
 clsp
 canonicalized
 Yanif
+incompletes
 multiline
 probabilistically
+Alekh
 outliers
 initializers
 PageRank
@@ -308,14 +321,15 @@ Jiarong's
 TimeML
 parameterization
 runtimes
+Gormley
 orthonormal
 wiki
 scriptable
 Domke's
 unpruned
-RSM
-SPC
 Tim
+SPC
+RSM
 minimizer
 notational
 tunable
@@ -325,6 +339,7 @@ hypergraph
 subtrees
 CRFs
 declaratively
+Subhro
 discriminative
 blackbox
 Efraimidis
@@ -345,6 +360,7 @@ Bodenstab's
 SVM
 overfit
 subsumption
+Renduchintala
 jammer
 bijective
 preprocess
@@ -366,6 +382,7 @@ subsumptive
 Daume
 inliner
 Domke
+Schapire
 aggregators
 arity
 Prewitt
@@ -383,6 +400,7 @@ reprioritization
 Searchable
 differentiability
 Connectionist
+Langford
 Roark
 decomposability
 repropagation
@@ -396,8 +414,10 @@ submatrix
 adjoint
 precomputed
 emacs
+Cython
 covary
 symlink
+Adithya
 observability
 majorization
 coreferent
@@ -412,9 +432,11 @@ memoization
 backchain
 Davidsonian
 vertices
+Pushpendre
 nondecomposable
 Keshet
 memoized
+TACL
 nonterminals
 Aspectual
 softmax
@@ -423,6 +445,7 @@ Hixkaryana
 unregularized
 EP
 bigram
+Schein
 Hobbsian
 binarization
 Ew
@@ -483,7 +506,9 @@ searn
 affine
 conjunctively
 disjunctively
+unordered
 webpages
+binarizing
 subderivations
 exponentiating
 matchings
