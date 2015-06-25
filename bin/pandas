@@ -38,7 +38,7 @@ print df
 #df.plot(subplots=True)
 #pl.show()
 
-from viz.interact import PointBrowser, LassoBrowser
+from viz.interact import PointBrowser
 
 if args.x is not None and args.y is not None:
     br = PointBrowser(df, xcol=args.x, ycol=args.y)
