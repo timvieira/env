@@ -3,14 +3,17 @@
 tex="$1"
 base=${tex%.tex}
 
-flags="-halt-on-error"
+cd `dirname $tex`
+base=`basename $base`
 
+flags="-halt-on-error"
 pdflatex $flags $base
 
 # might need to edit configuration:
 # $ sudo emacs -nw /usr/share/texlive/texmf/web2c/texmf.cnf
 # change 'openout_any = p' to 'a' or 'r'
 bibtex $base
+
 pdflatex $flags $base
 pdflatex $flags $base
 #nohup gnome-open $1.pdf 2>/dev/null &
