@@ -45,3 +45,30 @@ function notes {
         yellow "pick a file or be more specific."
     fi
 }
+
+# Jump to directory, don't open the file.
+function notes-cd {
+
+    COMP_NOTES=/home/timv/projects/notes/.index/files
+
+    matches=`cat $COMP_NOTES | xargs dirname |sort |uniq |bymtime - |cut -f2 |/home/timv/projects/env/bin/filter.py $@`
+    retcode="$?"
+
+    # clickable verion
+    #echo "$matches" |linepy 'print "file://" + line'
+    echo "$matches"
+
+    #notes.py $@
+
+    if [[ "$retcode" -eq "0" ]]; then
+        # feeling lucky, so we'll open the file for you.
+
+        # drop color codes
+        match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+
+        cd $match
+
+    else
+        yellow "pick a file or be more specific."
+    fi
+}
