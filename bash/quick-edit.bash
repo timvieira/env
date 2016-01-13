@@ -35,7 +35,8 @@ function edit-bash-function {
         # TODO: the `ack` search only covers personal config files, should
         # probably extend to other configuration, e.g., stuff in `/etc`.
 
-        ackresults=$(ack --nogroup "^[^#]*\\b$1\\b" ~/projects/env/bash ~/projects/env/bashrc)
+        #ackresults=$(ack --nogroup "^[^#]*\\b$1\\b" ~/projects/env/bash ~/projects/env/bashrc)
+        ackresults=$(ack --nogroup "^[^#]*alias \\b$1\\b" ~/projects/env/bash ~/projects/env/bashrc)
 
         if [[ $ackresults ]]; then
             green '============================================'
@@ -44,6 +45,13 @@ function edit-bash-function {
             # filters out lines which are commented out with a pound sign
             echo "$ackresults"
             green '============================================'
+
+            # open file at lineno with visit
+            visit `echo $ackresults |nocolor |linepy 'print re.findall("[^:]*:[0-9]+", line)[0]; break'`
+
+            # recenter window
+            ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
+
         else
             echo 'ack search failed'
         fi
