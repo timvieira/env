@@ -44,6 +44,10 @@ from collections import *
 from pprint import *
 from path import path
 try:
+    from arsenal.terminal import *
+except ImportError:
+    pass
+try:
     from pandas import DataFrame
 except ImportError:
     pass
