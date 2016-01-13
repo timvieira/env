@@ -67,7 +67,10 @@ import sys
 from os import environ, path
 from env.bin.filter import main, words
 from collections import defaultdict
-from arsenal.math.featureselection import kl_filter
+
+# faster to import this way so that we don't drag lots of other math utils along.
+sys.path.append('/home/timv/projects/arsenal/arsenal/math')
+from featureselection import kl_filter
 
 
 def complete(filename, testing=''):
