@@ -1,4 +1,4 @@
-personal_ws-1.1 en 531 
+personal_ws-1.1 en 573 
 nonhomogeneous
 ANF
 google
@@ -20,8 +20,10 @@ encodings
 discretize
 collineation
 wallclock
+morphotactics
 transduction
 Domingos
+canonicalization
 regularizer
 workspaces
 reweighted
@@ -31,6 +33,7 @@ robustify
 Minka
 nonconvex
 Gaussians
+PocketKB
 tradeoffs
 dev
 Champaign
@@ -39,6 +42,7 @@ BP's
 treewidth
 eigenfunctions
 backprop
+adversarially
 nonnegative
 CKY
 preconditioner
@@ -65,6 +69,7 @@ Kinect
 modularity
 backchaining
 Bagnell
+determinantal
 centroid
 rsync
 workflow
@@ -98,12 +103,13 @@ misspecification
 sigmoid
 facebook
 coindexed
+uncomment
 parallelizing
 frequentist
 Teichert
 submodular
-hypergraphs
 hypergraph's
+hypergraphs
 Prolog
 matplotlib
 unpronounced
@@ -135,6 +141,8 @@ parameterizing
 nondeterministically
 uninstalled
 nondifferentiable
+segmentations
+nondeterministic
 precomputation
 todo
 coindexing
@@ -171,23 +179,30 @@ Pearlmutter's
 Dyna's
 unpruning
 epipole
+preprocessed
 discriminatively
+Pallika's
 LDP
 HMMs
 aggregator
 nonmonotonic
+Naradowsky
 datasets
 consequents
 discretized
+pylint
 nonconvexity
 covariance
 instantiations
+AdaGrad
 exponentiated
 precompute
 resampling
 nonterminal
 metadata
 MBR
+subadditive
+LHS
 linux
 MDP
 hyperedge
@@ -223,6 +238,7 @@ LSE
 unmemoized
 multilinear
 univariate
+misclassification
 Boyan
 Jacobian
 summand
@@ -232,13 +248,14 @@ gmail
 minima
 deterministically
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 invariants
 noogie
 nonprojective
+expressivity
 Cotterell
 reranking
 semiring
@@ -249,6 +266,8 @@ Datalog
 codegen
 Peano
 Viterbi
+modalities
+nonidempotent
 Lexicalization
 timvieira
 Agarwal
@@ -265,6 +284,7 @@ optimality
 invertible
 OOV
 backpropagates
+parametrize
 disjunction
 vowpal
 nonstationary
@@ -287,6 +307,7 @@ POS
 unbinarized
 multiclass
 backpointers
+summarization
 functionals
 binarized
 PTB
@@ -295,6 +316,8 @@ lookup
 html
 sbt
 disambiguates
+RHS
+lemmatization
 hypercube
 pseudocode
 maxima
@@ -304,9 +327,11 @@ scala
 hypernyms
 covariates
 nonparametrics
+cloze
 reachability
 McAllester
 vieira
+WFST
 tokenization
 nwf's
 RPC
@@ -317,6 +342,7 @@ parametrized
 Nonlinearities
 overcounting
 http
+reweighting
 Jiarong's
 TimeML
 parameterization
@@ -326,10 +352,11 @@ orthonormal
 wiki
 scriptable
 Domke's
+McCallum's
 unpruned
-Tim
-SPC
 RSM
+SPC
+Tim
 minimizer
 notational
 tunable
@@ -339,6 +366,7 @@ hypergraph
 subtrees
 CRFs
 declaratively
+featurization
 Subhro
 discriminative
 blackbox
@@ -359,10 +387,12 @@ counterfactuals
 Bodenstab's
 SVM
 overfit
+abductive
 subsumption
 Renduchintala
 jammer
 bijective
+Bodyweight
 preprocess
 decomposablility
 backpropagating
@@ -372,6 +402,7 @@ inlined
 DAgger's
 Immanant
 discontiguous
+contrastive
 backpropagation
 variational
 uncentered
@@ -397,6 +428,7 @@ underdetermined
 pretrained
 adaptively
 reprioritization
+Proximal
 Searchable
 differentiability
 Connectionist
@@ -416,6 +448,7 @@ precomputed
 emacs
 Cython
 covary
+derivational
 symlink
 Adithya
 observability
@@ -426,6 +459,7 @@ superset
 checksum
 tuple
 MCMC
+filename
 interpretable
 BP
 memoization
@@ -450,6 +484,7 @@ Hobbsian
 binarization
 Ew
 resamples
+recurse
 multiobjective
 perceptron
 variates
@@ -464,10 +499,12 @@ nominalizations
 JSON
 softmin
 preprocessing
+Durme
 LBFGS
 embeddings
 deduplication
 hyperedges
+projectivity
 eisner
 Numpy
 unnormalized
@@ -486,6 +523,7 @@ nand
 nonsingularity
 RL
 thresholded
+nullary
 Mathematica
 monotonicity
 MERT
@@ -509,6 +547,7 @@ disjunctively
 unordered
 webpages
 binarizing
+nominalization
 subderivations
 exponentiating
 matchings
@@ -517,12 +556,14 @@ Bottou's
 elisp
 Bottou
 changeprop's
+substrings
 substring
 changeprop
 preterminals
 acyclic
 subgraph
 suboptimal
+aspell
 munge
 CPLEX
 projective
