@@ -103,6 +103,7 @@ function update {
         $PROJECTS/*/working \
         $PROJECTS/*/*/working \
         $PROJECTS/* \
+        $PROJECTS/blab/* \
         $PROJECTS/self/* \
         |sed 's/ /\n/g')
 
