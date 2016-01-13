@@ -77,10 +77,10 @@ export ILOG_LICENSE_FILE=~/software/cplex/access.ilm
 add-pypath \
     $PROJECTS/incubator \
     $PROJECTS/shelf \
-    $PROJECTS
-#    $PROJECTS/ldp/code/working/lpldp \
-#    $PROJECTS/shelf/quantities \
-#    ~/software/OpenCV-2.4.2/release/lib
+    $PROJECTS \
+    $PROJECTS/ldp/code/working/lpldp \
+    $PROJECTS/shelf/quantities \
+    ~/software/OpenCV-2.4.2/release/lib
 
 # Classpath
 add-classpath .
@@ -103,7 +103,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(.class\|.pyc\|.o\|.hi\)$' \
-      |grep -v '\(\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|third-party/\|results.*/\)'
+      |grep -v '\(\.hg\|\.svn\|\.git\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
 }
 
 #______________________________________________________________________________
@@ -117,7 +117,7 @@ function t {
         return
     fi
 
-    files=`find ~/Dropbox/todo |grep -v '\.org_archive$' |ignore-filter`
+    files=`find ~/Dropbox/todo |grep -v '\.org_archive$' |ignore-filter |grep -v '\.pdf$'`
 
     matches=`echo "$files" |filter.py "$@"`
     retcode="$?"
@@ -218,6 +218,19 @@ function notes-ack {
 #    print f
 #"
 #}
+
+function _cpufreak {
+    gov=$1  # TODO: check that valid governor is passed in.
+    for cpu in `echo 0 1 2 3`; do  # TODO: automatically enumerate CPUs.
+        sudo cpufreq-set -g $gov -c$cpu
+        cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor
+    done
+    cat /proc/cpuinfo |grep MHz
+}
+
+alias cpufreak='_cpufreak performance'
+alias cpufreak-performance='_cpufreak performance'
+alias cpufreak-powersave='_cpufreak powersave'
 
 # added by Anaconda 2.1.0 installer
 export PATH="/home/timv/anaconda/bin:$PATH"
