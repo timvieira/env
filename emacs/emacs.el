@@ -631,3 +631,8 @@
                                 "EN_UNPAIRED_BRACKETS"
                                 "COMMA_PARENTHESIS_WHITESPACE"
                                 "EN_QUOTES"))
+
+(defun ansi-colors-show ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
