@@ -1,10 +1,11 @@
-personal_ws-1.1 en 573 
+personal_ws-1.1 en 583 
 nonhomogeneous
 ANF
 google
 tuples
 Multi
 eigenvectors
+analytics
 subgraphs
 API
 bulleted
@@ -19,6 +20,7 @@ IPython
 encodings
 discretize
 collineation
+VoCRF
 wallclock
 morphotactics
 transduction
@@ -84,9 +86,11 @@ resample
 ICML
 minibatch
 DSL
+Kleene
 Prolog's
 formalisms
 subgradient
+agglutinative
 automata
 anaphora
 subdifferentiable
@@ -108,8 +112,8 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraph's
 hypergraphs
+hypergraph's
 Prolog
 matplotlib
 unpronounced
@@ -178,8 +182,10 @@ Bodenstab
 Pearlmutter's
 Dyna's
 unpruning
+invariance
 epipole
 preprocessed
+acceptor
 discriminatively
 Pallika's
 LDP
@@ -248,8 +254,8 @@ gmail
 minima
 deterministically
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 invariants
@@ -353,10 +359,11 @@ wiki
 scriptable
 Domke's
 McCallum's
+morphologically
 unpruned
-RSM
-SPC
 Tim
+SPC
+RSM
 minimizer
 notational
 tunable
@@ -365,11 +372,13 @@ underestimator
 hypergraph
 subtrees
 CRFs
+unlexicalized
 declaratively
 featurization
 Subhro
 discriminative
 blackbox
+Rudinger
 Efraimidis
 compositionality
 Epipolar
@@ -428,6 +437,7 @@ underdetermined
 pretrained
 adaptively
 reprioritization
+proximal
 Proximal
 Searchable
 differentiability
@@ -483,6 +493,7 @@ Schein
 Hobbsian
 binarization
 Ew
+incrementing
 resamples
 recurse
 multiobjective
@@ -500,6 +511,7 @@ JSON
 softmin
 preprocessing
 Durme
+lexicalized
 LBFGS
 embeddings
 deduplication
