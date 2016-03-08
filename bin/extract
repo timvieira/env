@@ -4,6 +4,8 @@
 # appropriate command line utility. Now, you don't have to memorize the command
 # line options!
 
+# TODO: replace extension mapping with the result of file command.
+
 if [ -f $1 ] ; then
   case $1 in
     *.tar.bz2)   tar xvjf $1   ;;
