@@ -2,10 +2,16 @@
 
 import pandas
 import sys
+import numpy as np
 import pylab as pl
-pl.ion()
-
+from arsenal.math import compare
 from argparse import ArgumentParser
+
+# tell pandas to use the full console width
+from arsenal.terminal import console_width
+pandas.set_option('display.width', console_width())
+
+pl.ion()
 
 p = ArgumentParser()
 p.add_argument('filename', nargs=1)
@@ -18,6 +24,7 @@ args = p.parse_args()
 
 [f] = args.filename
 
+# TODO: support tar zip version.
 if args.sep is None:
     if f.endswith('csv'):
         sep = ','
