@@ -9,9 +9,9 @@ function notes {
     # TODO: search skid as well.
     # TODO: don't just use filename. include the title (heuristic, first line=title)
 
-    COMP_NOTES=/home/timv/projects/notes/.index/files
+    COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES |bymtime - |cut -f2 |/home/timv/projects/env/bin/filter.py $@`
+    matches=`cat $COMP_NOTES |bymtime - |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion
@@ -49,9 +49,9 @@ function notes {
 # Jump to directory, don't open the file.
 function notes-cd {
 
-    COMP_NOTES=/home/timv/projects/notes/.index/files
+    COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES | xargs dirname |sort |uniq |bymtime - |cut -f2 |/home/timv/projects/env/bin/filter.py $@`
+    matches=`cat $COMP_NOTES | xargs dirname |sort |uniq |bymtime - |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion
