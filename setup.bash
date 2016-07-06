@@ -38,9 +38,12 @@ else
 fi
 
 # no dot in front of this destination.
-add-link2 texmf /home/timv/texmf
+add-link2 texmf ~/texmf
 
 add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
+
+mkdir -p ~/.ipython/extensions/
+mkdir -p ~/.ipython/profile_default/
 
 add-link2 ipython-extensions/line_profiler_ext.py \
     ~/.ipython/extensions/line_profiler_ext.py
