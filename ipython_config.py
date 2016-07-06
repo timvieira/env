@@ -396,10 +396,10 @@ c.InteractiveShellApp.exec_lines.append('pl.ion()')
 
 
 c.TerminalIPythonApp.extensions = [
-    'line_profiler_ext',
-    'memory_profiler_ext',
+#    'line_profiler_ext',
+#    'memory_profiler_ext',
 ]
 c.InteractiveShellApp.extensions = [
-    'line_profiler_ext',
-    'memory_profiler_ext',
+#    'line_profiler_ext',
+#    'memory_profiler_ext',
 ]
