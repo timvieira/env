@@ -38,7 +38,7 @@ load-plugins=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=W0142,W0232,W0212,C0103,C,R,W1401,E1103
+disable=W0142,W0232,W0212,C0103,C,R,W1401,E1103,using-constant-test
 
 # TODO: temporary patch to avoid false report of no-name-in-module for numpy
 extension-pkg-whitelist=numpy,path
