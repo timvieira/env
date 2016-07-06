@@ -102,7 +102,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: consider filtering all hidden directories.
 # TODO: directory filter skips substring matches
 function ignore-filter {
-    grep -v '\(\.class\|\.pyc\|\.o\|\.hi\)$' \
+    grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\)$' \
       |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
 }
 
@@ -222,8 +222,9 @@ function notes-ack {
 function _cpufreak {
     gov=$1  # TODO: check that valid governor is passed in.
     for cpu in `echo 0 1 2 3`; do  # TODO: automatically enumerate CPUs.
+        echo "cpu $cpu" '> was:' `cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor`
         sudo cpufreq-set -g $gov -c$cpu
-        cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor
+        echo "     " '> now:' `cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor`
     done
     cat /proc/cpuinfo |grep MHz
 }
@@ -232,5 +233,9 @@ alias cpufreak='_cpufreak performance'
 alias cpufreak-performance='_cpufreak performance'
 alias cpufreak-powersave='_cpufreak powersave'
 
-# added by Anaconda 2.1.0 installer
+#export LD_PRELOAD=/usr/local/lib/libfst.so:$LD_PRELOAD
+
+alias bibgrep="locate '*.bib' |xargs ack -i"
+
+# added by Anaconda2 4.1.0 installer
 export PATH="/home/timv/anaconda/bin:$PATH"
