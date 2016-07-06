@@ -1,4 +1,4 @@
-personal_ws-1.1 en 583 
+personal_ws-1.1 en 595 
 nonhomogeneous
 ANF
 google
@@ -18,6 +18,7 @@ submodularity
 Urbana
 IPython
 encodings
+judgement
 discretize
 collineation
 VoCRF
@@ -112,16 +113,18 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraphs
 hypergraph's
+hypergraphs
 Prolog
 matplotlib
+replicable
 unpronounced
 anaphor
 unweighted
 README
 Chernoff
 subproblem
+distributivity
 quartile
 replicability
 enqueue
@@ -199,6 +202,7 @@ discretized
 pylint
 nonconvexity
 covariance
+judgements
 instantiations
 AdaGrad
 exponentiated
@@ -254,8 +258,8 @@ gmail
 minima
 deterministically
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 invariants
@@ -274,7 +278,7 @@ Peano
 Viterbi
 modalities
 nonidempotent
-Lexicalization
+lexicalization
 timvieira
 Agarwal
 Dykstra's
@@ -359,11 +363,11 @@ wiki
 scriptable
 Domke's
 McCallum's
-morphologically
 unpruned
-Tim
-SPC
+morphologically
 RSM
+SPC
+Tim
 minimizer
 notational
 tunable
@@ -402,6 +406,7 @@ Renduchintala
 jammer
 bijective
 Bodyweight
+memoryless
 preprocess
 decomposablility
 backpropagating
@@ -411,12 +416,14 @@ inlined
 DAgger's
 Immanant
 discontiguous
+inlining
 contrastive
 backpropagation
 variational
 uncentered
 scalability
 REPL
+extensibility
 subsequences
 subsumptive
 Daume
@@ -425,6 +432,7 @@ Domke
 Schapire
 aggregators
 arity
+toposort
 Prewitt
 internet
 equational
@@ -437,8 +445,8 @@ underdetermined
 pretrained
 adaptively
 reprioritization
+interpretability
 proximal
-Proximal
 Searchable
 differentiability
 Connectionist
@@ -460,6 +468,7 @@ Cython
 covary
 derivational
 symlink
+nominals
 Adithya
 observability
 majorization
@@ -514,6 +523,7 @@ Durme
 lexicalized
 LBFGS
 embeddings
+unigram
 deduplication
 hyperedges
 projectivity
@@ -572,6 +582,7 @@ substrings
 substring
 changeprop
 preterminals
+Vectorization
 acyclic
 subgraph
 suboptimal
