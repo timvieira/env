@@ -68,9 +68,9 @@ _complete_vpy ()
 
 
 # TODO: clever things to keep things up-to-date?
-COMP_ENV="/home/timv/.completions/env"
-COMP_NOTES='/home/timv/projects/notes/.index/files'
-COMP_PROJECTS="/home/timv/.completions/projects"
+COMP_ENV=~/.completions/env
+COMP_NOTES=~/projects/notes/.index/files
+COMP_PROJECTS=~/.completions/projects
 
 function ensuredirs {
   for x in `echo $@`; do
