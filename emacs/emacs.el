@@ -248,7 +248,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(pending-delete-mode nil)  ;; crucial! typed text replaces a selection, rather than append
 
 ;; TODO: things I don't like about my tab situations
 ;;  - sometimes I screw up Makefiles
@@ -636,3 +635,6 @@
   (interactive)
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
+
+
+(pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append
