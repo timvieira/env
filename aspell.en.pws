@@ -113,8 +113,8 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraph's
 hypergraphs
+hypergraph's
 Prolog
 matplotlib
 replicable
@@ -258,8 +258,8 @@ gmail
 minima
 deterministically
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 invariants
@@ -363,11 +363,11 @@ wiki
 scriptable
 Domke's
 McCallum's
-unpruned
 morphologically
-RSM
-SPC
+unpruned
 Tim
+SPC
+RSM
 minimizer
 notational
 tunable
@@ -418,6 +418,7 @@ Immanant
 discontiguous
 inlining
 contrastive
+reparameterization
 backpropagation
 variational
 uncentered
