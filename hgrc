@@ -16,7 +16,6 @@ cacerts =
 
 [extdiff]
 cmd.meld =
-##cmd.kdiff3 =
 cmd.diff = colordiff
 opts.diff = -uprN
 
@@ -24,7 +23,6 @@ cmd.wdiff = wdiff
 opts.wdiff =
 
 [merge-tools]
-##kdiff3.args = $base $local $other -o $output
 meld.args = $base $local $other -o $output
 
 [extensions]
@@ -34,3 +32,11 @@ hggit =
 fetch =
 color =
 highlight =
+mercurial_keyring =
+
+[auth]
+gitlab.prefix = https://gitlab.hltcoe.jhu.edu
+gitlab.username = timv
+
+[backend]
+default-keyring = keyring.backends.Gnome.Keyring
