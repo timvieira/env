@@ -1,19 +1,22 @@
 [user]
-        name = Tim Vieira
-        email = tim.f.vieira@gmail.com
+name = Tim Vieira
+email = tim.f.vieira@gmail.com
 
 [color]
-        diff = always
+diff = always
 
 [push]
-        default = simple
+default = simple
 
 [diff]
-        tool = meld
-        prompt = false
+tool = meld
+prompt = false
 
 [merge]
-        tool = meld
+tool = meld
 
 [difftool]
-        prompt = false
+prompt = false
+
+[credential]
+helper = cache --timeout=36000
