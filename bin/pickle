@@ -13,8 +13,6 @@ import pylab as pl
 from arsenal.timer import timeit
 from arsenal.terminal import yellow, green
 
-from ldp.learn import *
-
 try:
     [_, filename] = sys.argv
 except ValueError:
