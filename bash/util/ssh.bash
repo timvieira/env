@@ -6,8 +6,8 @@
 #alias dali='ssh timv@dalisrv.cs.umass.edu'
 #alias loki='ssh timv@loki.cs.umass.edu'
 #alias ugradx='ssh timv@ugradx.cs.jhu.edu'
-alias clsp='ssh timv@login2.clsp.jhu.edu'
-alias coe='ssh tvieira@test1.hltcoe.jhu.edu'
+alias clsp='ssh -X timv@login.clsp.jhu.edu'
+alias coe='ssh -X tvieira@test1.hltcoe.jhu.edu'
 
 
 # Add ssh public key to remote machine
