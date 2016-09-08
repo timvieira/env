@@ -229,6 +229,7 @@ function _cpufreak {
     cat /proc/cpuinfo |grep MHz
 }
 
+alias cpuinfo='cat /proc/cpuinfo |grep MHz'
 alias cpufreak='_cpufreak performance'
 alias cpufreak-performance='_cpufreak performance'
 alias cpufreak-powersave='_cpufreak powersave'
@@ -239,3 +240,11 @@ alias bibgrep="locate '*.bib' |xargs ack -i"
 
 # added by Anaconda2 4.1.0 installer
 export PATH="/home/timv/anaconda/bin:$PATH"
+
+# Standard places to do local install (Chandler's convention)
+#export PATH="$HOME/.local/bin:$PATH"
+#export PATH="$HOME/bin:$PATH"
+#export CPLUS_INCLUDE_PATH="$HOME/include:$CPLUS_INCLUDE_PATH"
+#export C_INCLUDE_PATH="$HOME/include:$C_INCLUDE_PATH"
+#export LIBRARY_PATH="$HOME/lib:$LIBRARY_PATH"
+#export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
