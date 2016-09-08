@@ -24,15 +24,13 @@ args = p.parse_args()
 
 [f] = args.filename
 
-# TODO: support tar zip version.
 if args.sep is None:
-    if f.endswith('csv'):
+    if '.csv' in f:
         sep = ','
-    elif f.endswith('tsv'):
+    elif '.tsv' in f:
         sep = '\t'
     else:
-        print 'unrecognized file extension'
-        exit(1)
+        sep = None
 else:
     sep = args.sep
 
