@@ -491,15 +491,6 @@
 ;  'executable-make-buffer-file-executable-if-script-p)
 
 
-
-;; http://jblevins.org/projects/deft/
-(when (require 'deft nil 'noerror)
-   (setq deft-extension "org"
-         deft-directory "~/projects/notes/"
-         deft-text-mode 'org-mode)
-   (global-set-key (kbd "<f8>") 'deft))
-
-
 ;;------------------------------------------------------------------------------
 
 
@@ -534,28 +525,6 @@
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
-; '(vc-annotate-background nil)
-; '(vc-annotate-color-map
-;   (quote
-;    ((20 . "#c82829")
-;     (40 . "#f5871f")
-;     (60 . "#eab700")
-;     (80 . "#718c00")
-;     (100 . "#3e999f")
-;     (120 . "#4271ae")
-;     (140 . "#8959a8")
-;     (160 . "#c82829")
-;     (180 . "#f5871f")
-;     (200 . "#eab700")
-;     (220 . "#718c00")
-;     (240 . "#3e999f")
-;     (260 . "#4271ae")
-;     (280 . "#8959a8")
-;     (300 . "#c82829")
-;     (320 . "#f5871f")
-;     (340 . "#eab700")
-;     (360 . "#718c00"))))
-; '(vc-annotate-very-old-color nil)
  '(visible-cursor nil))
 
 (custom-set-faces
@@ -567,8 +536,6 @@
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
  '(flymake-errline ((((class color)) (:underline "red"))))
  '(flymake-warnline ((((class color)) (:underline "yellow4")))))
-
-
 
 ;; <INDENTING TEXT>
 ;;   Code copied from:  http://www.emacswiki.org/emacs/IndentingText
@@ -621,15 +588,13 @@
 (require 'color-theme)
 (load-theme 'sanityinc-tomorrow-eighties)
 
-
-
-(require 'langtool)
-(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
-      langtool-mother-tongue "en"
-      langtool-disabled-rules '("WHITESPACE_RULE"
-                                "EN_UNPAIRED_BRACKETS"
-                                "COMMA_PARENTHESIS_WHITESPACE"
-                                "EN_QUOTES"))
+;(require 'langtool)
+;(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
+;      langtool-mother-tongue "en"
+;      langtool-disabled-rules '("WHITESPACE_RULE"
+;                                "EN_UNPAIRED_BRACKETS"
+;                                "COMMA_PARENTHESIS_WHITESPACE"
+;                                "EN_QUOTES"))
 
 (defun ansi-colors-show ()
   (interactive)
