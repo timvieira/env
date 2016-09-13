@@ -30,7 +30,6 @@
 
 ;; TODO: easily search google for word-at-point or phrase-in-region
 
-
 ;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs.el"))))
@@ -38,7 +37,6 @@
 (global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
 (global-unset-key [f4])
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
-
 
 ;; Note: Install packages early. In some cases late installation is buggy
 ;; (apparently the case with org-mode stuff -- must install before we load
@@ -601,5 +599,15 @@
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 
+
+;; hippie expand is dabbrev expand on steroids
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-dabbrev-from-kill
+                                         try-expand-all-abbrevs
+                                         try-expand-list
+                                         try-expand-line
+                                         try-complete-file-name-partially
+                                         try-complete-file-name))
 
 (pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append
