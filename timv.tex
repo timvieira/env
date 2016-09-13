@@ -7,8 +7,6 @@
 %\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
 \usepackage[makeroom]{cancel} % For cancel
 
-
-
 \setlength\parindent{0pt}   % no paragraph indentation
 \usepackage{fullpage}
 \setlength{\parskip}{.4cm plus4mm minus3mm}
@@ -63,6 +61,7 @@
 \definecolor{lightyellow}{rgb}{1.0,1.0,0.8}
 \definecolor{lightorange}{rgb}{1.0,0.9,0.8}
 \definecolor{lightgrey}{rgb}{0.96,0.97,0.98}
+\definecolor{orange}{HTML}{D95F02}   % darker /default/ orange color.
 
 \newsavebox{\savelisting}
 \newenvironment{timbox}
@@ -84,17 +83,6 @@
 
 \usepackage{bm}             % load after all math to give access to bold math
 
-%\usepackage{fixltx2e}
-%\usepackage{graphicx}
-%\usepackage{longtable}
-%\usepackage{float}
-%\usepackage{wrapfig}
-%\usepackage{soul}
-%\usepackage{textcomp}
-%\usepackage{marvosym}
-%\usepackage{wasysym}
-%\usepackage{latexsym}
-%\usepackage{amssymb}
 %\usepackage{hyperref}
 \tolerance=1000
 \providecommand{\alert}[1]{\textbf{#1}}
@@ -123,8 +111,8 @@
 \newcommand{\Ebb}{\mathbb{E}}
 
 \newcommand{\ExpectA}[0]{\mathbb{E}}
-\newcommand{\ExpectB}[1]{\mathbb{E}\left[ #1 \right]}
-\newcommand{\ExpectC}[2]{\mathbb{E}_{#1}\left[ #2 \right]}
+\newcommand{\ExpectB}[1]{\mathbb{E}\!\left[ #1 \right]}
+\newcommand{\ExpectC}[2]{\mathbb{E}_{#1}\!\left[ #2 \right]}
 
 %\newcommand{\Ebb}[1]{\mathbb{E} \left[ #1 \right] }
 %\DeclareMathOperator*{\Eee}{\mathbb{E}}
@@ -136,9 +124,9 @@
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 
-
 \newcommand{\g}{\,|\,}
 \newcommand{\teq}{\!=\!}
+\newcommand{\tcdot}{\! \cdot\! }
 
 \newcommand{\bphi}{\boldsymbol{\phi}}
 \newcommand{\btheta}{\boldsymbol{\theta}}
@@ -154,9 +142,12 @@
 \newcommand{\pair}[2]{\left<#1, #2\right>}
 \newcommand{\tuple}[1]{\left<#1\right>}
 
-\newcommand{\iid}{\text{i.i.d. }}
+\newcommand{\iid}{\text{i.i.d.}\xspace}
 
 \newcommand{\bigo}{\mathcal{O}}
-\newcommand{\wrt}{\text{w.r.t. }}
+\newcommand{\wrt}{\text{w.r.t.}\xspace}
+\newcommand{\suchthat}{\text{s.t.}\xspace}
+\newcommand{\iid}{\text{i.i.d. }}
+\newcommand{\bigo}{\mathcal{O}}
 \newcommand{\notimplies}{%
   \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
