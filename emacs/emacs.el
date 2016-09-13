@@ -38,13 +38,31 @@
 (global-unset-key [f4])
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
-;; Note: Install packages early. In some cases late installation is buggy
-;; (apparently the case with org-mode stuff -- must install before we load
-;; customizations)
+; What to do if visiting a symbolic link to a file under version control.
+(setq vc-follow-symlinks t)
+
+
+;; Now install el-get at the very first
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch
+          ;; do not build recipes from emacswiki due to poor quality and
+          ;; documentation
+          el-get-install-skip-emacswiki-recipes)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  ;; build melpa packages for el-get
+  (el-get-install 'package)
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (el-get-elpa-build-local-recipes))
+
+
 (require 'package)
-(package-initialize)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 (unless (package-installed-p 'scala-mode2)
   (package-refresh-contents) (package-install 'scala-mode2))
@@ -56,8 +74,6 @@
   (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
 
 
-; What to do if visiting a symbolic link to a file under version control.
-(setq vc-follow-symlinks t)
 
 ;; highlight URLs in comments/strings
 ;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
