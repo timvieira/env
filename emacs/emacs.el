@@ -149,9 +149,9 @@
 ;(blink-cursor-mode 0)
 
 ;; TODO: evaluation period. Not sure how useful this is.
-(add-path "site-lisp/expand-region/")
-(require 'expand-region)  ; https://github.com/magnars/expand-region.el/
-(global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
+;(add-path "site-lisp/expand-region/")
+;(require 'expand-region)  ; https://github.com/magnars/expand-region.el/
+;(global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
