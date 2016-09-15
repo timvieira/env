@@ -296,9 +296,6 @@
       scroll-preserve-screen-position 1
 )
 
-;; TODO: does this make hippie expand more usable?
-(delete 'try-expand-line hippie-expand-try-functions-list)
-(delete 'try-expand-list hippie-expand-try-functions-list)
 
 ;;; ido: "Interactively do" things (switch buffers, open files)
 (require 'ido)
@@ -616,14 +613,22 @@
     (ansi-color-apply-on-region (point-min) (point-max))))
 
 
+;; TODO: does this make hippie expand more usable?
+;(delete 'try-expand-line hippie-expand-try-functions-list)
+;(delete 'try-expand-list hippie-expand-try-functions-list)
+
+
 ;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-file-name-partially
-                                         try-complete-file-name))
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev               ; any word that starts like this (in this buffer)
+        try-expand-dabbrev-all-buffers   ; any word that starts like this (in any buffer)
+        ;try-expand-dabbrev-from-kill
+        try-expand-whole-kill            ; kill ring entry that starts like this one [added]
+        try-expand-all-abbrevs           ; local abbrev table, then global, then other abbrev tables
+        try-expand-list                  ; delimited list from elsewhere (in this buffer)
+        try-expand-line                  ; line that starts just like this one (in this buffer)
+        try-complete-file-name-partially ; partial filename completion (as far as unique) [added]
+        try-complete-file-name           ; any filename that starts like this
+        ))
 
 (pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append
