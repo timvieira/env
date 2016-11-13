@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-Very simple indexing files. Used for searching my notes.
+Searching my notes!
 
 This script extracts a small amount of metadata: title and tags. The title is
-taken to be the first line of the file. tags are specific in a comment
+taken to be the first line of the file. tags are specified in a comment
 
 (#|%|;) tags: tag1 tag2 tag3
 
@@ -11,11 +11,9 @@ TODO:
 
  * add option for listing recently modified files.
 
- * unify with skid
-
 """
 
-import re, os
+import re, os, codecs
 from datetime import datetime
 from path import path
 from whoosh.index import create_in, open_dir
@@ -23,10 +21,11 @@ from whoosh.fields import Schema, TEXT, ID, DATETIME
 from whoosh.qparser import QueryParser
 from whoosh.analysis import KeywordAnalyzer
 
-from arsenal.terminal import cyan, yellow, magenta
+from arsenal.terminal import red, cyan, yellow, magenta
 from arsenal.fsutils import find
 from arsenal.iterextras import unique
 from arsenal.humanreadable import datestr
+
 
 from configparser import ConfigParser
 parser = ConfigParser(allow_no_value=True)
@@ -100,20 +99,43 @@ def drop():
     print 'dropped index', DIRECTORY
 
 
+def mtime_if_exists(x):
+    p = path(x)
+    return datetime.fromtimestamp(p.mtime) if p.exists() else None
+
+
 def _search(q, limit=None):
     q = unicode(q.decode('utf8'))
     ix = open_dir(DIRECTORY, NAME)
     with ix.searcher() as searcher:
-        qp = QueryParser('content', schema=ix.schema)
-        q = qp.parse(q)
-        for hit in searcher.search(q, limit=limit):
-            yield hit
+
+        if not q:  # empty query
+            for d in sorted(ix.searcher().documents(),
+                            key = lambda x: mtime_if_exists(x['path']),
+                            reverse = 1):
+                yield d
+
+        else:
+            qp = QueryParser('content', schema=ix.schema)
+            q = qp.parse(q)
+            for hit in searcher.search(q, limit=limit):
+                yield hit
 
 
 def search(*q):
     print
     for hit in _search(' '.join(q)):
-        print hit['title'], magenta % '(%s)' % datestr(hit['mtime'])
+
+        mt = mtime_if_exists(hit['path'])
+        if mt is None:
+            mt = hit['mtime']
+            mtime_msg = 'no longer exists!'
+            mtime_msg = red % '(%s)' % mtime_msg
+        else:
+            mtime_msg = datestr(mt)
+            mtime_msg = magenta % '(%s)' % mtime_msg
+
+        print hit['title'].encode('utf-8'), mtime_msg
         print cyan % 'file://%s' % hit['path']
         if hit['tags']:
             print magenta % ' '.join(hit['tags'])
@@ -147,19 +169,21 @@ def update():
                 print '[INFO] new document:', d
 
             else:
-
                 assert len(result) == 1, 'should be unique.'
                 result = result[0]
                 if mtime <= result['mtime']:   # already up to date
-
                     # Since we've sorted files by mtime, we know that files
                     # after this one are older, and thus we're done.
                     return
 
                 print '[INFO] update:', d
 
-            with file(d) as f:
-                content = unicode(f.read().decode('utf8', 'ignore'))
+            with codecs.open(d, 'r', encoding='utf8', errors='ignore') as f:
+                content = f.read()
+
+            if not content.strip():
+                print '[INFO] document empty.'
+                continue
 
             title = extract_title(d, content)
 
@@ -179,9 +203,12 @@ def update():
 def extract_title(d, x=None):
     "Apply heuristics for extracting document titles."
 
+    if d.endswith('.ipynb') or d.endswith('.nb'):   # mathematica or jupyter notebook
+        return d
+
     if x is None:
-        with file(d) as f:
-            x = unicode(f.read().decode('utf8', 'ignore'))
+        with codecs.open(d, 'r', encoding='utf8') as f:
+            x = f.read()
 
     title = None
     if d.endswith('.odp'):
@@ -224,7 +251,7 @@ def extract_title(d, x=None):
             line = re.sub('^(#\+title:|""")', '', line)
 
             if line:
-                if not line.startswith('#!'): # skip shebang
+                if not line.startswith('#!') and not line.startswith('# -*-'): # skip shebang and encoding line
                     title = line
                     break
 
@@ -250,14 +277,18 @@ def main():
 
     if args.files:
         dump_files()
+        return
 
     if args.rebuild:
         create()
         dump_files()
         update()
+        return
 
     if args.update:
+        dump_files()
         update()
+        return
 
     search(*args.query)
 
