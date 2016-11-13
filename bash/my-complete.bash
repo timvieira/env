@@ -108,18 +108,22 @@ function update {
         |sed 's/ /\n/g')
 
     # courses
-    courses=`find $PROJECTS/courses -type d`
+    courses=`find $PROJECTS/shelf/courses -type d`
 
     # version controlled project roots -- be sure to strip off hg directories or
     # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
+    hg_roots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
+    git_roots=`find $PROJECTS -name '.git' -type d | grep -v incoming | sed 's/\\/\.git$//g'`
+
+    vcroots="$hg_roots $git_roots"
+
     #locate "*/.hg"
     #locate "*/.git"
 
     # TODO: why did I have this filter "grep -v '/projects/notes/'" above?
 
     # sort vc roots so that prefixes come first
-    vcroots=`echo "$vcroots" |sort`
+    vcroots=`echo "$vcroots" |sed 's/ /\n/g'| bymtime -t -`
 
     # everything else
     #everythingelse=`find $PROJECTS -type d`
