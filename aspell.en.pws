@@ -1,4 +1,4 @@
-personal_ws-1.1 en 596 
+personal_ws-1.1 en 600 
 nonhomogeneous
 ANF
 google
@@ -24,6 +24,7 @@ collineation
 VoCRF
 wallclock
 morphotactics
+aggregands
 transduction
 Domingos
 canonicalization
@@ -97,6 +98,7 @@ anaphora
 subdifferentiable
 webpage
 renormalize
+geegaws
 noncommutativity
 ERM
 satisfiability
@@ -113,8 +115,8 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraph's
 hypergraphs
+hypergraph's
 Prolog
 matplotlib
 replicable
@@ -177,6 +179,7 @@ online
 wildcard
 sigmoidal
 defeasible
+memoizing
 subconstituents
 Prefuse
 Spirakis
@@ -258,8 +261,8 @@ gmail
 minima
 deterministically
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 invariants
@@ -364,11 +367,11 @@ wiki
 scriptable
 Domke's
 McCallum's
-unpruned
 morphologically
-RSM
-SPC
+unpruned
 Tim
+SPC
+RSM
 minimizer
 notational
 tunable
@@ -539,6 +542,7 @@ UMass
 autodiff
 neuralnets
 backpropagate
+datastructures
 Tetris
 canonicalize
 unbinarize
