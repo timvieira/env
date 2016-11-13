@@ -103,7 +103,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\)$' \
-      |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
+      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
 }
 
 #______________________________________________________________________________
