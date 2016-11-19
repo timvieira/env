@@ -1,8 +1,3 @@
-# todo: use locate instead.
-function find-repos {
-    locate "*/.hg"
-    locate "*/.git"
-}
 
 # try to find repositories which have changes which might need to be pushed
 #function hg-changed-repos {
