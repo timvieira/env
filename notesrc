@@ -16,10 +16,11 @@
 ~/projects/blab/PredPatt/paper
 ~/projects/blab/kb-summarization
 ~/projects/gbo
+~/.skid/marks
 
 [exclude]
-.*\.pdf
-.*~
+.*\.pdf$
+.*~$
 \.hg
 .*\.log$
 timv\.tex$
