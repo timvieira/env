@@ -248,3 +248,27 @@ export PATH="/home/timv/anaconda/bin:$PATH"
 #export C_INCLUDE_PATH="$HOME/include:$C_INCLUDE_PATH"
 #export LIBRARY_PATH="$HOME/lib:$LIBRARY_PATH"
 #export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+
+# Wrapper around make, which covers building different project types, when an
+# actual Makefile isn't present.
+function make {
+    if [[ -e Makefile ]]; then
+        yellow "[make] found Makefile"
+        /usr/bin/make $@
+    else
+        yellow "[make] No Makefile found"
+        if [[ -e setup.py ]]; then
+            yellow "[make] python setup.py build_ext -i"
+            python setup.py build_ext -i
+        else
+            # Compile most-recently modified tex file, if one exists.
+            local tex=`ls -t *.tex 2>/dev/null |head -n1`
+            if [[ -n $tex ]]; then
+                yellow "[make] latexmk $tex"
+                latexmk -pdf $tex
+                local pdf=`echo $tex |sed -e 's/tex$/pdf/'`
+                o $pdf
+            fi
+        fi
+    fi
+}
