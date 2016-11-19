@@ -1,11 +1,12 @@
 #
 # Jump to project directory by name (with flexible matching on path).
 #
-
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
         cd $PROJECTS
+        yellow "Recent projects"
+        cat $COMP_PROJECTS | bymtime | head -n 10
         return
     fi
 
