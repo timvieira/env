@@ -2,18 +2,32 @@
 
 from datetime import datetime
 from path import path
-from sys import stdin, argv
+from sys import stdin, argv, stdout
+from argparse import ArgumentParser
 
-files = list(stdin) if '-' in argv else argv[1:]
+p = ArgumentParser('Sort stream of files by mtimes.')
+p.add_argument('-t',
+               action='store_true',
+               help="Don't print mtime along with file.")
+args = p.parse_args()
+
+files = list(stdin)
 files = map(path, filter(None, map(str.strip, files)))
 
 def t(x):
     return datetime.fromtimestamp(x.mtime)
 
-fs = [(t(x), x) for x in files if x.exists()]
+fs = [(t(x), x) for x in set(files) if x.exists()]
 fs.sort(reverse=True)
 
-if '-t' in argv:
-    print '\n'.join(str(f) for _, f in fs)
-else:
-    print '\n'.join(map('%s\t%s'.__mod__, fs))
+try:
+    if args.t:
+        for _, f in fs:
+            print f
+            stdout.flush()
+    else:
+        for f in fs:
+            print '%s\t%s' % f
+            stdout.flush()
+except IOError:
+    pass
