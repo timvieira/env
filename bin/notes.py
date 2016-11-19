@@ -1,15 +1,23 @@
 #!/usr/bin/env python
-"""
-Searching my notes!
+"""Search my notes!
 
-This script extracts a small amount of metadata: title and tags. The title is
-taken to be the first line of the file. tags are specified in a comment
+Finds notes living all over your hard drive and build an index over them for
+efficient keyword search.
+
+We have some support or fuzzy term matching, which allows for typos in the
+queries and documents.
+
+We also support limited metadata indexing and extraction, including title, tags,
+and modification time.
+
+Many heuristics for title are implemented depending on the filetype.
 
 (#|%|;) tags: tag1 tag2 tag3
 
 TODO:
 
- * add option for listing recently modified files.
+ - add a cleanup option for deleting files which no longer exist (Currently, we
+   have to drop and recreate the index in order to do that.)
 
 """
 
@@ -18,13 +26,33 @@ from datetime import datetime
 from path import path
 from whoosh.index import create_in, open_dir
 from whoosh.fields import Schema, TEXT, ID, DATETIME
-from whoosh.qparser import QueryParser
+from whoosh.qparser import MultifieldParser
 from whoosh.analysis import KeywordAnalyzer
+from whoosh.query import FuzzyTerm
+from whoosh.analysis import STOP_WORDS
 
 from arsenal.terminal import red, cyan, yellow, magenta
 from arsenal.fsutils import find
-from arsenal.iterextras import unique
+from arsenal.iterextras import unique, take
 from arsenal.humanreadable import datestr
+
+
+STOP_WORDS |= frozenset([
+    'which', 'like', 'might', 'and', 'is', 'it', 'an', 'as',
+    'do', 'at', 'have', 'in', 'begin', 'end', 'ell', 'sum', 'sum_',
+    'yet', 'if', 'from', 'for', 'when', 'by', 'to', 'you', 'frac',
+    'varepsilon', 'epsilon', 'min', 'min_', 'max', 'max_',
+    'be', 'we', 'that', 'may', 'not', 'with', 'tbd', 'a', 'on',
+    'your', 'this', 'of', 'us', 'will', 'can', 'the', 'or', 'are',
+])
+
+re_stopwords = re.compile(r'\b(%s)\b\s*' % '|'.join(STOP_WORDS), re.I)
+def remove_stopwords(x):
+    """
+    >>> remove_stopwords('A man saw the boy with his telescope.')
+    'man saw boy his telescope.'
+    """
+    return re_stopwords.sub('', x)
 
 
 from configparser import ConfigParser
@@ -85,6 +113,7 @@ def create():
     os.system('rm -rf %s' % DIRECTORY)
     os.mkdir(DIRECTORY)
     schema = Schema(path = ID(stored=True, unique=True),
+                    filename = TEXT(stored=True),   # filename store as text too.
                     title = TEXT(stored=True),
                     content = TEXT(stored=True),
                     tags = TEXT(stored=True, analyzer=KeywordAnalyzer()),
@@ -110,22 +139,66 @@ def _search(q, limit=None):
     with ix.searcher() as searcher:
 
         if not q:  # empty query
-            for d in sorted(ix.searcher().documents(),
-                            key = lambda x: mtime_if_exists(x['path']),
-                            reverse = 1):
+            for d in take(limit, sorted(ix.searcher().documents(),
+                                        key = lambda x: mtime_if_exists(x['path']),
+                                        reverse = 1)):
                 yield d
 
         else:
-            qp = QueryParser('content', schema=ix.schema)
+            weights = {
+                'title':    7,
+                'tags':     3,
+                'path':     2,
+                'filename': 2,
+                'content':  1,
+            }
+
+            qp = MultifieldParser(fieldnames=weights.keys(),
+                                  fieldboosts=weights,
+                                  termclass=FuzzyTerm,
+                                  schema=ix.schema)
+
+            # Whoosh chokes on queries with stop words, so remove them.
+            q = remove_stopwords(q)
             q = qp.parse(q)
-            for hit in searcher.search(q, limit=limit):
+            hits = list(searcher.search(q, limit=limit))
+            for hit in hits:
                 yield hit
 
+            #additional_terms(hits)
 
-def search(*q):
+
+# TODO: figure out how to expand queries with synonyms and other related terms.
+# For example,
+#   1) "searn" => {"dagger", "lols", "imitation", ...}
+#   1) "ddecomp" => {"dualdecomp", "dual", "decomposition", ...}
+def additional_terms(hits, top=20):
+    import whoosh
+    import numpy as np
+    from collections import Counter
+    from whoosh.scoring import BM25F, Frequency, TF_IDF, MultiWeighting
+
+    s = whoosh.scoring.BM25F()
+    S = MultiWeighting(BM25F(), id=Frequency(), keys=TF_IDF())
+    def score(k):
+        return S.scorer(searcher, 'content', k.lower()).idf * np.log(1 + content[k])
+
+    content = Counter()
+    analyzer = whoosh.analysis.StandardAnalyzer(stoplist=STOP_WORDS)
+
+    for hit in hits:
+        for x in analyzer(hit['content']):
+            content[x.text] += 1
+
+    ix = open_dir(DIRECTORY, NAME)
+    with ix.searcher() as searcher:
+        for s,k in list(sorted([(score(k), k) for k in content]))[-top::]:
+            print '%.1f %s' % (s, k)
+
+
+def search(*args, **kw):
     print
-    for hit in _search(' '.join(q)):
-
+    for hit in _search(*args, **kw):
         mt = mtime_if_exists(hit['path'])
         if mt is None:
             mt = hit['mtime']
@@ -197,6 +270,7 @@ def update():
                               title = title,
                               content = content,
                               mtime = mtime,
+                              filename = ' '.join(re.split('[/\-\._]', d)),
                               tags = tags)
 
 
@@ -241,15 +315,12 @@ def extract_title(d, x=None):
 
     if not title:
         lines = x.split('\n')
-
         # use first (non-shebang) line of the file as title
         title = lines[0]
         for line in lines:
             line = line.strip()
-
             # remove org-mode markup or python doc string.
-            line = re.sub('^(#\+title:|""")', '', line)
-
+            line = re.sub('^(#\+title:|"""|#|\*)', '', line)
             if line:
                 if not line.startswith('#!') and not line.startswith('# -*-'): # skip shebang and encoding line
                     title = line
@@ -258,7 +329,6 @@ def extract_title(d, x=None):
     title = re.sub('\s\s+', ' ', title)
 
     return title.strip()
-
 
 
 def main():
@@ -272,8 +342,13 @@ def main():
                    help='Search for changes and update index.')
     p.add_argument('--files', action='store_true',
                    help='Cache tracked files.')
+    p.add_argument('--limit', type=int, default=5)
+    p.add_argument('-a', action='store_true')
 
     args = p.parse_args()
+
+    if args.a:
+        args.limit = None
 
     if args.files:
         dump_files()
@@ -290,7 +365,10 @@ def main():
         update()
         return
 
-    search(*args.query)
+    if args.limit:
+        print yellow % 'Showing top %s results' % args.limit
+
+    search(' '.join(args.query), limit=args.limit)
 
 
 if __name__ == '__main__':

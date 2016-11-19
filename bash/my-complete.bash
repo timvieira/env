@@ -137,6 +137,7 @@ $vcroots
 
     echo "/home/timv/Dropbox/todo" > $COMP_PROJECTS
     echo "$matches" |ignore-filter \
+        |grep -v '\.skid'          \
         |grep -v pelican-plugins   \
         |grep -v third-party       \
         |grep -v incoming          \

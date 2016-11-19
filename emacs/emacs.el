@@ -73,8 +73,6 @@
 (unless (package-installed-p 'color-theme-sanityinc-tomorrow)
   (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
 
-
-
 ;; highlight URLs in comments/strings
 ;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
 
@@ -84,18 +82,21 @@
 (add-path "")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
+(add-path "site-lisp/cython-mode.el")
+(add-path "site-lisp/flycheck-cython.el")
 ;(add-path "site-lisp/protobuf-mode.el")
 ;(add-path "site-lisp/zimpl-mode.el")
 ;(add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")       ;; TODO: why do I still need this? shouldn't the elpa version suffice?
 ;(add-path "site-lisp/haskell-mode")
-(add-path "site-lisp/cython-mode")
 
 (require 'cython-mode)
+;(require 'flycheck-cython)
+;(add-hook 'cython-mode-hook 'flycheck-mode)
 
-;;(add-path "site-lisp/dyna-mode.el")
-;(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
-;(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
+(add-path "site-lisp/dyna-mode.el")
+(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
+(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
 ;(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
 
 
