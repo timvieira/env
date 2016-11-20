@@ -58,7 +58,8 @@
 ;;    ))
 
 (defun run-make-latex (f)
-  (if (= 1 (shell-command (concat "/home/timv/projects/env/bin/make-latex " f)))
+;  (if (= 1 (shell-command (concat "/home/timv/projects/env/bin/make-latex " f)))
+    (if (= 1 (shell-command (concat "latexmk -pdf " f)))
       (message "make-latex failed")
     (progn
       (delete-other-windows))))
