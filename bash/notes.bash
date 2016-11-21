@@ -11,7 +11,7 @@ function notes {
 
     COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
+    matches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion

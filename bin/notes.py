@@ -16,35 +16,52 @@ Many heuristics for title are implemented depending on the filetype.
 
 TODO:
 
- - add a cleanup option for deleting files which no longer exist (Currently, we
+ - Add a cleanup option for deleting files which no longer exist (Currently, we
    have to drop and recreate the index in order to do that.)
+
+ - Config file
+
+   - Validation
+
+   - Sources should be directories or files.
+
+   - Glob instead of regex?
+
+   - Other options: add things matching a pattern under a specific directory.
 
 """
 
 import re, os, codecs
+from configparser import ConfigParser
 from datetime import datetime
 from path import path
+
+from whoosh.analysis import KeywordAnalyzer, STOP_WORDS
 from whoosh.index import create_in, open_dir
 from whoosh.fields import Schema, TEXT, ID, DATETIME
 from whoosh.qparser import MultifieldParser
-from whoosh.analysis import KeywordAnalyzer
-from whoosh.query import FuzzyTerm
-from whoosh.analysis import STOP_WORDS
+#from whoosh.query import FuzzyTerm
 
 from arsenal.terminal import red, cyan, yellow, magenta
-from arsenal.fsutils import find
 from arsenal.iterextras import unique, take
 from arsenal.humanreadable import datestr
+from arsenal.fsutils import files
 
 
-STOP_WORDS |= frozenset([
-    'which', 'like', 'might', 'and', 'is', 'it', 'an', 'as',
-    'do', 'at', 'have', 'in', 'begin', 'end', 'ell', 'sum', 'sum_',
-    'yet', 'if', 'from', 'for', 'when', 'by', 'to', 'you', 'frac',
-    'varepsilon', 'epsilon', 'min', 'min_', 'max', 'max_',
-    'be', 'we', 'that', 'may', 'not', 'with', 'tbd', 'a', 'on',
-    'your', 'this', 'of', 'us', 'will', 'can', 'the', 'or', 'are',
-])
+config = ConfigParser(allow_no_value=True)
+config.optionxform = unicode       # don't lower case keys
+config.read(path('~/.notesrc').expand())
+
+DIRECTORY = path(config.get('config', 'index')).expand()
+TRACKED = DIRECTORY / 'files'
+NAME = 'index'
+
+
+def extract_content(f):
+    "What file extensions should we extract content from?"
+    return f.ext in {'', '.md', '.py', '.pyx', '.html', '.bib',
+                     '.pxd', '.org', '.tex', '.rst'}
+
 
 re_stopwords = re.compile(r'\b(%s)\b\s*' % '|'.join(STOP_WORDS), re.I)
 def remove_stopwords(x):
@@ -55,20 +72,8 @@ def remove_stopwords(x):
     return re_stopwords.sub('', x)
 
 
-from configparser import ConfigParser
-parser = ConfigParser(allow_no_value=True)
-parser.optionxform = unicode       # don't lower case keys
-parser.read(path('~/.notesrc').expand())
-
-# TODO: config file validation. Sources should be directories or
-# files. Include/exclude should be regular expressions. Add option for glob?
-
-DIRECTORY = path(parser.get('config', 'index')).expand()
-TRACKED = DIRECTORY / 'files'
-NAME = 'index'
-
-
 def dump_files():
+    "Write tracked files to index directory."
     with file(TRACKED, 'wb') as f:
         for x in unique(find_notes()):
             print >> f, x
@@ -76,17 +81,19 @@ def dump_files():
 
 
 def find_notes():
-    for d, _ in sorted(parser.items('sources')):
-        for x in sorted(find(path(d).expand())):
-            if not any(re.match(p, x) for p, _ in parser.items('include')):
+    "Search for notes given the settings in config."
+    for d, _ in sorted(config.items('sources')):
+        for x in sorted(files(path(d).expand())):
+            x = path(x)
+            if not any(re.match(p, x) for p, _ in config.items('include')):
                 continue
-            if any(exclude(p, x) for p, _ in parser.items('exclude')):
+            if any(exclude(p, x) for p, _ in config.items('exclude')):
                 continue
             yield x
 
 
 def exclude(p, x):
-    if p.startswith('%'):  # magic filter function
+    if p.startswith('%'):        # magic filter function
         if magic_filters[p](x):
             return True
     else:
@@ -96,20 +103,20 @@ def exclude(p, x):
 
 def org_export_tex(f):
     "Is `f` a path to an org-mode tex export files?"
-    return (os.path.exists(f) \
-            and f.endswith('.tex') \
-            and any(('Emacs Org-mode version' in line) for line in file(f)))
+    # a tex file with an org file next to it.
+    return f.endswith('.tex') and path(f[:-3] + 'org').exists()
 
 
+# catalog of magic filters
 magic_filters = {
-    '%file_exists': lambda x: not path(x).exists(),
+    '%file_exists': lambda x: not x.exists(),
     '%org_export_tex': org_export_tex,
 }
 
 
 def create():
-    """ Create a new Whoosh index.. """
-    print 'creating new index in directory %s' % DIRECTORY
+    "Create a new Whoosh index."
+    print yellow % 'creating new index in directory %s' % DIRECTORY
     os.system('rm -rf %s' % DIRECTORY)
     os.mkdir(DIRECTORY)
     schema = Schema(path = ID(stored=True, unique=True),
@@ -129,77 +136,45 @@ def drop():
 
 
 def mtime_if_exists(x):
-    p = path(x)
-    return datetime.fromtimestamp(p.mtime) if p.exists() else None
+    "Grab mtime for a file that exists."
+    return datetime.fromtimestamp(x.mtime) if x.exists() else None
+
+
+def ls(limit=None):
+    ix = open_dir(DIRECTORY, NAME)
+    for d in take(limit, sorted(ix.searcher().documents(),
+                                key = lambda x: mtime_if_exists(x['path']),
+                                reverse = 1)):
+        yield d
 
 
 def _search(q, limit=None):
     q = unicode(q.decode('utf8'))
     ix = open_dir(DIRECTORY, NAME)
+    w = {'title': 4, 'tags': 3, 'path': 2, 'filename': 2, 'content': 1}
+    p = MultifieldParser(fieldnames = w,
+                         fieldboosts = w,
+                         #termclass = FuzzyTerm,
+                         schema = ix.schema)
     with ix.searcher() as searcher:
+        # Whoosh chokes on queries with stop words, so remove them.
+        q = remove_stopwords(q)
+        q = p.parse(q)
+        hits = list(searcher.search(q, limit=limit))
+        for hit in hits:
+            yield hit
 
-        if not q:  # empty query
-            for d in take(limit, sorted(ix.searcher().documents(),
-                                        key = lambda x: mtime_if_exists(x['path']),
-                                        reverse = 1)):
-                yield d
-
-        else:
-            weights = {
-                'title':    7,
-                'tags':     3,
-                'path':     2,
-                'filename': 2,
-                'content':  1,
-            }
-
-            qp = MultifieldParser(fieldnames=weights.keys(),
-                                  fieldboosts=weights,
-                                  termclass=FuzzyTerm,
-                                  schema=ix.schema)
-
-            # Whoosh chokes on queries with stop words, so remove them.
-            q = remove_stopwords(q)
-            q = qp.parse(q)
-            hits = list(searcher.search(q, limit=limit))
-            for hit in hits:
-                yield hit
-
-            #additional_terms(hits)
-
-
-# TODO: figure out how to expand queries with synonyms and other related terms.
-# For example,
-#   1) "searn" => {"dagger", "lols", "imitation", ...}
-#   1) "ddecomp" => {"dualdecomp", "dual", "decomposition", ...}
-def additional_terms(hits, top=20):
-    import whoosh
-    import numpy as np
-    from collections import Counter
-    from whoosh.scoring import BM25F, Frequency, TF_IDF, MultiWeighting
-
-    s = whoosh.scoring.BM25F()
-    S = MultiWeighting(BM25F(), id=Frequency(), keys=TF_IDF())
-    def score(k):
-        return S.scorer(searcher, 'content', k.lower()).idf * np.log(1 + content[k])
-
-    content = Counter()
-    analyzer = whoosh.analysis.StandardAnalyzer(stoplist=STOP_WORDS)
-
-    for hit in hits:
-        for x in analyzer(hit['content']):
-            content[x.text] += 1
-
-    ix = open_dir(DIRECTORY, NAME)
-    with ix.searcher() as searcher:
-        for s,k in list(sorted([(score(k), k) for k in content]))[-top::]:
+        for k, s in  searcher.key_terms(docnums=[h.docnum for h in hits],
+                                        fieldname='content',
+                                        numterms=10):
             print '%.1f %s' % (s, k)
 
 
-def search(*args, **kw):
+def search(q, **kw):
+    hits = _search(q, **kw) if q else ls(**kw)
     print
-    for hit in _search(*args, **kw):
-        mt = mtime_if_exists(hit['path'])
+    for hit in hits:
+        mt = mtime_if_exists(path(hit['path']))
         if mt is None:
             mt = hit['mtime']
             mtime_msg = 'no longer exists!'
@@ -207,7 +182,6 @@ def search(*args, **kw):
         else:
             mtime_msg = datestr(mt)
             mtime_msg = magenta % '(%s)' % mtime_msg
-
         print hit['title'].encode('utf-8'), mtime_msg
         print cyan % 'file://%s' % hit['path']
         if hit['tags']:
@@ -216,7 +190,7 @@ def search(*args, **kw):
 
 
 def update():
-    "re-index files which have change."
+    "Re-index files which have changed."
 
     # create index if it doesn't exist
     if not DIRECTORY.exists():
@@ -251,8 +225,10 @@ def update():
 
                 print '[INFO] update:', d
 
-            with codecs.open(d, 'r', encoding='utf8', errors='ignore') as f:
-                content = f.read()
+            content = ''
+            if extract_content(d):
+                with codecs.open(d, 'r', encoding='utf8', errors='ignore') as f:
+                    content = f.read()
 
             if not content.strip():
                 print '[INFO] document empty.'
@@ -274,15 +250,11 @@ def update():
                               tags = tags)
 
 
-def extract_title(d, x=None):
+def extract_title(d, x):
     "Apply heuristics for extracting document titles."
 
     if d.endswith('.ipynb') or d.endswith('.nb'):   # mathematica or jupyter notebook
         return d
-
-    if x is None:
-        with codecs.open(d, 'r', encoding='utf8') as f:
-            x = f.read()
 
     title = None
     if d.endswith('.odp'):
@@ -368,7 +340,8 @@ def main():
     if args.limit:
         print yellow % 'Showing top %s results' % args.limit
 
-    search(' '.join(args.query), limit=args.limit)
+    q = ' '.join(args.query)
+    search(q, limit=args.limit)
 
 
 if __name__ == '__main__':
