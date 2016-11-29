@@ -10,7 +10,7 @@
 
 # grep file path from recursive directory listing
 function f {
-    find $2 -type f |ignore-filter | filter.py $@ #|grep -i "$1"
+    find -type f |ignore-filter | filter.py $@
 }
 
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
