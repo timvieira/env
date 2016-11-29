@@ -97,48 +97,32 @@ function find-repos {
 }
 
 function update {
-
+    sb
     yellow "Updating completions"
 
+    #sudo updatedb
+
     # notes files
-    notes.py --files
-#    notes.py --update
+    n2 --files
 
     # environment files
     find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
-    # project directories
-#    projname=$( echo \
-#        $PROJECTS/*/working \
-#        $PROJECTS/*/*/working \
-#        $PROJECTS/* \
-#        $PROJECTS/blab/* \
-#        $PROJECTS/self/* \
-#        |sed 's/ /\n/g')
-#    echo $projname
-
     # courses
+    presentations=`find $PROJECTS/presentations -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
     courses=`find $PROJECTS/shelf/courses -type d`
-
-    # version controlled project roots -- be sure to strip off hg directories or
-    # else they'll get filtered out
-    #hg_roots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
-    #git_roots=`find $PROJECTS -name '.git' -type d | grep -v incoming | sed 's/\\/\.git$//g'`
-    #vcroots="$hg_roots $git_roots"
-
     vcroots=`find-repos`
-#    vcroots=`echo "$vcroots" |sed 's/ /\n/g'`
 
-    #matches="$projname
-    matches="$courses
+    matches="$presentations
 $vcroots
+$courses
 "
 
     echo "/home/timv/Dropbox/todo" > $COMP_PROJECTS
     echo "$matches" |ignore-filter \
         |grep -v '\.skid'          \
-        |grep -v pelican-plugins   \
+        |grep -v pelican           \
         |grep -v third-party       \
         |grep -v incoming          \
         |grep -v bdslss/reviews    \
