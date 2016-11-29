@@ -28,10 +28,15 @@ function p {
 
     matches=`cat $COMP_PROJECTS`
 
-    #echo "$matches" |filter.py $@
+    echo "$matches" |filter.py $@
 
     matches=`echo "$matches" |filter.py -C $@`
 
+    # TODO: if all matches have a common (nontrivial) directory go to it
+    # instead?
+
+    # TODO: If a directory name is an exact match go to it.
+    
     # TODO: repos with more overlap with name should come first
     # e.g.
     #     $ p pdfhacks
