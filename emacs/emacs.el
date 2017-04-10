@@ -40,24 +40,6 @@
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
 
-;; Note: Install packages early. In some cases late installation is buggy
-;; (apparently the case with org-mode stuff -- must install before we load
-;; customizations)
-(require 'package)
-(package-initialize)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
-(unless (package-installed-p 'scala-mode2)
-  (package-refresh-contents) (package-install 'scala-mode2))
-(unless (package-installed-p 'org-plus-contrib)
-  (package-refresh-contents) (package-install 'org-plus-contrib))
-(unless (package-installed-p 'org)
-  (package-refresh-contents) (package-install 'org))
-(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
-  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
-
-
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
 
@@ -68,6 +50,7 @@
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs/") p)))
 
 (add-path "")
+(add-path "site-lisp/package.el")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
 ;(add-path "site-lisp/protobuf-mode.el")
@@ -76,6 +59,30 @@
 (add-path "site-lisp/org-7.8.03/lisp")       ;; TODO: why do I still need this? shouldn't the elpa version suffice?
 ;(add-path "site-lisp/haskell-mode")
 (add-path "site-lisp/cython-mode")
+
+
+
+
+;; Note: Install packages early. In some cases late installation is buggy
+;; (apparently the case with org-mode stuff -- must install before we load
+;; customizations)
+(require 'package)
+(package-initialize)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+;(unless (package-installed-p 'scala-mode2)
+;  (package-refresh-contents) (package-install 'scala-mode2))
+(unless (package-installed-p 'org-plus-contrib)
+  (package-refresh-contents) (package-install 'org-plus-contrib))
+(unless (package-installed-p 'org)
+  (package-refresh-contents) (package-install 'org))
+;(unless (package-installed-p 'color-theme)
+;  (package-refresh-contents) (package-install 'color-theme))
+;(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
+;  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
+
+
 
 (require 'cython-mode)
 
@@ -618,18 +625,18 @@
 
 ; Note: We load theme late so that we tell emacs that it's "safe," which happens
 ; somewhere in custom-set-variables.
-(require 'color-theme)
-(load-theme 'sanityinc-tomorrow-eighties)
+;(require 'color-theme)
+;(load-theme 'sanityinc-tomorrow-eighties)
 
 
 
-(require 'langtool)
-(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
-      langtool-mother-tongue "en"
-      langtool-disabled-rules '("WHITESPACE_RULE"
-                                "EN_UNPAIRED_BRACKETS"
-                                "COMMA_PARENTHESIS_WHITESPACE"
-                                "EN_QUOTES"))
+;(require 'langtool)
+;(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
+;      langtool-mother-tongue "en"
+;      langtool-disabled-rules '("WHITESPACE_RULE"
+;                                "EN_UNPAIRED_BRACKETS"
+;                                "COMMA_PARENTHESIS_WHITESPACE"
+;                                "EN_QUOTES"))
 
 (defun ansi-colors-show ()
   (interactive)

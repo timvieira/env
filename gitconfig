@@ -6,7 +6,7 @@ email = tim.f.vieira@gmail.com
 diff = always
 
 [push]
-default = simple
+#default = simple
 
 [diff]
 tool = meld
