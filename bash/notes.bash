@@ -60,15 +60,17 @@ function notes-cd {
 
     #notes.py $@
 
-    if [[ "$retcode" -eq "0" ]]; then
-        # feeling lucky, so we'll open the file for you.
-
-        # drop color codes
-        match=`echo "$matches" |pysed '\\033\[.*?m' '' `
-
-        cd $match
-
-    else
-        yellow "pick a file or be more specific."
+    if [[ "$retcode" -ne "0" ]]; then
+        # We're feeling lucky, so we'll cd into that directory.
+        yellow "Multiple hits, taking most recently modified."
     fi
+
+    # Take the top hit
+    matches=`echo "$matches" |head -n1`
+
+    # drop color codes
+    match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+
+    cd $match
+
 }
