@@ -99,8 +99,8 @@ function find-repos {
 function update {
     sb
     yellow "Updating completions"
-
-    #sudo updatedb
+    yellow "# sudo updatedb"
+    sudo updatedb
 
     # notes files
     n2 --files
@@ -113,6 +113,7 @@ function update {
     presentations=`find $PROJECTS/presentations -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
     courses=`find $PROJECTS/shelf/courses -type d`
     vcroots=`find-repos`
+    notes=`find $PROJECTS/notes -type d`
 
     matches="$presentations
 $vcroots
