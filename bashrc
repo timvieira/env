@@ -103,7 +103,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\)$' \
-      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
+      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|\.fls\|\.fdb_latexmk\|third-party/\|results.*/\)'
 }
 
 #______________________________________________________________________________
@@ -253,21 +253,23 @@ export PATH="/home/timv/anaconda/bin:$PATH"
 # actual Makefile isn't present.
 function make {
     if [[ -e Makefile ]]; then
-        yellow "[make] found Makefile"
+        #yellow "[make] found Makefile"
         /usr/bin/make $@
     else
-        yellow "[make] No Makefile found"
+        #yellow "[make] No Makefile found"
         if [[ -e setup.py ]]; then
-            yellow "[make] python setup.py build_ext -i"
+            #yellow "[make] python setup.py build_ext -i"
             python setup.py build_ext -i
         else
             # Compile most-recently modified tex file, if one exists.
             local tex=`ls -t *.tex 2>/dev/null |head -n1`
             if [[ -n $tex ]]; then
-                yellow "[make] latexmk $tex"
-                latexmk -pdf $tex
-                local pdf=`echo $tex |sed -e 's/tex$/pdf/'`
-                o $pdf
+                #yellow "[make] latexmk $tex"
+                latexmk -interaction=nonstopmode -pdf $tex
+                if [[ "$#" -eq 0 ]]; then
+                     local pdf=`echo $tex |sed -e 's/tex$/pdf/'`
+                     o $pdf
+                fi
             fi
         fi
     fi
