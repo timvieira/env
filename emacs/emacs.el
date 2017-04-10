@@ -62,22 +62,6 @@
   (el-get-elpa-build-local-recipes))
 
 
-<<<<<<< HEAD
-; What to do if visiting a symbolic link to a file under version control.
-(setq vc-follow-symlinks t)
-=======
-(require 'package)
-(package-initialize)
-(unless (package-installed-p 'scala-mode2)
-  (package-refresh-contents) (package-install 'scala-mode2))
-(unless (package-installed-p 'org-plus-contrib)
-  (package-refresh-contents) (package-install 'org-plus-contrib))
-(unless (package-installed-p 'org)
-  (package-refresh-contents) (package-install 'org))
-(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
-  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
->>>>>>> fa3d90501e9b360fe9c546474a0ce3113f8ebaea
-
 ;; highlight URLs in comments/strings
 ;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
 
@@ -113,10 +97,10 @@
   (package-refresh-contents) (package-install 'org-plus-contrib))
 (unless (package-installed-p 'org)
   (package-refresh-contents) (package-install 'org))
-;(unless (package-installed-p 'color-theme)
-;  (package-refresh-contents) (package-install 'color-theme))
-;(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
-;  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
+(unless (package-installed-p 'color-theme)
+  (package-refresh-contents) (package-install 'color-theme))
+(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
+  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
 
 
 
@@ -630,11 +614,6 @@
 ;(require 'color-theme)
 ;(load-theme 'sanityinc-tomorrow-eighties)
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> fa3d90501e9b360fe9c546474a0ce3113f8ebaea
 ;(require 'langtool)
 ;(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
 ;      langtool-mother-tongue "en"
@@ -668,3 +647,7 @@
         ))
 
 (pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append
+
+
+(require 'color-theme)
+(load-theme 'sanityinc-tomorrow-eighties)
