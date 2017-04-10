@@ -16,7 +16,7 @@
 ~/projects/blab/PredPatt/paper
 ~/projects/blab/kb-summarization
 ~/projects/gbo
-~/.skid/marks
+##~/.skid/marks
 
 [exclude]
 .*\.pdf$
