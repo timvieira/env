@@ -67,7 +67,7 @@ _complete_vpy ()
 
 
 
-# TODO: clever things to keep things up-to-date?
+# TODO: clever things to keep these files up-to-date?
 COMP_ENV=~/.completions/env
 COMP_NOTES=~/projects/notes/.index/files
 COMP_PROJECTS=~/.completions/projects
@@ -86,58 +86,57 @@ ensuredirs \
     $COMP_NOTES \
     $COMP_PROJECTS
 
-function update {
+#function find-repos {
+#   find $1 -name '.hg' -type d | sed 's/\\/\.hg$//g'
+#   find $1 -name '.git' -type d | sed 's/\\/\.git$//g'
+#}
 
+function find-repos {
+    locate '*/.hg' | sed 's/\/\.hg$//g'
+    locate '*/.git' | sed 's/\/\.git$//g'
+}
+
+function update {
+    sb
     yellow "Updating completions"
+    yellow "# sudo updatedb"
+    sudo updatedb
 
     # notes files
-    notes.py --files
-    notes.py --update
+    n2 --files
 
     # environment files
     find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
-    # project directories
-    projname=$( echo \
-        $PROJECTS/*/working \
-        $PROJECTS/*/*/working \
-        $PROJECTS/* \
-        $PROJECTS/blab/* \
-        $PROJECTS/self/* \
-        |sed 's/ /\n/g')
-
     # courses
-    courses=`find $PROJECTS/courses -type d`
+    presentations=`find $PROJECTS/presentations -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
+    courses=`find $PROJECTS/shelf/courses -type d`
+    vcroots=`find-repos`
+    notes=`find $PROJECTS/notes -type d`
 
-    # version controlled project roots -- be sure to strip off hg directories or
-    # else they'll get filtered out
-    vcroots=`find $PROJECTS -name '.hg' -type d | grep -v incoming | sed 's/\\/\.hg$//g'`
-    #locate "*/.hg"
-    #locate "*/.git"
-
-    # TODO: why did I have this filter "grep -v '/projects/notes/'" above?
-
-    # sort vc roots so that prefixes come first
-    vcroots=`echo "$vcroots" |sort`
-
-    # everything else
-    #everythingelse=`find $PROJECTS -type d`
-
-    matches="$projname
-$courses
+    matches="$presentations
 $vcroots
-$everythingelse"
+$courses
+"
 
     echo "/home/timv/Dropbox/todo" > $COMP_PROJECTS
     echo "$matches" |ignore-filter \
+        |grep -v '\.skid'          \
+        |grep -v pelican           \
+        |grep -v third-party       \
+        |grep -v incoming          \
         |grep -v bdslss/reviews    \
         |grep -v '/data/'          \
         |grep -v hw7-xfst/xfsm_api \
         |grep -v '~$'              \
-        >> $COMP_PROJECTS
+        |bymtime -t >> $COMP_PROJECTS
 }
 
+
+#function unique-lines {
+#    linepy 'z=set()' 'z.add(line)' 'print "\n".join(sorted(z))'
+#}
 
 # TODO: create a version of hist complete which uses dir-history.
 

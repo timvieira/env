@@ -1,14 +1,8 @@
 [MASTER]
 
-# Specify a configuration file.
-#rcfile=
-
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
 #init-hook=
-
-# Profiled execution.
-profile=no
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
@@ -41,7 +35,7 @@ load-plugins=
 disable=W0142,W0232,W0212,C0103,C,R,W1401,E1103,using-constant-test
 
 # TODO: temporary patch to avoid false report of no-name-in-module for numpy
-extension-pkg-whitelist=numpy,path
+extension-pkg-whitelist= #numpy,path
 
 [REPORTS]
 
@@ -154,9 +148,6 @@ indent-string='    '
 
 [BASIC]
 
-# Required attributes for module, separated by a comma
-required-attributes=
-
 # List of builtins function names that should not be used, separated by a comma
 bad-functions=
 
@@ -208,10 +199,6 @@ docstring-min-length=-1
 
 
 [CLASSES]
-
-# List of interface methods to ignore, separated by a comma. This is used for
-# instance to not check methods defines in Zope's Interface base class.
-ignore-iface-methods=isImplementedBy,deferred,extends,names,namesAndDescriptions,queryDescriptionFor,getBases,getDescriptionFor,getDoc,getName,getTaggedValue,getTaggedValueTags,isEqualOrExtendedBy,setTaggedValue,isImplementedByInstancesOf,adaptWith,is_implemented_by
 
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods=__init__,__new__,setUp

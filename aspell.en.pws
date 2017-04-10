@@ -1,4 +1,4 @@
-personal_ws-1.1 en 595 
+personal_ws-1.1 en 626 
 nonhomogeneous
 ANF
 google
@@ -6,6 +6,7 @@ tuples
 Multi
 eigenvectors
 analytics
+recency
 subgraphs
 API
 bulleted
@@ -24,6 +25,7 @@ collineation
 VoCRF
 wallclock
 morphotactics
+aggregands
 transduction
 Domingos
 canonicalization
@@ -50,6 +52,7 @@ nonnegative
 CKY
 preconditioner
 repropagated
+analytical
 Levenshtein
 newswire
 timeline
@@ -67,10 +70,12 @@ DNF
 infeasible
 multimodal
 DAgger
+recalibration
 optimizers
 Kinect
 modularity
 backchaining
+heldout
 Bagnell
 determinantal
 centroid
@@ -83,6 +88,7 @@ timv
 nonlinearity
 frequentists
 mentorship
+memoize
 resample
 ICML
 minibatch
@@ -97,6 +103,7 @@ anaphora
 subdifferentiable
 webpage
 renormalize
+geegaws
 noncommutativity
 ERM
 satisfiability
@@ -136,6 +143,7 @@ subproblems
 EMNLP
 SampleRank
 regex
+Filardo
 BUGFIX
 instantiation
 Rastogi
@@ -148,11 +156,13 @@ parameterizing
 nondeterministically
 uninstalled
 nondifferentiable
+unsatisfiable
 segmentations
 nondeterministic
 precomputation
 todo
 coindexing
+ergodic
 ILP
 combinatorial
 Hoeffding
@@ -177,6 +187,7 @@ online
 wildcard
 sigmoidal
 defeasible
+memoizing
 subconstituents
 Prefuse
 Spirakis
@@ -255,6 +266,7 @@ summand
 approximators
 parameterizes
 gmail
+POMDP
 minima
 deterministically
 acyclicity
@@ -289,6 +301,7 @@ RANSAC
 hypernym
 sidenote
 Rao
+satisfiable
 iteratively
 optimality
 invertible
@@ -300,7 +313,9 @@ vowpal
 nonstationary
 overfitting
 Sobel
+recursing
 intuiton
+granularities
 clsp
 canonicalized
 Yanif
@@ -336,6 +351,7 @@ piecewise
 scala
 hypernyms
 covariates
+cardinality
 nonparametrics
 cloze
 reachability
@@ -349,10 +365,11 @@ treebank
 Gricean
 neuroscientists
 parametrized
-Nonlinearities
+nonlinearities
 overcounting
 http
 reweighting
+aggregand
 Jiarong's
 TimeML
 parameterization
@@ -399,10 +416,12 @@ UMD
 counterfactuals
 Bodenstab's
 SVM
+nonstationarity
 overfit
 abductive
 subsumption
 Renduchintala
+dynabase
 jammer
 bijective
 Bodyweight
@@ -423,6 +442,7 @@ backpropagation
 variational
 uncentered
 scalability
+representable
 REPL
 extensibility
 subsequences
@@ -461,6 +481,7 @@ Wishlist
 PSDP
 pragma
 thresholding
+unifications
 submatrix
 adjoint
 precomputed
@@ -504,6 +525,7 @@ Hobbsian
 binarization
 Ew
 incrementing
+memoizes
 resamples
 recurse
 multiobjective
@@ -538,19 +560,24 @@ UMass
 autodiff
 neuralnets
 backpropagate
+datastructures
 Tetris
 canonicalize
+Fenwick
 unbinarize
 subgradients
 nand
 nonsingularity
+covariate
 RL
 thresholded
 nullary
+Kahan
 Mathematica
 monotonicity
 MERT
 adjoints
+adaptivity
 uninstall
 versa
 subvector
@@ -573,17 +600,19 @@ binarizing
 nominalization
 subderivations
 exponentiating
+recomputation
 matchings
 argmin
 Bottou's
 elisp
+recalibrated
 Bottou
 changeprop's
 substrings
 substring
 changeprop
 preterminals
-Vectorization
+vectorization
 acyclic
 subgraph
 suboptimal
@@ -594,3 +623,4 @@ projective
 unbiasedness
 monads
 uncommenting
+lookahead

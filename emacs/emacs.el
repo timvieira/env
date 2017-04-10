@@ -30,7 +30,6 @@
 
 ;; TODO: easily search google for word-at-point or phrase-in-region
 
-
 ;; speed-dial
 (global-unset-key [f3])
 (global-set-key [f3] '(lambda() (interactive) (set-buffer (find-file "~/.emacs.el"))))
@@ -39,9 +38,45 @@
 (global-unset-key [f4])
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
 
-
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)
+
+
+;; Now install el-get at the very first
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch
+          ;; do not build recipes from emacswiki due to poor quality and
+          ;; documentation
+          el-get-install-skip-emacswiki-recipes)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  ;; build melpa packages for el-get
+  (el-get-install 'package)
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (el-get-elpa-build-local-recipes))
+
+
+<<<<<<< HEAD
+; What to do if visiting a symbolic link to a file under version control.
+(setq vc-follow-symlinks t)
+=======
+(require 'package)
+(package-initialize)
+(unless (package-installed-p 'scala-mode2)
+  (package-refresh-contents) (package-install 'scala-mode2))
+(unless (package-installed-p 'org-plus-contrib)
+  (package-refresh-contents) (package-install 'org-plus-contrib))
+(unless (package-installed-p 'org)
+  (package-refresh-contents) (package-install 'org))
+(unless (package-installed-p 'color-theme-sanityinc-tomorrow)
+  (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
+>>>>>>> fa3d90501e9b360fe9c546474a0ce3113f8ebaea
 
 ;; highlight URLs in comments/strings
 ;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
@@ -53,12 +88,13 @@
 (add-path "site-lisp/package.el")
 (add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
+(add-path "site-lisp/cython-mode.el")
+(add-path "site-lisp/flycheck-cython.el")
 ;(add-path "site-lisp/protobuf-mode.el")
 ;(add-path "site-lisp/zimpl-mode.el")
 ;(add-path "site-lisp/writegood-mode.el")
 (add-path "site-lisp/org-7.8.03/lisp")       ;; TODO: why do I still need this? shouldn't the elpa version suffice?
 ;(add-path "site-lisp/haskell-mode")
-(add-path "site-lisp/cython-mode")
 
 
 
@@ -85,10 +121,12 @@
 
 
 (require 'cython-mode)
+;(require 'flycheck-cython)
+;(add-hook 'cython-mode-hook 'flycheck-mode)
 
-;;(add-path "site-lisp/dyna-mode.el")
-;(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
-;(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
+(add-path "site-lisp/dyna-mode.el")
+(autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
+(add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
 ;(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
 
 
@@ -156,9 +194,9 @@
 ;(blink-cursor-mode 0)
 
 ;; TODO: evaluation period. Not sure how useful this is.
-(add-path "site-lisp/expand-region/")
-(require 'expand-region)  ; https://github.com/magnars/expand-region.el/
-(global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
+;(add-path "site-lisp/expand-region/")
+;(require 'expand-region)  ; https://github.com/magnars/expand-region.el/
+;(global-set-key (kbd "C-=") 'er/expand-region)  ; todo: add to keys section
 
 ;; maximize screen real estate
 (tool-bar-mode -1)
@@ -289,9 +327,6 @@
       scroll-preserve-screen-position 1
 )
 
-;; TODO: does this make hippie expand more usable?
-(delete 'try-expand-line hippie-expand-try-functions-list)
-(delete 'try-expand-list hippie-expand-try-functions-list)
 
 ;;; ido: "Interactively do" things (switch buffers, open files)
 (require 'ido)
@@ -440,7 +475,7 @@
   )
 
   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
-  (load-library "matlab")
+  ;(load-library "matlab")
 
   (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
   (setq auto-mode-alist (cons '("\\.\\(md\\|markdown\\)" . markdown-mode) auto-mode-alist))
@@ -498,15 +533,6 @@
 ;  'executable-make-buffer-file-executable-if-script-p)
 
 
-
-;; http://jblevins.org/projects/deft/
-(when (require 'deft nil 'noerror)
-   (setq deft-extension "org"
-         deft-directory "~/projects/notes/"
-         deft-text-mode 'org-mode)
-   (global-set-key (kbd "<f8>") 'deft))
-
-
 ;;------------------------------------------------------------------------------
 
 
@@ -541,28 +567,6 @@
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
-; '(vc-annotate-background nil)
-; '(vc-annotate-color-map
-;   (quote
-;    ((20 . "#c82829")
-;     (40 . "#f5871f")
-;     (60 . "#eab700")
-;     (80 . "#718c00")
-;     (100 . "#3e999f")
-;     (120 . "#4271ae")
-;     (140 . "#8959a8")
-;     (160 . "#c82829")
-;     (180 . "#f5871f")
-;     (200 . "#eab700")
-;     (220 . "#718c00")
-;     (240 . "#3e999f")
-;     (260 . "#4271ae")
-;     (280 . "#8959a8")
-;     (300 . "#c82829")
-;     (320 . "#f5871f")
-;     (340 . "#eab700")
-;     (360 . "#718c00"))))
-; '(vc-annotate-very-old-color nil)
  '(visible-cursor nil))
 
 (custom-set-faces
@@ -574,8 +578,6 @@
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
  '(flymake-errline ((((class color)) (:underline "red"))))
  '(flymake-warnline ((((class color)) (:underline "yellow4")))))
-
-
 
 ;; <INDENTING TEXT>
 ;;   Code copied from:  http://www.emacswiki.org/emacs/IndentingText
@@ -628,8 +630,11 @@
 ;(require 'color-theme)
 ;(load-theme 'sanityinc-tomorrow-eighties)
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> fa3d90501e9b360fe9c546474a0ce3113f8ebaea
 ;(require 'langtool)
 ;(setq langtool-language-tool-jar "/home/timv/Downloads/LanguageTool-2.9/languagetool-commandline.jar"
 ;      langtool-mother-tongue "en"
@@ -643,5 +648,23 @@
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 
+
+;; TODO: does this make hippie expand more usable?
+;(delete 'try-expand-line hippie-expand-try-functions-list)
+;(delete 'try-expand-list hippie-expand-try-functions-list)
+
+
+;; hippie expand is dabbrev expand on steroids
+(setq hippie-expand-try-functions-list
+      '(try-expand-dabbrev               ; any word that starts like this (in this buffer)
+        try-expand-dabbrev-all-buffers   ; any word that starts like this (in any buffer)
+        ;try-expand-dabbrev-from-kill
+        try-expand-whole-kill            ; kill ring entry that starts like this one [added]
+        try-expand-all-abbrevs           ; local abbrev table, then global, then other abbrev tables
+        try-expand-list                  ; delimited list from elsewhere (in this buffer)
+        try-expand-line                  ; line that starts just like this one (in this buffer)
+        try-complete-file-name-partially ; partial filename completion (as far as unique) [added]
+        try-complete-file-name           ; any filename that starts like this
+        ))
 
 (pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append

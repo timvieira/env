@@ -1,11 +1,12 @@
 #
 # Jump to project directory by name (with flexible matching on path).
 #
-
 function p {
     # calling with no arguments lands you in the projects directory.
     if [[ "$#" -eq 0 ]]; then
         cd $PROJECTS
+        yellow "Recent projects"
+        cat $COMP_PROJECTS | bymtime | head -n 10
         return
     fi
 
@@ -27,10 +28,15 @@ function p {
 
     matches=`cat $COMP_PROJECTS`
 
-    #echo "$matches" |filter.py $@
+    echo "$matches" |filter.py $@
 
     matches=`echo "$matches" |filter.py -C $@`
 
+    # TODO: if all matches have a common (nontrivial) directory go to it
+    # instead?
+
+    # TODO: If a directory name is an exact match go to it.
+    
     # TODO: repos with more overlap with name should come first
     # e.g.
     #     $ p pdfhacks

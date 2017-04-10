@@ -11,7 +11,7 @@ function notes {
 
     COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES |bymtime - |cut -f2 |~/projects/env/bin/filter.py $@`
+    matches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion
@@ -51,7 +51,7 @@ function notes-cd {
 
     COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES | xargs dirname |sort |uniq |bymtime - |cut -f2 |~/projects/env/bin/filter.py $@`
+    matches=`cat $COMP_NOTES | xargs dirname |sort |uniq |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion
@@ -60,15 +60,17 @@ function notes-cd {
 
     #notes.py $@
 
-    if [[ "$retcode" -eq "0" ]]; then
-        # feeling lucky, so we'll open the file for you.
-
-        # drop color codes
-        match=`echo "$matches" |pysed '\\033\[.*?m' '' `
-
-        cd $match
-
-    else
-        yellow "pick a file or be more specific."
+    if [[ "$retcode" -ne "0" ]]; then
+        # We're feeling lucky, so we'll cd into that directory.
+        yellow "Multiple hits, taking most recently modified."
     fi
+
+    # Take the top hit
+    matches=`echo "$matches" |head -n1`
+
+    # drop color codes
+    match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+
+    cd $match
+
 }

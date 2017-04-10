@@ -1,24 +1,26 @@
 [include]
-.*\.(org|tex|md|py|nb|ipynb|odp)$
+.*\.(org|tex|md|py|pyx|pxd|nb|ipynb|odp)$
 .*\\b(TODO|NOTES|LOG|README)\\b.*
 
 [sources]
 ~/projects/notes
-~/projects/papers
+~/projects/presentations/papers
 ~/shelf/tetris/thesis
 ~/projects/temporal_ordering/write
 ~/projects/ddecomp-bp/
 ~/projects/blog/content
-~/projects/courses
-~/projects/same-size-word-o-nyms
+~/projects/shelf/courses
+~/projects/justified-variables
 ~/projects/ldp/write/working
 ~/Dropbox/todo
 ~/projects/blab/PredPatt/paper
 ~/projects/blab/kb-summarization
+~/projects/gbo
+##~/.skid/marks
 
 [exclude]
-.*\.pdf
-.*~
+.*\.pdf$
+.*~$
 \.hg
 .*\.log$
 timv\.tex$

@@ -103,7 +103,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\)$' \
-      |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|third-party/\|results.*/\)'
+      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|\.fls\|\.fdb_latexmk\|third-party/\|results.*/\)'
 }
 
 #______________________________________________________________________________
@@ -229,6 +229,7 @@ function _cpufreak {
     cat /proc/cpuinfo |grep MHz
 }
 
+alias cpuinfo='cat /proc/cpuinfo |grep MHz'
 alias cpufreak='_cpufreak performance'
 alias cpufreak-performance='_cpufreak performance'
 alias cpufreak-powersave='_cpufreak powersave'
@@ -239,3 +240,37 @@ alias bibgrep="locate '*.bib' |xargs ack -i"
 
 # added by Anaconda2 4.1.0 installer
 export PATH="/home/timv/anaconda/bin:$PATH"
+
+# Standard places to do local install (Chandler's convention)
+#export PATH="$HOME/.local/bin:$PATH"
+#export PATH="$HOME/bin:$PATH"
+#export CPLUS_INCLUDE_PATH="$HOME/include:$CPLUS_INCLUDE_PATH"
+#export C_INCLUDE_PATH="$HOME/include:$C_INCLUDE_PATH"
+#export LIBRARY_PATH="$HOME/lib:$LIBRARY_PATH"
+#export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+
+# Wrapper around make, which covers building different project types, when an
+# actual Makefile isn't present.
+function make {
+    if [[ -e Makefile ]]; then
+        #yellow "[make] found Makefile"
+        /usr/bin/make $@
+    else
+        #yellow "[make] No Makefile found"
+        if [[ -e setup.py ]]; then
+            #yellow "[make] python setup.py build_ext -i"
+            python setup.py build_ext -i
+        else
+            # Compile most-recently modified tex file, if one exists.
+            local tex=`ls -t *.tex 2>/dev/null |head -n1`
+            if [[ -n $tex ]]; then
+                #yellow "[make] latexmk $tex"
+                latexmk -interaction=nonstopmode -pdf $tex
+                if [[ "$#" -eq 0 ]]; then
+                     local pdf=`echo $tex |sed -e 's/tex$/pdf/'`
+                     o $pdf
+                fi
+            fi
+        fi
+    fi
+}
