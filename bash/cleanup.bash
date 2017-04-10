@@ -42,6 +42,7 @@ function org-clean {
 TEX_CRUFT="log aux blg bbl dvi fls fdb_latexmk out"
 function tex-clean {
     remove-exts-associated-with-ext tex $TEX_CRUFT
+    rm -f pdflatex*.fls
 }
 
 function cython-clean {
