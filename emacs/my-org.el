@@ -5,8 +5,8 @@
 (require 'org)
 ;(require 'ox-publish)
 ;(require 'ox-latex)
-(require 'org-publish)
-(require 'org-latex)
+;(require 'org-publish)
+;(require 'org-latex)
 
 ;; -- Display images in org mode
 ;; enable image mode first
@@ -46,7 +46,7 @@
 (add-to-list 'org-export-latex-classes
              '("article"
 "
-\\documentclass[pdftex, a4paper, 12pt, openbib, ]{article}
+\\documentclass[pdftex, 12pt, openbib, ]{article}
 \\input{/home/timv/projects/env/timv}
 "
 
@@ -67,8 +67,11 @@
 )
 
 
+;(fset 'my-org-export-pdf
+;      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
+
 (fset 'my-org-export-pdf
-      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t return ?p])
+      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t ?- ?d ?i ?s ?p ?a ?t ?c ?h return ?l ?o])
 
 ;(fset 'my-org-export-pdf
 ;      [?\M-x ?o ?r ?g ?- ?e ?x ?p ?o ?r ?t ?- ?d ?i ?s ?p ?a ?t ?c ?h return ?l ?l])
