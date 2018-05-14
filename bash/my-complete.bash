@@ -99,28 +99,42 @@ function find-repos {
 function update {
     sb
     yellow "Updating completions"
-    yellow "# sudo updatedb"
+
+    # global indexing
+    yellow "# updatedb (requires sudo)"
     sudo updatedb
 
-    # notes files
+    # notes
+    yellow "# n2 files"
+    n2 --update
     n2 --files
 
-    # environment files
+    # environment
+    yellow "# env files"
     find $ENV |ignore-filter |grep -v README |grep -v 'site-lisp' > $COMP_ENV
     ls -x $ENV/emacs/*.el >> $COMP_ENV
 
-    # courses
-    presentations=`find $PROJECTS/presentations -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
+    # projects
+    yellow "# projects files"
+    list-projects > $COMP_PROJECTS
+
+    yellow "# done"
+}
+
+# TODO: use .projectsrc
+function list-projects {
+    presentations=`find $PROJECTS/presentations -maxdepth 2 -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
     courses=`find $PROJECTS/shelf/courses -type d`
     vcroots=`find-repos`
-    notes=`find $PROJECTS/notes -type d`
+    #notes=`find $PROJECTS/notes -type d`
 
+    # courses, presentations, repos
     matches="$presentations
 $vcroots
 $courses
 "
 
-    echo "/home/timv/Dropbox/todo" > $COMP_PROJECTS
+    echo "/home/timv/Dropbox/todo"
     echo "$matches" |ignore-filter \
         |grep -v '\.skid'          \
         |grep -v pelican           \
@@ -130,7 +144,7 @@ $courses
         |grep -v '/data/'          \
         |grep -v hw7-xfst/xfsm_api \
         |grep -v '~$'              \
-        |bymtime -t >> $COMP_PROJECTS
+        |bymtime -t
 }
 
 
