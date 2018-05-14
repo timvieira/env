@@ -42,7 +42,7 @@ CODE="
 import re, sys, os
 from collections import *
 from pprint import *
-from path import path
+from path import Path as path
 try:
     from arsenal.terminal import *
 except ImportError:
