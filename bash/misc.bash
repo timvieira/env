@@ -3,6 +3,8 @@
 # make common tasks easier.
 #
 
+export PATH="/home/timv/projects/latex2unicode/bin:$PATH"
+
 function graphviz {
     out=$1.svg
     green output file: $out
@@ -20,8 +22,11 @@ function o {
 alias tetris="shutup-and-disown google-chrome $ENV/tetris.html 2>/dev/null"
 
 function pkill9 {
-  ps aux |grep "$@"
-  kill -9 `pgrep $@`
+    # Skip the grep command
+    ps aux |grep -v grep |grep "$@"
+    pids=`ps aux |grep -v grep |grep "$@" |linepy 'ids=[]' 'ids.append(split[1])' 'print " ".join(ids)'`
+    echo "$pids"
+    kill -9 $pids
 }
 
 alias poweroff-display='sleep 1 && xset dpms force off'
@@ -86,6 +91,13 @@ function blue   { echo -e "\e[34m$@\e[0m"; }
 function purple { echo -e "\e[35m$@\e[0m"; }
 function cyan   { echo -e "\e[36m$@\e[0m"; }
 
+function bright_red    { echo -e "\e[31;1m$@\e[0m"; }
+function bright_yellow { echo -e "\e[33;1m$@\e[0m"; }
+function bright_green  { echo -e "\e[32;1m$@\e[0m"; }
+function bright_blue   { echo -e "\e[34;1m$@\e[0m"; }
+function bright_purple { echo -e "\e[35;1m$@\e[0m"; }
+function bright_cyan   { echo -e "\e[36;1m$@\e[0m"; }
+
 # kill a process after a number of seconds
 # usage: doalarm <seconds to wait> program arg arg ...
 function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
@@ -102,4 +114,40 @@ function ack-pdf {
             echo
         fi
     done
+}
+
+
+function pdf-to-svg {
+    if [[ "$#" -ne "1" ]]; then
+        echo "pdf-to-svg <pdf>"
+        return
+    fi
+    inkscape --without-gui --file="$1" --export-plain-svg="$1.svg"
+}
+
+function pdf-to-png {
+    if [[ "$#" -ne "1" ]]; then
+        echo "pdf-to-png <pdf>"
+        return
+    fi
+    gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png256 -r300 -dTextAlphaBits=4 -o "$1_%04d.png" -f "$1"
+}
+
+
+function meld-nocolor {
+    if [[ "$#" -ne "2" ]]; then
+        echo "Error: $0 expected two files as input."
+        return
+    fi
+
+    local A=/tmp/`basename "$1"`
+    local B=/tmp/`basename "$2"`
+    cat "$1" | nocolor > "$A"
+    cat "$2" | nocolor > "$B"
+
+    echo "writing nocolor versions of each file to temp files"
+    echo "$1 -> $A"
+    echo "$2 -> $B"
+
+    meld "$A" "$B"
 }
