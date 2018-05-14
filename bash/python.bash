@@ -4,7 +4,7 @@
 
 # ack thru all the python code on my hard drive
 function pysearch {
-    locate -0 '*.py' |xargs -0 ack --color --group "$@"
+    locate -0 '*.py' |xargs -0 ack --ignore-case --color --group "$@"
 }
 
 # Show pythonpath
@@ -26,6 +26,8 @@ function cython-a {
 }
 
 
+# This version runs python with cProfile enabled and then calls the gprof
+# visualizer.
 function pyprof-callgraph {
 
   name="/tmp/pyprof-callgraph"
@@ -33,8 +35,20 @@ function pyprof-callgraph {
   rm -f "$name.pstats"
   rm -f "$name.svg"
 
+  # Run python with cprofile enabled
   python -m cProfile -o "$name.pstats" "$@"
-  gprof2dot.py -f pstats "$name.pstats" | dot -Tsvg -o "$name.svg"
+  red "wrote results to $name.pstats"
+
+  # Call gprof visualization tool.
+  gprof-viz "$name.pstats"
+}
+
+
+# gprof call-graph visualization.
+function gprof-viz {
+  local name="$1"
+
+  gprof2dot.py -f pstats "$1" | dot -Tsvg -o "$name.svg"
   shutup-and-disown google-chrome "$name.svg"
 
   echo
@@ -48,6 +62,6 @@ function pyprof-callgraph {
 |  total number of self calls      |
 +----------------------------------+
 "
-  red "wrote results to $name.pstats and $name.svg"
+  red "wrote results to $name.svg"
 
 }
