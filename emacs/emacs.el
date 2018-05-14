@@ -290,6 +290,9 @@
 (setq c-basic-offset 2)  ;; timv: do I need this?
 
 ;; Column width (used in longlines-mode)
+; [2018-05-11 Fri] Longlines-mode is obsolete according to emacs wiki - we're
+; now supposed to use visual-line-mode)
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 (setq-default auto-fill-mode 1
               fill-column 80)
 
@@ -386,6 +389,7 @@
 
   (global-set-key "\C-b" 'goto-matching-paren)
   (global-set-key (kbd "s-q") '(lambda () (interactive) (whitespace-cleanup) (message "whitespace-cleanup")))
+  ;(global-set-key (kbd "s-q") '(lambda () (interactive) (message "whitespace-cleanup DISABLED!")))
 
   (global-set-key [f7] 'flyspell-start)
 
