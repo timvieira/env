@@ -14,11 +14,16 @@ function notes {
     matches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
+    top=`echo "$matches" |head -n1 |pysed '\\033\[.*?m' '' `
+    topdir=`dirname "$top"`
+    cd "$topdir"
+    bright_yellow "-> $topdir"
+
     # clickable verion
     #echo "$matches" |linepy 'print "file://" + line'
     echo "$matches"
 
-    #notes.py $@
+    #n2 $@
 
     if [[ "$retcode" -eq "0" ]]; then
         # feeling lucky, so we'll open the file for you.
@@ -30,10 +35,10 @@ function notes {
 
         # dispatch to the appropriate opener; the text editor is the default
         if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
-            gnome-open $match
+            gnome-open "$match"
 
         elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
-            ipython notebook --pylab inline $match
+            nbopen "$match"
         else
             $EDITOR "$match"
         fi
@@ -41,8 +46,8 @@ function notes {
         #bash   # sigh. Changing directory worked for bash function, but not for
         #       # this script version...
 
-    else
-        yellow "pick a file or be more specific."
+#    else
+#        yellow "pick a file or be more specific."
     fi
 }
 
