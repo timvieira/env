@@ -231,8 +231,8 @@ function _cpufreak {
 
 alias cpuinfo='cat /proc/cpuinfo |grep MHz'
 alias cpufreak='_cpufreak performance'
-alias cpufreak-performance='_cpufreak performance'
-alias cpufreak-powersave='_cpufreak powersave'
+alias fast='_cpufreak performance'
+alias slow='_cpufreak powersave'
 
 #export LD_PRELOAD=/usr/local/lib/libfst.so:$LD_PRELOAD
 
@@ -240,6 +240,7 @@ alias bibgrep="locate '*.bib' |xargs ack -i"
 
 # added by Anaconda2 4.1.0 installer
 export PATH="/home/timv/anaconda/bin:$PATH"
+
 
 # Standard places to do local install (Chandler's convention)
 #export PATH="$HOME/.local/bin:$PATH"
@@ -251,7 +252,7 @@ export PATH="/home/timv/anaconda/bin:$PATH"
 
 # Wrapper around make, which covers building different project types, when an
 # actual Makefile isn't present.
-function make {
+function my-make {
     if [[ -e Makefile ]]; then
         #yellow "[make] found Makefile"
         /usr/bin/make $@
@@ -274,3 +275,11 @@ function make {
         fi
     fi
 }
+alias make='my-make'
+
+
+
+# Gurobi optimization software
+export GUROBI_HOME="/home/timv/Downloads/gurobi752/linux64"
+export PATH="${PATH}:${GUROBI_HOME}/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
