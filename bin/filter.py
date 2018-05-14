@@ -11,13 +11,6 @@
   ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
   ./src/main/java/edu/jhu/nlp/parsing/grammar/ConvertSlavGrammar.java
 
-  [ update: `$ fv jhu nlp /Grammar.java` works. ]
-
-- TODO: Handle complete paths
-
-  $ fv ./src/main/java/edu/jhu/nlp/parsing/grammar/Grammar.java
-  no results
-
 - TODO: underscore/lackof is a problem.
 
   Neither 'two_line_search' or 'twolinesearch' match the query 'two line search'
@@ -167,7 +160,7 @@ if __name__ == '__main__':
     parser.add_argument('--on-fail', help='When a no match is found execute this command.')
 
     parser.add_argument('-C', '--no-color', dest='color', action='store_false',
-                        help='Do not print ANSO color codes.')
+                        help='Do not print ANSI color codes.')
 
     parser.add_argument('-N', dest='msg', action='store_false',
                         help='omit "no results" msg')
