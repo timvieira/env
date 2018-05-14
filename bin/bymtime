@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from datetime import datetime
-from path import path
+from path import Path
 from sys import stdin, argv, stdout
 from argparse import ArgumentParser
 
@@ -12,7 +12,7 @@ p.add_argument('-t',
 args = p.parse_args()
 
 files = list(stdin)
-files = map(path, filter(None, map(str.strip, files)))
+files = map(Path, filter(None, map(str.strip, files)))
 
 def t(x):
     return datetime.fromtimestamp(x.mtime)
