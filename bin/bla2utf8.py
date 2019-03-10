@@ -2,7 +2,7 @@
 """Convert STDIN to UTF-8 based on character encoding detection
 
 """
-
+from __future__ import print_function
 import sys, itertools
 from chardet.universaldetector import UniversalDetector
 
@@ -15,7 +15,7 @@ for line in sys.stdin:
         break
 detector.close()
 
-print>>sys.stderr, detector.result
+print(detector.result, file=sys.stderr)
 
 encoding = detector.result['encoding']
 for line in itertools.chain(lines, sys.stdin):
