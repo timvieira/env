@@ -7,23 +7,24 @@ usage:
     $ pickle filename.pkl
 
 """
-import cPickle
+from __future__ import print_function
+import pickle
 import sys
 import pylab as pl
 from arsenal.timer import timeit
-from arsenal.terminal import yellow, green
+from arsenal.terminal import colors
 
 try:
     [_, filename] = sys.argv
 except ValueError:
-    print __doc__.strip()
-    print
+    print(__doc__.strip())
+    print()
     exit(1)
 
-with timeit(yellow % 'loading pickle'):
-    with file(filename) as f:
-        obj = cPickle.load(f)
+with timeit(colors.yellow % 'loading pickle'):
+    with open(filename, 'rb') as f:
+        obj = pickle.load(f)
 
-print green % 'pickled object is available in local variable `obj`'
+print(colors.green % 'pickled object is available in local variable `obj`')
 
 from arsenal.debug import ip; ip()
