@@ -62,14 +62,14 @@ Runs in two modes
 
 TODO: The bash configuration stuff seems like excessive boilerplate.
 """
-
+from __future__ import print_function
 import sys
 from os import environ, path
-from env.bin.filter import main, words
+from env.bin.filter import run, words
 from collections import defaultdict
 
 # faster to import this way so that we don't drag lots of other math utils along.
-sys.path.append('/home/timv/projects/arsenal/arsenal/math')
+sys.path.append('/home/timv/projects/arsenal/arsenal/maths')
 from featureselection import kl_filter
 
 
@@ -86,10 +86,10 @@ def complete(filename, testing=''):
         cwords = environ.get('COMP_WORDS', '').split()[1:] + ['']   # ignore program name, pad by one word
         currword = cwords[int(environ.get('COMP_CWORD', 0)) - 1]
 
-    lines = [line.strip() for line in file(filename)]
+    lines = [line.strip() for line in open(filename)]
 
     # ensures prefix of query matches
-    matches = list(main(cwords, lines, color=False))
+    matches = list(run(cwords, lines, color=False))
 
     if not matches:
         return
@@ -111,16 +111,16 @@ def complete(filename, testing=''):
         # prefix, KL divergence will be zero.
         if s > 0.1 or m == 1 or (n == 1 and len(w) > len(currword) > 0):  # strict prefix has been typed
             if testing:
-                print '(%g) %s' % (s, w)
+                print('(%g) %s' % (s, w))
                 for _, d in ds:
-                    print '   %s' % d
+                    print('   %s' % d)
             else:
-                print w.encode('utf8')
+                print(w)
         else:
             if testing:
-                print '## (%g) %s' % (s, w)
+                print('## (%g) %s' % (s, w))
                 for _, d in ds:
-                    print '##   %s' % d
+                    print('##   %s' % d)
 
 
 if __name__ == '__main__':
