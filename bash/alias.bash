@@ -54,3 +54,11 @@ alias nocolor="python -c 'import sys, re; [sys.stdout.write(re.sub(\"\033\[[0-9;
 # For example:
 #     $ sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+alias myopen='shutup-and-disown xdg-open'
+
+alias opdf-mapl='myopen /home/timv/projects/presentations/papers/2017-mapl-dyna/mapl.pdf'
+alias opdf-nwf='myopen /home/timv/Desktop/read/dyna/nwf-thesis.pdf'
+alias opdf-nwf-pseudo='myopen /home/timv/Desktop/read/dyna/nwf-thesis-eb2.pdf'
+alias opdf-latex-symbols='myopen /home/timv/.skid/marks/LaTexSymbols-letter.pdf'
+alias opdf-dyna='myopen /home/timv/.skid/marks/datalog20-paper.pdf'
