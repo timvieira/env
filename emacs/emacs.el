@@ -70,17 +70,9 @@
 
 (add-path "")
 (add-path "site-lisp/package.el")
-(add-path "site-lisp/pylint.el")
 (add-path "site-lisp")
-(add-path "site-lisp/cython-mode.el")
-(add-path "site-lisp/flycheck-cython.el")
-;(add-path "site-lisp/protobuf-mode.el")
-;(add-path "site-lisp/zimpl-mode.el")
 ;(add-path "site-lisp/writegood-mode.el")
-(add-path "site-lisp/org-7.8.03/lisp")       ;; TODO: why do I still need this? shouldn't the elpa version suffice?
 ;(add-path "site-lisp/haskell-mode")
-
-
 
 
 ;; Note: Install packages early. In some cases late installation is buggy
@@ -102,6 +94,12 @@
 (unless (package-installed-p 'color-theme-sanityinc-tomorrow)
   (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
 
+(unless (package-installed-p 'cython-mode)
+  (package-refresh-contents) (package-install 'cython-mode))
+(unless (package-installed-p 'flycheck-cython)
+  (package-refresh-contents) (package-install 'flycheck-cython))
+(unless (package-installed-p 'pylint)
+  (package-refresh-contents) (package-install 'pylint))
 
 
 (require 'cython-mode)
@@ -111,7 +109,7 @@
 (add-path "site-lisp/dyna-mode.el")
 (autoload 'dyna-mode "dyna-mode" "Major mode for editing Dyna programs." t)
 (add-hook 'dyna-mode-hook 'turn-on-font-lock)  ; if you want syntax highlighting
-;(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
+(add-to-list 'auto-mode-alist '("\\.dyna[^.]*$" . dyna-mode))
 
 
 ;; auctex
@@ -190,13 +188,13 @@
 (column-number-mode 1) ; show column number near mode-line
 
 ;; TODO: Can we fix the columns/rows discretization problem by adding a margin?
-(defun my-window-placement ()
-  (interactive)
-  (if (window-system)
-    (progn
-      (set-frame-position (selected-frame) 622 0)
-      ; rows instead of pixels => imperfect
-      (set-frame-size (selected-frame) 119 49))))
+;(defun my-window-placement ()
+;  (interactive)
+;  (if (window-system)
+;    (progn
+;      (set-frame-position (selected-frame) 622 0)
+;      ; rows instead of pixels => imperfect
+;      (set-frame-size (selected-frame) 119 49))))
 
 
 ;(defun dark-colors ()
@@ -271,7 +269,7 @@
 ;(dark-colors)
 ;(light-colors)
 
-(add-hook 'window-setup-hook 'my-window-placement)
+;(add-hook 'window-setup-hook 'my-window-placement)
 ;(run-with-idle-timer 0.2 nil 'my-window-placement)  ; to avoid some issues, waits a half-second
 ;(my-window-placement)
 
@@ -552,6 +550,9 @@
  '(icomplete-mode nil nil (icomplete))
  '(inhibit-startup-screen t)
  '(mouse-wheel-mode t nil (mwheel))
+ '(package-selected-packages
+   (quote
+    (pylint flycheck-cython color-theme-sanityinc-tomorrow color-theme org-plus-contrib)))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
