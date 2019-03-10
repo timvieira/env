@@ -1,8 +1,9 @@
-personal_ws-1.1 en 682 
+personal_ws-1.1 en 700 
 nonhomogeneous
 ANF
 google
 tuples
+preprint
 multi
 eigenvectors
 analytics
@@ -16,6 +17,7 @@ CGI
 github
 Pearlmutter
 dyna
+monadic
 submodularity
 Urbana
 IPython
@@ -42,6 +44,7 @@ Gaussians
 PocketKB
 tradeoffs
 dev
+decidability
 Champaign
 reproducibility
 BP's
@@ -57,6 +60,7 @@ analytical
 Levenshtein
 refactoring
 newswire
+computability
 timeline
 functor
 modality
@@ -84,8 +88,8 @@ determinantal
 centroid
 rsync
 workflow
-Earley
 LaTeX
+Earley
 Sudoku
 gbo
 timv
@@ -125,8 +129,8 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraph's
 hypergraphs
+hypergraph's
 Prolog
 matplotlib
 replicable
@@ -181,6 +185,7 @@ additively
 Blackwellization
 pdfs
 Makefile
+tokenize
 suboptimally
 JHU
 dualdecomp
@@ -199,6 +204,7 @@ online
 wildcard
 sigmoidal
 args
+underspecified
 defeasible
 GPUs
 memoizing
@@ -248,6 +254,7 @@ subtasks
 priori
 neuralnet
 constituent's
+dereferencing
 Theano
 Comcast
 regressor
@@ -278,6 +285,7 @@ MLN
 LSE
 unmemoized
 multilinear
+uncomputability
 univariate
 misclassification
 Boyan
@@ -292,8 +300,8 @@ minima
 deterministically
 procedurally
 acyclicity
-pdf
 NLP
+pdf
 traversable
 linesearch
 dynabases
@@ -307,6 +315,7 @@ reranking
 semiring
 parallelizable
 parallelize
+unintuitive
 cyclicity
 Datalog
 codegen
@@ -379,6 +388,7 @@ SGD
 piecewise
 scala
 hypernyms
+infeasiblity
 Wasserstein
 covariates
 cardinality
@@ -393,6 +403,7 @@ nwf's
 REPLs
 RPC
 treebank
+reentrancy
 Gricean
 neuroscientists
 parametrized
@@ -497,6 +508,7 @@ SCEA
 Prewitt
 internet
 equational
+nontermination
 might've
 Nelder
 toolkits
@@ -506,6 +518,7 @@ whitespace
 underdetermined
 pretrained
 adaptively
+Bloomberg
 reprioritization
 interpretability
 proximal
@@ -555,6 +568,7 @@ vertices
 Pushpendre
 nondecomposable
 Keshet
+requeue
 memoized
 TACL
 nonterminals
@@ -603,6 +617,7 @@ eisner
 numpy
 unnormalized
 probit
+nonadaptive
 advisor
 coreference
 UMass
@@ -623,12 +638,14 @@ RL
 thresholded
 nullary
 Kahan
+confounders
 Mathematica
 monotonicity
 MERT
 adjoints
 adaptivity
 uninstall
+extremal
 versa
 subvector
 compositional
@@ -643,6 +660,7 @@ subsample
 simulative
 searn
 affine
+undecidability
 hamfistedly
 conjunctively
 disjunctively
