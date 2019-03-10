@@ -23,6 +23,7 @@ function tmpfiles {
 }
 
 function pyclean {
+    rm -rf `find . -name "__pycache__"`
     rm -f `find . -name "*.pyc"`
     rm -f `find . -name "*$py.class"`  # jython
 }
