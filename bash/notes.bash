@@ -20,7 +20,7 @@ function notes {
     bright_yellow "-> $topdir"
 
     # clickable verion
-    #echo "$matches" |linepy 'print "file://" + line'
+    #echo "$matches" |linepy 'print("file://" + line)'
     echo "$matches"
 
     #n2 $@
@@ -60,7 +60,7 @@ function notes-cd {
     retcode="$?"
 
     # clickable verion
-    #echo "$matches" |linepy 'print "file://" + line'
+    #echo "$matches" |linepy 'print("file://" + line)'
     echo "$matches"
 
     #notes.py $@
