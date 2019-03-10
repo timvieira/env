@@ -40,13 +40,11 @@ fi
 # no dot in front of this destination.
 add-link2 texmf ~/texmf
 
-add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
+#add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
 
-mkdir -p ~/.ipython/extensions/
-mkdir -p ~/.ipython/profile_default/
+#mkdir -p ~/.ipython/extensions/
+#mkdir -p ~/.ipython/profile_default/
 
-#sudo apt-get install python-dev python-setuptools python-numpy python-scipy
-#sudo apt-get install mercurial git
 #sudo easy_install ipython
 #sudo easy_install hg-git
 #sudo apt-get install texlive-latex-base
