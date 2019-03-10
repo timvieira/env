@@ -25,7 +25,7 @@ function prompt_command {
 
   # pull command number out of history file; $HISTCMD didn't work..
 #  HISTNUM=`echo "$CMD" |cut -f1 -d' ' `   # broken now has space prefix...
-#  HISTNUM=`echo "$CMD" |linepy 'print line.strip().split()[0]' `   # slow
+#  HISTNUM=`echo "$CMD" |linepy 'print(line.strip().split()[0]') `   # slow
   HISTNUM=`echo "$CMD" |sed 's/^ *//' | cut -f1 -d' ' `  # trim prefix
 
   if [[ "$PREV_HISTNUM" -ne "$HISTNUM" ]]; then
@@ -46,11 +46,11 @@ PROMPT_COMMAND="prompt_command"
 
 # view bash history for this directory
 function dir-history {
-    cat ~/.bash_history_metadata |grep "^$PWD "
+    cat ~/.bash_history_metadata |grep -a "^$PWD " 
 }
 
 function dir-history-list {
-    dir-history | linepy 'print re.sub("^\\S+\\s+\\S+\\s+\\S+\\s+\\S+ ", "", line)'
+    dir-history | linepy 'print(re.sub("^\\S+\\s+\\S+\\s+\\S+\\s+\\S+ ", "", line))'
 }
 
 # note: this is not an accurate count because store succesive repeats of an
