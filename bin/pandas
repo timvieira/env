@@ -4,7 +4,7 @@ import pandas
 import sys
 import numpy as np
 import pylab as pl
-from arsenal.math import compare
+from arsenal.maths import compare
 from argparse import ArgumentParser
 
 # tell pandas to use the full console width
@@ -38,7 +38,7 @@ else:
 
 df = pandas.io.parsers.read_table(f,sep=sep)
 
-print df
+print(df)
 
 #df.plot(subplots=True)
 #pl.show()
