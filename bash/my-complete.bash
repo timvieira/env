@@ -34,7 +34,7 @@ _complete_notes ()
 
 #_complete_es ()
 #{
-#    arg=`python -c "print '$COMP_LINE'[2:]"`
+#    arg=`python -c "print('$COMP_LINE'[2:]")`
 #    COMPREPLY=$(compgen -c |grep $arg |sort |uniq)
 #}
 
@@ -149,7 +149,7 @@ $courses
 
 
 #function unique-lines {
-#    linepy 'z=set()' 'z.add(line)' 'print "\n".join(sorted(z))'
+#    linepy 'z=set()' 'z.add(line)' 'print("\n".join(sorted(z)))'
 #}
 
 # TODO: create a version of hist complete which uses dir-history.
