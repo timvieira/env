@@ -47,7 +47,7 @@ function edit-bash-function {
             green '============================================'
 
             # open file at lineno with visit
-            visit `echo $ackresults |nocolor |linepy 'print re.findall("[^:]*:[0-9]+", line)[0]; break'`
+            visit `echo $ackresults |nocolor |linepy 'print(re.findall("[^:]*:[0-9]+", line)[0]); break'`
 
             # recenter window
             ( emacsclient -e '(recenter-top-bottom)' ) >&/dev/null
