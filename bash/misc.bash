@@ -24,7 +24,7 @@ alias tetris="shutup-and-disown google-chrome $ENV/tetris.html 2>/dev/null"
 function pkill9 {
     # Skip the grep command
     ps aux |grep -v grep |grep "$@"
-    pids=`ps aux |grep -v grep |grep "$@" |linepy 'ids=[]' 'ids.append(split[1])' 'print " ".join(ids)'`
+    pids=`ps aux |grep -v grep |grep "$@" |linepy 'ids=[]' 'ids.append(split[1])' 'print(" ".join(ids))'`
     echo "$pids"
     kill -9 $pids
 }
@@ -67,7 +67,7 @@ function compare-uniq-lines {
     meld $hs
 }
 
-alias pyhash="python -c 'import sys, hashlib; print hashlib.sha1(str().join(sys.argv[1:]) or raw_input()).hexdigest()'"
+alias pyhash="python -c 'import sys, hashlib; print(hashlib.sha1(str().join(sys.argv[1:]) or raw_input()).hexdigest())'"
 
 # re-execute a command periodically, in an infinite loop
 function ghetto-refresh {
@@ -150,4 +150,8 @@ function meld-nocolor {
     echo "$2 -> $B"
 
     meld "$A" "$B"
+}
+
+function unicode-lookup {
+    ack -i "$@" ~/projects/env/bin/unicode-lookup/unicode.db.txt
 }
