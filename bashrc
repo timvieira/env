@@ -102,8 +102,11 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: consider filtering all hidden directories.
 # TODO: directory filter skips substring matches
 function ignore-filter {
-    grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\)$' \
-      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\|build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|\.prof$\|\.fls\|\.fdb_latexmk\|third-party/\|results.*/\)'
+    grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\|__pycache__\)$' \
+      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\)' \
+      |grep -v '\(build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|third-party/\|results.*/\)' \
+      |grep -v '\(\.prof$\|\.fls\|\.fdb_latexmk\)' \
+      |grep -v '\(#.*#\|.*~$\)'
 }
 
 #______________________________________________________________________________
@@ -154,8 +157,8 @@ function todos {
 # grep notes for patterns
 # TODO: generalize to multiple keyword search (filter by multiple regexps)
 function notes-ack {
-    cat $COMP_NOTES | xargs ack -i "$@"
-    echo ~/.skid/marks/*.d/notes.org | xargs ack -i "$@"
+    cat $COMP_NOTES | xargs -0 ack -i "$@"
+    echo ~/.skid/marks/*.d/notes.org | xargs -0 ack -i "$@"
 }
 
 #_______________________________________________________________________________
@@ -280,6 +283,12 @@ alias make='my-make'
 
 
 # Gurobi optimization software
-export GUROBI_HOME="/home/timv/Downloads/gurobi752/linux64"
+#export GUROBI_HOME="/home/timv/Downloads/gurobi752/linux64"
+export GUROBI_HOME="/home/timv/Downloads/gurobi8.0.0_linux64/gurobi800/linux64"
 export PATH="${PATH}:${GUROBI_HOME}/bin"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# added by Anaconda3 installer
+export PATH="/home/timv/anaconda3/bin:$PATH"
