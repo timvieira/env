@@ -48,7 +48,7 @@ function pyprof-callgraph {
 function gprof-viz {
   local name="$1"
 
-  gprof2dot.py -f pstats "$1" | dot -Tsvg -o "$name.svg"
+  gprof2dot -f pstats "$1" | dot -Tsvg -o "$name.svg"
   shutup-and-disown google-chrome "$name.svg"
 
   echo
