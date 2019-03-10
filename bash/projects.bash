@@ -10,20 +10,17 @@ function p {
         return
     fi
 
-    # TODO: add directories of recently modified files to the list of things we
-    # search
+    # TODO: add directories of recently modified files to the list of things we search
 
     # TODO: utility which searches recent files from the command-line (such a
     # tool must already exist!)
 
-    # TODO: if all matches have a common (nontrivial) directory go to it
-    # instead?
+    # TODO: if all matches have a common (nontrivial) directory go to it instead?
 
-    # TODO: If a directory name is an exact match go to it.
+    # TODO: If a directory name is an exact match go to it. Especially, if one
+    # of the folders in ~/projects is an exact match.
 
-    # TODO: repos with more overlap with name should come first
-    # e.g.
-    #     $ p pdfhacks
+    # TODO: repos with more overlap with name should come first e.g. `$ p pdfhacks`
 
     matches=`cat $COMP_PROJECTS |bymtime -t`
     echo "$matches" |filter.py $@
