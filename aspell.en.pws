@@ -1,4 +1,4 @@
-personal_ws-1.1 en 700 
+personal_ws-1.1 en 706 
 nonhomogeneous
 ANF
 google
@@ -69,6 +69,7 @@ subphrases
 subtree
 CRF
 MLNs
+iterable
 DLM
 BibTeX
 conformability
@@ -129,8 +130,8 @@ parallelizing
 frequentist
 Teichert
 submodular
-hypergraphs
 hypergraph's
+hypergraphs
 Prolog
 matplotlib
 replicable
@@ -300,8 +301,8 @@ minima
 deterministically
 procedurally
 acyclicity
-NLP
 pdf
+NLP
 traversable
 linesearch
 dynabases
@@ -432,6 +433,7 @@ notational
 tunable
 RSS
 underestimator
+trichotomy
 hypergraph
 subtrees
 CRFs
@@ -445,6 +447,7 @@ Rudinger
 Efraimidis
 compositionality
 Epipolar
+bijection
 revisitation
 complementizer
 rescaled
@@ -490,6 +493,7 @@ variational
 uncentered
 scalability
 representable
+pathologies
 REPL
 extensibility
 subsequences
@@ -503,6 +507,7 @@ aggregators
 kludgy
 reweight
 arity
+stationarity
 toposort
 SCEA
 Prewitt
@@ -674,6 +679,7 @@ exponentiating
 recomputation
 matchings
 argmin
+cancelation
 vectorized
 Bottou's
 elisp
