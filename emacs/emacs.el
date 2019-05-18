@@ -45,6 +45,7 @@
 ;; Now install el-get at the very first
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
+
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
@@ -167,7 +168,6 @@
 ;(require 'protobuf-mode)
 ;(require 'writegood-mode)
 ;(require 'zimpl-mode)
-
 
 ;; Highlight current line
 ;(global-hl-line-mode 1)
@@ -603,7 +603,7 @@
 
 
 ; utf-8 everywhere (http://stackoverflow.com/questions/2901541/which-coding-system-should-i-use-in-emacs)
-(setq utf-translate-cjk-mode nil) ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+;(setq utf-translate-cjk-mode nil) ; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
 (set-language-environment 'utf-8)
 (set-keyboard-coding-system 'utf-8-mac) ; For old Carbon emacs on OS X only
 (setq locale-coding-system 'utf-8)
