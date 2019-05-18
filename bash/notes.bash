@@ -35,7 +35,7 @@ function notes {
 
         # dispatch to the appropriate opener; the text editor is the default
         if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
-            gnome-open "$match"
+            xdg-open "$match"
 
         elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
             nbopen "$match"
