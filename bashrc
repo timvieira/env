@@ -103,6 +103,7 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\|__pycache__\)$' \
+      |grep -v '\(__init__\.py\)' \
       |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\)' \
       |grep -v '\(build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|third-party/\|results.*/\)' \
       |grep -v '\(\.prof$\|\.fls\|\.fdb_latexmk\)' \
@@ -241,9 +242,6 @@ alias slow='_cpufreak powersave'
 
 alias bibgrep="locate '*.bib' |xargs ack -i"
 
-# added by Anaconda2 4.1.0 installer
-export PATH="/home/timv/anaconda/bin:$PATH"
-
 
 # Standard places to do local install (Chandler's convention)
 #export PATH="$HOME/.local/bin:$PATH"
@@ -269,7 +267,7 @@ function my-make {
             local tex=`ls -t *.tex 2>/dev/null |head -n1`
             if [[ -n $tex ]]; then
                 #yellow "[make] latexmk $tex"
-                latexmk -interaction=nonstopmode -pdf $tex
+                latexmk -interaction=nonstopmode -f -pdf $tex
                 if [[ "$#" -eq 0 ]]; then
                      local pdf=`echo $tex |sed -e 's/tex$/pdf/'`
                      o $pdf
@@ -284,11 +282,29 @@ alias make='my-make'
 
 # Gurobi optimization software
 #export GUROBI_HOME="/home/timv/Downloads/gurobi752/linux64"
-export GUROBI_HOME="/home/timv/Downloads/gurobi8.0.0_linux64/gurobi800/linux64"
+#export GUROBI_HOME="/home/timv/Downloads/gurobi8.0.0_linux64/gurobi800/linux64"
+export GUROBI_HOME="/home/timv/Downloads/gurobi8.1.1_linux64/gurobi811/linux64"
 export PATH="${PATH}:${GUROBI_HOME}/bin"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+
 # added by Anaconda3 installer
 export PATH="/home/timv/anaconda3/bin:$PATH"
+# added by Anaconda3 2018.12 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/timv/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/home/timv/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/timv/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/home/timv/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
