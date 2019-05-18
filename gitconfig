@@ -8,15 +8,47 @@ diff = always
 [push]
 default = simple
 
+[credential]
+helper = cache --timeout=36000
+
+##############
+# Diff
+
 [diff]
 tool = meld
 prompt = false
 
+[difftool]
+	prompt = false
+
+[diff]
+guitool = meld
+
+[difftool "meld"]
+cmd = meld \"$LOCAL\" \"$REMOTE\" --label \"DIFF (ORIGINAL MY)\"
+
+###############
+# Merge
+
 [merge]
 tool = meld
 
-[difftool]
-prompt = false
+[mergetool "meld"]
+cmd = meld --auto-merge \"$LOCAL\" \"$BASE\" \"$REMOTE\" --output \"$MERGED\" --label \"MERGE (REMOTE BASE MY)\"
+trustExitCode = false
 
-[credential]
-helper = cache --timeout=36000
+[mergetool]
+# don't ask if we want to skip merge
+	prompt = false
+
+# don't create backup *.orig files
+keepBackup = false
+[diff "jupyternotebook"]
+	command = git-nbdiffdriver diff
+[merge "jupyternotebook"]
+	driver = git-nbmergedriver merge %O %A %B %L %P
+	name = jupyter notebook merge driver
+[difftool "nbdime"]
+	cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
+[mergetool "nbdime"]
+	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
