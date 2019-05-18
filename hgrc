@@ -29,6 +29,7 @@ meld.args = $base $local $other -o $output
 hgext.extdiff =
 hgext.bookmarks =
 hggit =
+#git =
 fetch =
 color =
 highlight =
