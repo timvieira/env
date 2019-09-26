@@ -20,7 +20,7 @@
 (defun flyspell-start ()
   "initialize flyspell-mode and check buffer."
   (interactive)
-  (flyspell-buffer)
+;  (flyspell-buffer)
   (flyspell-mode))
 
 ;(defun run-pdflatex (file-name)
