@@ -65,11 +65,13 @@ def tree():
 
 $INIT
 
-for rawline in sys.stdin:
+lineno=-1
+for lineno, rawline in enumerate(sys.stdin):
     line = rawline.strip()       # no trailing whitespace
     split = line.split()
     tabsplit = line.split('\t')
     $LOOP
+if lineno == -1: exit(1)
 
 $END
 "
