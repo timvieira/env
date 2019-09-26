@@ -57,4 +57,5 @@ function clean {
     org-clean
     pyclean
     cython-clean
+    rm -f `find . -name "*.bak"`
 }
