@@ -43,6 +43,8 @@
 (unless (boundp 'org-export-latex-classes)
   (setq org-export-latex-classes nil))
 
+; TODO: I think this has been deprecated in newer versions of org-mode.  Figure
+; out how to do this in the newer version.
 (add-to-list 'org-export-latex-classes
              '("article"
 "
