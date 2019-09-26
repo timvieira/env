@@ -4,21 +4,23 @@
 
 [sources]
 ~/projects/notes
+~/projects/*/notes
 ~/projects/presentations/papers
-~/shelf/tetris/thesis
 ~/projects/temporal_ordering/write
 ~/projects/ddecomp-bp/
 ~/projects/blog/main/content
 ~/projects/shelf/courses
 ~/projects/justified-variables
 ~/projects/ldp/write/working
-~/Dropbox/todo
 ~/projects/blab/PredPatt/paper
 ~/projects/blab/kb-summarization
 ~/projects/gbo
+~/Dropbox/todo
+~/shelf/tetris/thesis
 ##~/.skid/marks
 
 [exclude]
+dyna-docs-priv
 .*\.pdf$
 .*~$
 \.hg
@@ -27,6 +29,7 @@ timv\.tex$
 .*/scrap/.*
 .*\.ipynb_checkpoints
 \.git
+/halpapers/
 
 # use org-export filter
 %org_export_tex
