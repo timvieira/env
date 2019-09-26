@@ -60,7 +60,7 @@ else
     echo "[INFO] There was no latest backup to link to.. creating fresh backup"
 fi
 
-if ! sudo rsync --progress -aR --exclude='/home/timv/.gvfs' $LINKDEST /home/timv $NEW
+if ! sudo rsync --progress -aR --exclude='.config/google-chrome' --exclude='/home/timv/snap' --exclude='/home/timv/.cache' --exclude='/home/timv/anaconda3' --exclude='/home/timv/.gvfs' $LINKDEST /home/timv $NEW
 then
     echo "$TODAY [ERROR] Failed to create backup."
     exit 1
