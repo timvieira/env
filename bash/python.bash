@@ -4,7 +4,10 @@
 
 # ack thru all the python code on my hard drive
 function pysearch {
-    locate -0 '*.py' |xargs -0 ack --ignore-case --color --group "$@"
+    # TODO: there are still a bunch of virtual environments that contain huge
+    # amounts of code that I don't want to search.
+    locate -i --regex -0 '/home/timv/projects/.*\.py$' |xargs -0 ack --ignore-case --color --group "$@"
+#    locate -i -0 '*.py$' |xargs -0 ack --ignore-case --color --group "$@"
 }
 
 # Show pythonpath
