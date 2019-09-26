@@ -63,3 +63,14 @@ alias opdf-nwf-pseudo='myopen /home/timv/Desktop/read/dyna/nwf-thesis-eb2.pdf'
 alias opdf-dyna='myopen /home/timv/.skid/marks/datalog20-paper.pdf'
 alias opdf-latex-symbols='myopen /home/timv/.skid/marks/LaTexSymbols-letter.pdf'
 alias opdf-unicode-latex-math-symbols='myopen /home/timv/.skid/marks/unimathsymbols.pdf'
+
+
+function sup {
+    yellow "`dir-history |tail`"
+    echo
+    find | ignore-filter | bymtime | head #tail
+    echo
+    purple "`((hg log |head) || (git log |head))`"
+    echo
+    hg st || git status
+}
