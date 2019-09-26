@@ -7,16 +7,15 @@
 ~/projects/*/notes
 ~/projects/presentations/papers
 ~/projects/temporal_ordering/write
-~/projects/ddecomp-bp/
-~/projects/blog/main/content
 ~/projects/shelf/courses
+~/projects/blog/main/content
 ~/projects/justified-variables
 ~/projects/ldp/write/working
-~/projects/blab/PredPatt/paper
-~/projects/blab/kb-summarization
-~/projects/gbo
+~/projects/hypergraphs
+~/projects/rl
+~/projects/shelf/blab/PredPatt/paper
+~/projects/shelf/blab/kb-summarization
 ~/Dropbox/todo
-~/shelf/tetris/thesis
 ##~/.skid/marks
 
 [exclude]
