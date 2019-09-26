@@ -1,4 +1,4 @@
-personal_ws-1.1 en 706 
+personal_ws-1.1 en 722 
 nonhomogeneous
 ANF
 google
@@ -14,6 +14,7 @@ API
 bulleted
 unary
 CGI
+realizability
 github
 Pearlmutter
 dyna
@@ -48,6 +49,7 @@ decidability
 Champaign
 reproducibility
 BP's
+denotational
 treewidth
 eigenfunctions
 backprop
@@ -178,6 +180,7 @@ nondeterministic
 precomputation
 todo
 coindexing
+perceptron's
 ergodic
 ILP
 combinatorial
@@ -266,6 +269,7 @@ stochastically
 differentiable
 Wallach
 preterminal
+Gagliolo's
 hacky
 composable
 subdifferentiability
@@ -286,6 +290,7 @@ MLN
 LSE
 unmemoized
 multilinear
+NeurIPS
 uncomputability
 univariate
 misclassification
@@ -294,6 +299,7 @@ Jacobian
 summand
 approximators
 parameterizes
+asymptotics
 gmail
 POMDP
 Markovian
@@ -388,6 +394,7 @@ maxima
 SGD
 piecewise
 scala
+infeasibility
 hypernyms
 infeasiblity
 Wasserstein
@@ -400,6 +407,7 @@ McAllester
 vieira
 WFST
 tokenization
+computable
 nwf's
 REPLs
 RPC
@@ -417,8 +425,10 @@ Jiarong's
 TimeML
 parameterization
 runtimes
+decompositions
 Gormley
 orthonormal
+functors
 wiki
 scriptable
 Domke's
@@ -458,6 +468,7 @@ Occam's
 exponentiate
 subtask
 discretization
+Guestrin
 UMD
 counterfactuals
 CPUs
@@ -562,8 +573,10 @@ checksum
 tuple
 BiLSTM
 MCMC
+monomials
 dequeued
 filename
+specializat
 interpretable
 BP
 memoization
@@ -641,6 +654,7 @@ nonsingularity
 covariate
 RL
 thresholded
+Lagoudakis
 nullary
 Kahan
 confounders
@@ -659,6 +673,7 @@ neuroscience
 unmodeled
 inhomogeneous
 Szeliski
+equivariance
 Scalarizing
 normalizer
 subsample
@@ -692,6 +707,7 @@ changeprop
 preterminals
 vectorization
 subsampling
+quantile
 acyclic
 workably
 subgraph
