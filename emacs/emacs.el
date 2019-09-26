@@ -76,6 +76,11 @@
 ;(add-path "site-lisp/haskell-mode")
 
 
+;(load-file "site-lisp/emacs-grammarly.el")
+;(global-set-key (kbd "C-c C-g") 'grammarly-save-region-and-run)
+
+
+
 ;; Note: Install packages early. In some cases late installation is buggy
 ;; (apparently the case with org-mode stuff -- must install before we load
 ;; customizations)
