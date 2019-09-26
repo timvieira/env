@@ -104,7 +104,7 @@ export GIT_EDITOR=$HGEDITOR
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\|__pycache__\)$' \
       |grep -v '\(__init__\.py\)' \
-      |grep -v '\(\.hg/\|\.svn/\|\.git/\|egg-info\|\.ipynb_checkpoints\)' \
+      |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\)\b' \
       |grep -v '\(build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|third-party/\|results.*/\)' \
       |grep -v '\(\.prof$\|\.fls\|\.fdb_latexmk\)' \
       |grep -v '\(#.*#\|.*~$\)'
@@ -225,7 +225,7 @@ function notes-ack {
 
 function _cpufreak {
     gov=$1  # TODO: check that valid governor is passed in.
-    for cpu in `echo 0 1 2 3`; do  # TODO: automatically enumerate CPUs.
+    for cpu in `echo 0 1 2 3 4 5 6 7`; do  # TODO: automatically enumerate CPUs.
         echo "cpu $cpu" '> was:' `cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor`
         sudo cpufreq-set -g $gov -c$cpu
         echo "     " '> now:' `cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_governor`
@@ -277,8 +277,6 @@ function my-make {
     fi
 }
 alias make='my-make'
-
-
 
 # Gurobi optimization software
 #export GUROBI_HOME="/home/timv/Downloads/gurobi752/linux64"
