@@ -2,53 +2,79 @@
 # My system for quickly finding/editing notes.
 #
 
+source /home/timv/projects/env/bash/colors.bash
+
 function yellow { echo -e "\e[33m$@\e[0m"; }
+
+function remove-color {
+    pysed '\033\[.*?m' ''
+}
 
 function notes {
 
-    # TODO: search skid as well.
-    # TODO: don't just use filename. include the title (heuristic, first line=title)
+    # TODO: search skid and n2 as well?
+    # TODO: don't just use filename: include the title (heuristic, first line=title)
 
     COMP_NOTES=~/projects/notes/.index/files
 
-    matches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
+    colormatches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
-
-    top=`echo "$matches" |head -n1 |pysed '\\033\[.*?m' '' `
-    topdir=`dirname "$top"`
-    cd "$topdir"
-    bright_yellow "-> $topdir"
 
     # clickable verion
     #echo "$matches" |linepy 'print("file://" + line)'
-    echo "$matches"
+    echo "$colormatches"
+
+    export matches=`echo "$colormatches"| remove-color`
+
+    top=`echo "$matches" |head -n1 `
 
     #n2 $@
 
     if [[ "$retcode" -eq "0" ]]; then
         # feeling lucky, so we'll open the file for you.
 
-        # drop color codes
-        match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+        open-note "$top"
 
-        cd `dirname $match`
+    else
 
-        # dispatch to the appropriate opener; the text editor is the default
-        if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
-            xdg-open "$match"
+        # Is there a single, general notes.org file in the matches?
+        export generalnote=`echo "$matches"| grep -i /notes.org `
 
-        elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
-            nbopen "$match"
-        else
-            $EDITOR "$match"
+        cnt=`echo "$matches"| grep -i "/notes.org" |wc -l`
+        if [[ "$cnt" -eq "1" ]]; then
+            # only print this message when we didn't have a unique match
+            yellow "Found unique note.org"    # print this on the line of the match.
+            open-note "$generalnote"
+            return
         fi
 
-        #bash   # sigh. Changing directory worked for bash function, but not for
-        #       # this script version...
+        topdir=`dirname "$top"`
+        cd "$topdir"
+        bright_yellow "-> $topdir"
 
-#    else
-#        yellow "pick a file or be more specific."
+        #yellow "pick a file or be more specific."
     fi
+}
+
+
+function open-note {
+    # drop color codes
+    match="$1"
+    bright_yellow "-> $topdir"
+    yellow "opening $match"
+    cd `dirname "$match"`
+
+    # dispatch to the appropriate opener; the text editor is the default
+    if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
+        xdg-open "$match"
+    elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
+        nbopen "$match"
+    else
+        $EDITOR "$match"
+    fi
+
+    #bash   # sigh. Changing directory worked for bash function, but not for
+    #       # this script version...
 }
 
 # Jump to directory, don't open the file.
@@ -74,7 +100,7 @@ function notes-cd {
     matches=`echo "$matches" |head -n1`
 
     # drop color codes
-    match=`echo "$matches" |pysed '\\033\[.*?m' '' `
+    match=`echo "$matches" |remove-color `
 
     cd $match
 
