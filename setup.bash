@@ -40,7 +40,7 @@ fi
 # no dot in front of this destination.
 add-link2 texmf ~/texmf
 
-#add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
+add-link2 ipython_config.py ~/.ipython/profile_default/ipython_config.py
 
 #mkdir -p ~/.ipython/extensions/
 #mkdir -p ~/.ipython/profile_default/
