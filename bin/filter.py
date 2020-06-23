@@ -28,12 +28,10 @@
   Neither 'two_line_search' or 'twolinesearch' match the query 'two line search'
 
 """
-from __future__ import print_function
 import re, os, sys
 
 from sys import stdin
 from itertools import cycle
-from subprocess import Popen, PIPE
 
 
 colors = red, green, yellow, blue, magenta, cyan = \
@@ -181,7 +179,20 @@ def main():
     matches = run(filters = args.filters,
                   lines = stdin,
                   color = args.color)
-    matches = list(sorted(matches, key=len))   # sorter strings go first because they might be prefixes of longer paths.
+#    matches = list(sorted(matches, key=len))   # sorter strings go first because they might be prefixes of longer paths.
+    matches = list(matches)
+
+    from path import Path
+    high = []
+    filters = [re.compile(re.escape(f), re.I) for f in args.filters]
+    for m in matches:
+        b = Path(m).basename()
+        if any(f.findall(b) for f in filters) or b.lower().startswith('note'):
+            high.append(m)
+
+    if len(high) == 1:
+        print(yellow % '-> using high-priority match', file=sys.stderr)
+        matches = high
 
     if not matches:
         if args.msg:
@@ -196,9 +207,8 @@ def main():
 
     if len(matches) == 1 or args.top:
         if args.on_unique:
-
+            from subprocess import Popen, PIPE
             cmd = args.on_unique.format(match=re.sub(r'\033\[.*?m', '', matches[0]))
-
             Popen(cmd,
                   stdout=PIPE,
                   stdin=PIPE,
