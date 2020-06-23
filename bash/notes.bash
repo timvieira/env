@@ -5,6 +5,7 @@
 source /home/timv/projects/env/bash/colors.bash
 
 function yellow { echo -e "\e[33m$@\e[0m"; }
+function light-yellow { echo -e "\e[1;33m$@\e[0m"; }
 
 function remove-color {
     pysed '\033\[.*?m' ''

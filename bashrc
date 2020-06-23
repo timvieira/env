@@ -264,9 +264,11 @@ function my-make {
             python setup.py build_ext -i
         else
             # Compile most-recently modified tex file, if one exists.
-            local tex=`ls -t *.tex 2>/dev/null |head -n1`
+            local tex=`((cat .latexmk) || (ls -t *.tex 2>/dev/null)) |head -n1`
             if [[ -n $tex ]]; then
                 #yellow "[make] latexmk $tex"
+                # The following option is required for the `minted` package
+                # -latex="pdflatex -shell-escape %O %S"
                 latexmk -interaction=nonstopmode -f -pdf $tex
                 if [[ "$#" -eq 0 ]]; then
                      local pdf=`echo $tex |sed -e 's/tex$/pdf/'`

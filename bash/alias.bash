@@ -68,11 +68,15 @@ alias opdf-unicode-latex-math-symbols='myopen /home/timv/.skid/marks/unimathsymb
 
 
 function sup {
-    yellow "`dir-history |tail`"
+    light-yellow Recent commands
+    echo "`dir-history |grep -v "\b\(hg\|grep\|git\|ack\|sb\|sup\|de\|cd\|rm\|ll\|ls\)\b" | tail`"
     echo
+    light-yellow Recently modified files
     find | ignore-filter | bymtime | head #tail
     echo
+    light-yellow Commit log
     purple "`((hg log |head) || (git log |head))`"
     echo
+    light-yellow Changes
     hg st || git status
 }
