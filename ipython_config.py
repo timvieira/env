@@ -34,6 +34,8 @@ c.InteractiveShellApp.exec_lines.append('from __future__ import division')
 c.InteractiveShellApp.exec_lines.append('import numpy as np')
 c.InteractiveShellApp.exec_lines.append('import pylab as pl')
 c.InteractiveShellApp.exec_lines.append('import scipy as sp')
+c.InteractiveShellApp.exec_lines.append('import scipy.stats as st')
+c.InteractiveShellApp.exec_lines.append('import scipy.linalg as la')
 c.InteractiveShellApp.exec_lines.append('import pandas as pd')
 
 c.InteractiveShellApp.exec_lines.append('from arsenal.iterextras import iterview')
