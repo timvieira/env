@@ -17,7 +17,7 @@ function notes {
 
     COMP_NOTES=~/projects/notes/.index/files
 
-    colormatches=`cat $COMP_NOTES |grep -v '\.skid' |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
+    colormatches=`cat $COMP_NOTES |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
     retcode="$?"
 
     # clickable verion
@@ -38,16 +38,16 @@ function notes {
     else
 
         # Is there a single, general notes.org file in the matches?
-        export generalnote=`echo "$matches"| grep -i /notes.org `
-
-        cnt=`echo "$matches"| grep -i "/notes.org" |wc -l`
-        if [[ "$cnt" -eq "1" ]]; then
-            # only print this message when we didn't have a unique match
-            yellow "Found unique note.org"    # print this on the line of the match.
-            open-note "$generalnote"
-            return
-        fi
-
+#        export generalnote=`echo "$matches"| grep -i /notes.org `
+#
+#        cnt=`echo "$matches"| grep -i "/notes.org" |wc -l`
+#        if [[ "$cnt" -eq "1" ]]; then
+#            # only print this message when we didn't have a unique match
+#            yellow "Found unique note.org"    # print this on the line of the match.
+#            open-note "$generalnote"
+#            return
+#        fi
+#
         topdir=`dirname "$top"`
         cd "$topdir"
         bright_yellow "-> $topdir"
