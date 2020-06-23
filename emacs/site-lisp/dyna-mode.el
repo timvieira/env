@@ -89,6 +89,7 @@
   (list "%")
 
   ;; keywords to highlight
+;  (list "if" "for")
 ;  (list "bool" "string" "term" "int" "double" "if" "whenever" "true" "false")
   (list )
 
@@ -109,15 +110,17 @@
     ;; ("(\\([^()]+\\))"         1 'font-lock-type-face)
 
     ;; operators +, =, *
-    ("\\(\\(log\\+\\|argm[ai][nx]\\|m[ai][nx]\\|[=:!\\|\\+\\-\\*]\\)?=\\)"         1 'font-lock-keyword-face)
-    ("\\([\\+\\-\\*\\&]\\)"     1 'font-lock-type-face)
-    ("\\(\\.\\)[ \t]*$"         1 'font-lock-type-face)
-    ("\\(for\\|unless\\)"       1 'font-lock-keyword-face)
-    ("^[ \t]*\\(:-\\)"          1 'font-lock-type-face)
+    ("\\(=\\|:-\\|log\\+=\\|argm[ai][nx]=\\|→\\|==>\\|m[ai][nx]=\\|\\+=\\|\\*=\\)"
+                                     1 'font-lock-keyword-face)
+    ("\\b\\(if\\|for\\|unless\\)\\b" 1 'font-lock-keyword-face)
+    ("\\([\\+\\-\\*\\&]\\|:>\\)"          1 'font-lock-type-face)
+    ("\\(\\.\\)[ \t]*$"              1 'font-lock-type-face)
+    ("^[ \t]*\\(:-\\)"               1 'font-lock-type-face)
 
     ;; ("\\(\\(^\\|=\\|*\\)[ \t]*[A-Za-z_]+[ \t]*\\)\\((\\|[+*-]\\)"         1 'font-lock-variable-name-face)
-    ("[\[, (]\\([A-Z0-9_]['A-Za-z0-9_]*[ \t]*\\)"       1 'font-lock-variable-name-face)
-    ("\\([a-z][A-Za-z0-9_]*[ \t]*\\)[ \t]*\\([,() ]\\)" 1 'font-lock-function-name-face)
+;    ("[\[, (]\\([A-Z0-9_]['A-Za-z0-9_]*[ \t]*\\)"       1 'font-lock-variable-name-face)
+    ("\\b[$]?\\([A-Z0-9]['A-Za-z0-9_]*\\b\\)"       1 'font-lock-variable-name-face)
+    ("\\b[$]?\\([a-z][A-Za-z0-9_]*\\)\\b" 1 'font-lock-function-name-face)
 
     )
 
