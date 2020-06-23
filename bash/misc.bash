@@ -89,8 +89,13 @@ function doalarm { perl -e 'alarm shift; exec @ARGV' "$@"; }
 
 
 # quickly search the first page of multiple pdfs
-function ack-pdf {
-    for f in `find -name '*.pdf'`; do
+function ack-pdf-recursive {
+    ack-pdfs "$1" `find -name '*.pdf'`
+}
+
+function ack-pdfs {
+    pdfs=`echo "${@:2}"`
+    for f in `echo $pdfs`; do
         # extract text and search only the first page (for efficiency)
         out=$((pdftotext -l 1 "$f" - |ack "$@") 2>/dev/null)
         if [[ $? -eq 0 ]]; then
