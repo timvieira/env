@@ -4,15 +4,21 @@
 
 [sources]
 ~/projects/notes
+~/projects/bandits
+~/projects/algebra
+~/projects/spanning_tree
+~/projects/pgsp
+~/projects/mst
 ~/projects/*/notes
+~/projects/swor
 ~/projects/presentations/papers
 ~/projects/temporal_ordering/write
-~/projects/shelf/courses
 ~/projects/blog/main/content
 ~/projects/justified-variables
 ~/projects/ldp/write/working
 ~/projects/hypergraphs
 ~/projects/rl
+~/projects/arsenal
 ~/projects/shelf/blab/PredPatt/paper
 ~/projects/shelf/blab/kb-summarization
 ~/Dropbox/todo
