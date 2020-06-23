@@ -57,9 +57,11 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias myopen='shutup-and-disown xdg-open'
 
-alias opdf-mapl='myopen /home/timv/projects/presentations/papers/2017-mapl-dyna/mapl.pdf'
-alias opdf-nwf='myopen /home/timv/Desktop/read/dyna/nwf-thesis.pdf'
-alias opdf-nwf-pseudo='myopen /home/timv/Desktop/read/dyna/nwf-thesis-eb2.pdf'
+export MYPAPERS='/home/timv/projects/presentations/papers'
+export READ='/home/timv/Desktop/read'
+alias opdf-mapl='myopen $MYPAPERS/2017-mapl-dyna/mapl.pdf'
+alias opdf-nwf='myopen $READ/thesis/dyna/nwf-thesis.pdf'
+alias opdf-nwf-pseudo='myopen $READ/dyna/nwf-thesis-eb2.pdf'
 alias opdf-dyna='myopen /home/timv/.skid/marks/datalog20-paper.pdf'
 alias opdf-latex-symbols='myopen /home/timv/.skid/marks/LaTexSymbols-letter.pdf'
 alias opdf-unicode-latex-math-symbols='myopen /home/timv/.skid/marks/unimathsymbols.pdf'
