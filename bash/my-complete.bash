@@ -124,7 +124,7 @@ function update {
 # TODO: use .projectsrc
 function list-projects {
     presentations=`find $PROJECTS/presentations -maxdepth 2 -type d |grep -v '\(\.hg\|\.git\)' |ignore-filter`
-    courses=`find $PROJECTS/shelf/courses -type d`
+#    courses=`find $PROJECTS/shelf/courses -type d`
     vcroots=`find-repos`
     #notes=`find $PROJECTS/notes -type d`
 
