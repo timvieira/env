@@ -58,13 +58,18 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias myopen='shutup-and-disown xdg-open'
 
 export MYPAPERS='/home/timv/projects/presentations/papers'
-export READ='/home/timv/Desktop/read'
-alias opdf-mapl='myopen $MYPAPERS/2017-mapl-dyna/mapl.pdf'
-alias opdf-nwf='myopen $READ/thesis/dyna/nwf-thesis.pdf'
-alias opdf-nwf-pseudo='myopen $READ/dyna/nwf-thesis-eb2.pdf'
+export READ='/home/timv/Desktop/read/topics'
+
+function lv {
+    myopen `locate "$1" |grep -v '.hg/ |grep -v '.d/'' | bymtime -t |head -n1`
+}
+alias opdf-mapl='lv mapl.pdf'
+alias opdf-nwf='lv nwf-thesis.pdf'
+alias opdf-nwf-pseudo='lv thesis-eb2.pdf'
 alias opdf-dyna='myopen /home/timv/.skid/marks/datalog20-paper.pdf'
 alias opdf-latex-symbols='myopen /home/timv/.skid/marks/LaTexSymbols-letter.pdf'
 alias opdf-unicode-latex-math-symbols='myopen /home/timv/.skid/marks/unimathsymbols.pdf'
+alias opdf-mixed-chaining='myopen /home/timv/.skid/marks/http_www.cs.jhu.edu_jason_papers_filardoeisner.iclp12.pdf'
 
 
 function sup {

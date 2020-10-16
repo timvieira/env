@@ -18,3 +18,7 @@ function f {
 function fv {
     find -type f | ignore-filter |grep -v 'scrap\|junk\|old' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$' | filter.py $@ --on-unique 'v {match}'
 }
+
+function ov {
+    find -type f | ignore-filter |grep -v 'scrap\|junk\|old' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$' | filter.py $@ --on-unique 'xdg-open {match}'
+}

@@ -22,11 +22,12 @@ function p {
 
     # TODO: repos with more overlap with name should come first e.g. `$ p pdfhacks`
 
-    matches=`cat $COMP_PROJECTS |bymtime -t`
-    echo "$matches" |filter.py $@
+    matches=`cat $COMP_PROJECTS |bymtime -t |filter.py $@`
+    echo "$matches"
 
     # run same search, but with color disabled.
-    matches=`echo "$matches" |filter.py -C $@`
+    #    matches=`echo "$matches" |filter.py -C $@`
+    matches=`echo "$matches" |nocolor $@`
     for d in $matches; do
         # might want to iterate thru this set..
         cd "$d"

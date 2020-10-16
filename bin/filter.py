@@ -39,15 +39,15 @@ colors = red, green, yellow, blue, magenta, cyan = \
 
 
 def unique(iterable):
-    """ List unique elements, preserving order. Remember all elements ever seen. """
-    # unique_everseen('AAAABBBCCDAABBB') --> A B C D
-    # unique_everseen('ABBCcAD', str.lower) --> A B C D
+    "List unique elements, preserving order. Remember all elements ever seen."
+    # unique('AAAABBBCCDAABBB') --> A B C D
+    # unique('ABBCcAD') --> A B C D
     seen = set()
     seen_add = seen.add
-    for element in iterable:
-        if element not in seen:
-            seen_add(element)
-            yield element
+    for x in iterable:
+        if x not in seen:
+            seen_add(x)
+            yield x
 
 
 def camel_space(x):

@@ -40,9 +40,10 @@ function org-clean {
 }
 
 # clean up tex derived files
-TEX_CRUFT="log aux blg bbl dvi fls fdb_latexmk out"
+TEX_CRUFT="log aux cls blg brf bbl dvi fls toc lot cb cb2 bcf lof fdb_latexmk out run.xml"
 function tex-clean {
     remove-exts-associated-with-ext tex $TEX_CRUFT
+    rm -f texput.*
     rm -f pdflatex*.fls
 }
 

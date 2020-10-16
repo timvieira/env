@@ -65,6 +65,7 @@ TODO: The bash configuration stuff seems like excessive boilerplate.
 from __future__ import print_function
 import sys
 from os import environ, path
+sys.path.append('/home/timv/projects')
 from env.bin.filter import run, words
 from collections import defaultdict
 

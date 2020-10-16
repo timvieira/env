@@ -37,6 +37,8 @@
 (global-set-key [f2] '(lambda() (interactive) (set-buffer (find-file "~/Dropbox/todo/todo.org"))))
 (global-unset-key [f4])
 (global-set-key [f4] '(lambda() (interactive) (set-buffer (find-file "~/.bashrc"))))
+(global-unset-key [f6])
+(global-set-key [f6] '(lambda() (interactive) (set-buffer (find-file "~/projects/notes/thesis/NOTES.org"))))
 
 ; What to do if visiting a symbolic link to a file under version control.
 (setq vc-follow-symlinks t)

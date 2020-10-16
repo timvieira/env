@@ -74,13 +74,13 @@ add-path ~/.cabal/bin                        # Haskell executables
 export ILOG_LICENSE_FILE=~/software/cplex/access.ilm
 
 # Python
-add-pypath \
-    $PROJECTS/incubator \
-    $PROJECTS/shelf \
-    $PROJECTS \
-    $PROJECTS/ldp/code/working/lpldp \
-    $PROJECTS/shelf/quantities \
-    ~/software/OpenCV-2.4.2/release/lib
+#add-pypath \
+#    $PROJECTS/incubator \
+#    $PROJECTS/shelf \
+#    $PROJECTS \
+#    $PROJECTS/ldp/code/working/lpldp \
+#    $PROJECTS/shelf/quantities \
+#    ~/software/OpenCV-2.4.2/release/lib
 
 # Classpath
 add-classpath .

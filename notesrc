@@ -19,6 +19,9 @@
 ~/projects/hypergraphs
 ~/projects/rl
 ~/projects/arsenal
+~/projects/dyna-pi
+~/projects/adaptive
+~/projects/thesis
 ~/projects/shelf/blab/PredPatt/paper
 ~/projects/shelf/blab/kb-summarization
 ~/Dropbox/todo
@@ -35,6 +38,7 @@ timv\.tex$
 .*\.ipynb_checkpoints
 \.git
 /halpapers/
+/build/
 
 # use org-export filter
 %org_export_tex
