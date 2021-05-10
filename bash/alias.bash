@@ -36,7 +36,7 @@ alias find-big-files="find . -type f -exec ls -s {} \; | sort -n -r"
 alias emacs-plain='shutup-and-disown emacs --no-init-file --no-splash'
 
 # fire-up a webserver for cwd and open it in the browser
-alias serve='o http://localhost:8000 && python -m SimpleHTTPServer'
+alias serve='o http://localhost:8000 && python -m http.server 8000'
 
 # remove empty lines
 alias remove-empty-lines='grep -v "^\s*$"'
@@ -70,6 +70,7 @@ alias opdf-dyna='myopen /home/timv/.skid/marks/datalog20-paper.pdf'
 alias opdf-latex-symbols='myopen /home/timv/.skid/marks/LaTexSymbols-letter.pdf'
 alias opdf-unicode-latex-math-symbols='myopen /home/timv/.skid/marks/unimathsymbols.pdf'
 alias opdf-mixed-chaining='myopen /home/timv/.skid/marks/http_www.cs.jhu.edu_jason_papers_filardoeisner.iclp12.pdf'
+alias opdf-mapl-talk='lv mapl2017_final_flat.pdf'
 
 
 function sup {
