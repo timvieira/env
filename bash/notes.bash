@@ -69,7 +69,7 @@ function open-note {
     if [[ "$match" =~ .*\.(nb|odp)$ ]]; then
         xdg-open "$match"
     elif [[ "$match" =~ .*\.(ipynb)$ ]]; then
-        nbopen "$match"
+        shutup-and-disown jupyter notebook "$match"
     else
         $EDITOR "$match"
     fi
