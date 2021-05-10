@@ -16,7 +16,6 @@ cacerts =
 
 [extdiff]
 cmd.meld =
-cmd.diff = colordiff
 opts.diff = -uprN
 
 cmd.wdiff = wdiff
@@ -26,7 +25,7 @@ opts.wdiff =
 meld.args = $base $local $other -o $output
 
 [extensions]
-hgext.extdiff =
+extdiff =
 hgext.bookmarks =
 hggit =
 #git =
