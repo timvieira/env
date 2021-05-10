@@ -3,7 +3,9 @@
 .*\\b(TODO|NOTES|LOG|README)\\b.*
 
 [sources]
+~/projects/*
 ~/projects/notes
+~/projects/cg
 ~/projects/bandits
 ~/projects/algebra
 ~/projects/spanning_tree
@@ -11,6 +13,7 @@
 ~/projects/mst
 ~/projects/*/notes
 ~/projects/swor
+~/projects/holyrolling
 ~/projects/presentations/papers
 ~/projects/temporal_ordering/write
 ~/projects/blog/main/content
