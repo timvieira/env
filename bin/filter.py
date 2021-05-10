@@ -27,6 +27,11 @@
 
   Neither 'two_line_search' or 'twolinesearch' match the query 'two line search'
 
+- TODO [2020-10-23 Fri] Idea use the augmented history file to determine whether
+  past searches were successful.  As a noisy signal, we can find previous
+  invocations of `fv` which were followed by a large enough pause (these
+  commands are timestamped).
+
 """
 import re, os, sys
 
