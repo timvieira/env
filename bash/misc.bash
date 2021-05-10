@@ -31,6 +31,14 @@ function pkill9 {
 
 alias poweroff-display='sleep 1 && xset dpms force off'
 
+# https://linuxconfig.org/how-to-disable-middle-mouse-button-click-paste-on-ubuntu-20-04-focal-fossa-linux
+function disable-middle-click-paste {
+    gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false
+}
+function enable-middle-click-paste {
+    gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true
+}
+
 function disable-touchpad {
     xinput list \
         |grep -i touchpad \
