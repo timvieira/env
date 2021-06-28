@@ -7,7 +7,17 @@
 _complete_fv ()
 {
     X="/tmp/find-dump"
-    find -type f |ignore-filter > $X
+    fff > $X
+    COMPREPLY=( $( \
+        COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
+        COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
+        hist-complete.py $X ) )
+}
+
+_complete_fo ()
+{
+    X="/tmp/find-dump"
+    fff > $X
     COMPREPLY=( $( \
         COMP_LINE=$COMP_LINE  COMP_POINT=$COMP_POINT \
         COMP_WORDS="${COMP_WORDS[*]}"  COMP_CWORD=$COMP_CWORD \
@@ -170,6 +180,7 @@ function _optcomplete {
 complete -F _optcomplete skid
 
 complete -F _complete_fv    fv
+complete -F _complete_fo    fo
 complete -F _complete_e     e
 complete -F _complete_notes notes
 complete -F _complete_p     p
