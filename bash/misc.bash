@@ -43,16 +43,24 @@ function disable-touchpad {
     xinput list \
         |grep -i touchpad \
         |linepy '
-[x] = re.findall("id=(\d+)", line)
-os.system("xinput set-prop %s \"Device Enabled\" 0" % x)'
+if line:
+    [x] = re.findall("id=(\d+)", line)
+    os.system("xinput set-prop %s \"Device Enabled\" 0" % x)
+else:
+    print("device not found")
+'
 }
 
 function enable-touchpad {
     xinput list \
         |grep -i touchpad \
         |linepy '
-[x] = re.findall("id=(\d+)", line)
-os.system("xinput set-prop %s \"Device Enabled\" 1" % x)'
+if line:
+    [x] = re.findall("id=(\d+)", line)
+    os.system("xinput set-prop %s \"Device Enabled\" 1" % x)
+else:
+    print("device not found")
+'
 }
 
 function compare-lines {
