@@ -13,14 +13,19 @@ function f {
     find -type f |ignore-filter | filter.py $@
 }
 
+function fff {
+    find -type f | ignore-filter |grep -v '(/scrap/\|/junk/\|/old/\|/docs/)' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$'
+}
+
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
 # matching specified pattern. Opens the file if a unique match is found.
 function fv {
-    find -type f | ignore-filter |grep -v 'scrap\|junk\|old\|docs' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$' | filter.py $@ --on-unique 'v {match}'
+    fff | filter.py $@ --on-unique 'v {match}'
 }
 
-function ov {
-    find -type f | ignore-filter |grep -v 'scrap\|junk\|old' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$' | filter.py $@ --on-unique 'xdg-open {match}'
+# find and open
+function fo {
+    fff | filter.py $@ --on-unique 'xdg-open {match}'
 }
 
 #
@@ -54,6 +59,6 @@ function emo {
     # for k in emoji.unicode_codes.EMOJI_ALIAS_UNICODE_ENGLISH:
     #     if 'wink' in k: print(k)
     out=`python -c "from emoji import emojize as emo; print(emo(':$1:', use_aliases=True))" `
-    echo "$out"
-    echo "$out" |xsel
+    echo "$out" |xsel --clipboard
+    xsel --clipboard
 }
