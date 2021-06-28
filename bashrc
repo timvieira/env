@@ -106,7 +106,7 @@ function ignore-filter {
       |grep -v '\(__init__\.py\)' \
       |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\)\b' \
       |grep -v '\(build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|third-party/\|results.*/\)' \
-      |grep -v '\(\.prof$\|\.fls\|\.fdb_latexmk\)' \
+      |grep -v '\(\.prof\|\.fls\|\.fdb_latexmk\)$' \
       |grep -v '\(#.*#\|.*~$\)'
 }
 
