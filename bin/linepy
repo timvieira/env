@@ -66,6 +66,9 @@ def tree():
 $INIT
 
 lineno=-1
+line = ''
+split = line.split()
+tabsplit = line.split('\t')
 for lineno, rawline in enumerate(sys.stdin):
     line = rawline.strip()       # no trailing whitespace
     split = line.split()
