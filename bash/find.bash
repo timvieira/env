@@ -52,6 +52,7 @@ function fpdf {
     done
     red "failed to find match for PDF $1"
 }
+alias fp='fpdf'
 
 # Utility for looking up emojis - results are automatically placed on clipboard
 # like l2u (my latexify script).

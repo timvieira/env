@@ -34,9 +34,11 @@
 
 """
 import re, os, sys
-
 from sys import stdin
 from itertools import cycle
+from path import Path
+from argparse import ArgumentParser
+from subprocess import Popen, PIPE
 
 
 colors = red, green, yellow, blue, magenta, cyan = \
@@ -53,42 +55,6 @@ def unique(iterable):
         if x not in seen:
             seen_add(x)
             yield x
-
-
-def camel_space(x):
-    """
-    Insert spaces implied by camel case.
-
-    >>> camel_space('McDonald')
-    'Mc Donald'
-
-    >>> camel_space('thisIsAWordInCamelCaseWord')
-    'this Is A Word In Camel Case Word'
-
-    >>> camel_space('howAboutNumbersLike2Or3')
-    'how About Numbers Like2 Or3'
-
-    """
-    return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
-
-
-# Note: unused in completion script
-def words(x):
-    """
-    Extract words.
-
-    >>> words('/path/to/some-file.txt')
-    ['path', 'to', 'some', 'file', 'txt']
-
-    >>> words('McDonald')
-    ['Mc', 'Donald']
-
-    >>> words('thisIsAWordInCamelCase')
-    ['this', 'Is', 'A', 'Word', 'In', 'Camel', 'Case']
-
-    """
-    x = camel_space(x)
-    return re.findall(r'\w+', x)
 
 
 # TODO: create a submodule with common filters so that we can use this in
@@ -126,42 +92,24 @@ def run(filters, lines, color=True):
     lines = [l.strip() for l in lines]
 
     # substring match -> higher recall
-    substring_match = 1
-    if substring_match:
-        filters = [re.compile(re.escape(f), re.I) for f in filters]
-    else:
-        # XXX: trial period. This version does not use regex filters.
-        # new:
-        filters = [re.compile(r'\b' + re.escape(f), re.I) for f in filters]
-        # old:
-        #filters = [re.compile(r'\b' + f, re.I) for f in filters]
+    filters = [re.compile(re.escape(f), re.I) for f in filters]
 
     for line in unique(lines):
 
-        if substring_match:
-            if not all(f.findall(line) for f in filters):
-                continue
-        else:
-            # camel case expansion not needed for substring match.
-
-            # XXX: is there a better way to do this? note that highlighting doesn't work.
-            line2 = camel_space(line)  # add spaces at camel case word boundaries
-            if not (all(f.findall(line) for f in filters) \
-                    or all(f.findall(line2) for f in filters)):
-                continue
+        if not all(f.findall(line) for f in filters):
+            continue
 
         if not filter2(line):
             continue
 
         if color:
             for f, c in zip(filters, cycle(colors)):
-                line = f.sub(lambda m: c % m.group(0), line)
+                line = f.sub(lambda m, c=c: c % m.group(0), line)
 
         yield line
 
 
 def main():
-    from argparse import ArgumentParser
 
     # "if (pattern1 and pattern2 ...) then action"
 
@@ -184,15 +132,14 @@ def main():
     matches = run(filters = args.filters,
                   lines = stdin,
                   color = args.color)
-#    matches = list(sorted(matches, key=len))   # sorter strings go first because they might be prefixes of longer paths.
+
     matches = list(matches)
 
-    from path import Path
     high = []
     filters = [re.compile(re.escape(f), re.I) for f in args.filters]
     for m in matches:
         b = Path(m).basename()
-        if any(f.findall(b) for f in filters) or b.lower().startswith('note'):
+        if any(f.findall(b) for f in filters):
             high.append(m)
 
     if len(high) == 1:
@@ -212,7 +159,6 @@ def main():
 
     if len(matches) == 1 or args.top:
         if args.on_unique:
-            from subprocess import Popen, PIPE
             cmd = args.on_unique.format(match=re.sub(r'\033\[.*?m', '', matches[0]))
             Popen(cmd,
                   stdout=PIPE,

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 744 
+personal_ws-1.1 en 751 
 ANF
 API
 AdaGrad
@@ -45,6 +45,7 @@ DSL
 Datalog
 Daume
 Davidsonian
+Dioids
 Domingos
 Domke
 Domke's
@@ -72,12 +73,14 @@ Gricean
 Guestrin
 Guestrin's
 HMMs
+Herbrand
 Hixkaryana
 Hobbsian
 Hoeffding
 Hollingshead
 Homographies
 ICML
+IDEs
 ILP
 IPython
 Immanant
@@ -264,6 +267,7 @@ coindexed
 coindexing
 collineation
 combinatorial
+combinatorics
 commutativity
 complementizer
 composable
@@ -305,6 +309,7 @@ dequeued
 dereferenced
 dereferencing
 derivational
+destructures
 determinantal
 deterministically
 dev
@@ -449,6 +454,7 @@ modality
 modularity
 monadic
 monads
+monoid
 monomials
 monotonicity
 morphologically
@@ -589,6 +595,7 @@ representability
 representable
 reprioritization
 reproducibility
+repropagate
 repropagated
 repropagation
 requeue

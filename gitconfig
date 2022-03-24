@@ -9,7 +9,11 @@ diff = always
 default = simple
 
 [credential]
-	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+        helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+
+[credential "https://git.overleaf.com"]
+    username = tim.f.vieira@gmail.com
+    helper = store
 
 ##############
 # Diff
@@ -19,7 +23,7 @@ tool = meld
 prompt = false
 
 [difftool]
-	prompt = false
+        prompt = false
 
 [diff]
 guitool = meld
@@ -39,16 +43,16 @@ trustExitCode = false
 
 [mergetool]
 # don't ask if we want to skip merge
-	prompt = false
+        prompt = false
 
 # don't create backup *.orig files
 keepBackup = false
 [diff "jupyternotebook"]
-	command = git-nbdiffdriver diff
+        command = git-nbdiffdriver diff
 [merge "jupyternotebook"]
-	driver = git-nbmergedriver merge %O %A %B %L %P
-	name = jupyter notebook merge driver
+        driver = git-nbmergedriver merge %O %A %B %L %P
+        name = jupyter notebook merge driver
 [difftool "nbdime"]
-	cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
+        cmd = git-nbdifftool diff \"$LOCAL\" \"$REMOTE\"
 [mergetool "nbdime"]
-	cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+        cmd = git-nbmergetool merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"

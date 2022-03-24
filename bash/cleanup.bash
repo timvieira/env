@@ -45,6 +45,7 @@ function tex-clean {
     remove-exts-associated-with-ext tex $TEX_CRUFT
     rm -f texput.*
     rm -f pdflatex*.fls
+    rm -f *.aux *.blg *.bbl
 }
 
 function cython-clean {

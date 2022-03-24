@@ -63,11 +63,47 @@ Runs in two modes
 TODO: The bash configuration stuff seems like excessive boilerplate.
 """
 from __future__ import print_function
-import sys
+import re, sys
 from os import environ, path
 sys.path.append('/home/timv/projects')
-from env.bin.filter import run, words
+from env.bin.filter import run #, words
 from collections import defaultdict
+
+
+def camel_space(x):
+    """
+    Insert spaces implied by camel case.
+
+    >>> camel_space('McDonald')
+    'Mc Donald'
+
+    >>> camel_space('thisIsAWordInCamelCaseWord')
+    'this Is A Word In Camel Case Word'
+
+    >>> camel_space('howAboutNumbersLike2Or3')
+    'how About Numbers Like2 Or3'
+
+    """
+    return re.sub(r'((?<=[a-z])[A-Z]|(?<!\A)[A-Z](?=[a-z]))', r' \1', x)
+
+
+def words(x):
+    """
+    Extract words.
+
+    >>> words('/path/to/some-file.txt')
+    ['path', 'to', 'some', 'file', 'txt']
+
+    >>> words('McDonald')
+    ['Mc', 'Donald']
+
+    >>> words('thisIsAWordInCamelCase')
+    ['this', 'Is', 'A', 'Word', 'In', 'Camel', 'Case']
+
+    """
+    x = camel_space(x)
+    return re.findall(r'\w+', x)
+
 
 # faster to import this way so that we don't drag lots of other math utils along.
 sys.path.append('/home/timv/projects/arsenal/arsenal/maths')
