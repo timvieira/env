@@ -14,14 +14,28 @@ function f {
 }
 
 function fff {
-    find -type f | ignore-filter |grep -v '(/scrap/\|/junk/\|/old/\|/docs/)' | bymtime | cut -f2 | grep -v '\.\(pdf\|dir\|bak\|dat\)$'
+    find -type f \
+     |ignore-filter \
+     |grep -v '(/scrap/\|\.log\|\.out\|/out/\|/junk/\|/old/\|/docs/)' \
+     |bymtime |cut -f2 |grep -v '\.\(pdf\|dir\|bak\|dat\)$'
 }
 
 # fv ("flexible visit" or "find and visit") recursively searches for a file path
 # matching specified pattern. Opens the file if a unique match is found.
+#function fv { fff | filter.py $@ --on-unique 'v {match}' }
+
 function fv {
-    fff | filter.py $@ --on-unique 'v {match}'
+    query=$(echo "$@" | sed 's/ /\ /g')
+    local results=$(fff | fzf -q "$query" --height 40% --layout reverse --border --preview 'cat {}' --color 'fg:#bbccdd,fg+:#ddeeff,bg:#334455,preview-bg:#223344,border:#778899')
+    if [ -z "$results" ]
+    then
+        echo
+    else
+        echo "$results"
+        v $results
+    fi
 }
+
 
 # find and open
 function fo {
@@ -40,17 +54,24 @@ function fpdf {
         return
     fi
 
-    matches=`locate '*.pdf' |bymtime -t |filter.py $@`
-    echo "$matches"
+    query=$(echo "$@" | sed 's/ /\ /g')
+    local results=`locate '*.pdf' |grep /home/timv/ |bymtime -t |fzf -q $query`
+    if [ -z "$results" ]
+    then
+        echo
+    else
+        echo "$results"
+        xdg-open $results
+    fi
 
-    matches=`echo "$matches" |nocolor $@`
-    for m in $matches; do
-        # might want to iterate thru this set..
-        #cd `dirname "$m"`
-        xdg-open "$m"
-        return
-    done
-    red "failed to find match for PDF $1"
+#    matches=`echo "$matches" |nocolor $@`
+#    for m in $matches; do
+#        # might want to iterate thru this set..
+#        #cd `dirname "$m"`
+#        xdg-open "$m"
+#        return
+#    done
+#    red "failed to find match for PDF $1"
 }
 alias fp='fpdf'
 
