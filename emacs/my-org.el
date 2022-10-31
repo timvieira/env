@@ -102,7 +102,7 @@
    (quote ((emacs-lisp . t)
            (dot . t)
            (python . t)
-           (sh . t)
+           (shell . t)
            (org . t)
            (latex . t))))
 
