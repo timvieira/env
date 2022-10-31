@@ -103,6 +103,8 @@ export GIT_EDITOR=$HGEDITOR
 # TODO: directory filter skips substring matches
 function ignore-filter {
     grep -v '\(\.class\|\.pyc\|\.o\|\.hi\|\.so\|__pycache__\)$' \
+      |grep -v '\.pytest_cache' \
+      |grep -v '\.coverage' \
       |grep -v '\(__init__\.py\|scrap\|scraps\)' \
       |grep -v '\(\.hg\|\.svn\|\.git\|egg-info\|\.ipynb_checkpoints\)\b' \
       |grep -v '\(build/\|dist/\|tmp/\|output/\|data/\|coverage-report\|third-party/\|results.*/\)' \
@@ -292,8 +294,6 @@ export GUROBI_HOME="/home/timv/Downloads/gurobi8.1.1_linux64/gurobi811/linux64"
 export PATH="${PATH}:${GUROBI_HOME}/bin"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 
 # added by Anaconda3 installer
 export PATH="/home/timv/anaconda3/bin:$PATH"
@@ -313,3 +313,5 @@ else
 fi
 unset __conda_setup
 # <<< conda init <<<
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
