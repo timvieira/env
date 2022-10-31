@@ -11,49 +11,65 @@ function remove-color {
     pysed '\033\[.*?m' ''
 }
 
+#   function notes {
+#
+#       # TODO: search skid and n2 as well?
+#       # TODO: don't just use filename: include the title (heuristic, first line=title)
+#
+#       COMP_NOTES=~/projects/notes/.index/files
+#
+#       colormatches=`cat $COMP_NOTES |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
+#       retcode="$?"
+#
+#       # clickable verion
+#       #echo "$matches" |linepy 'print("file://" + line)'
+#       echo "$colormatches"
+#
+#       export matches=`echo "$colormatches"| remove-color`
+#
+#       top=`echo "$matches" |head -n1 `
+#
+#       #n2 $@
+#
+#       if [[ "$retcode" -eq "0" ]]; then
+#           # feeling lucky, so we'll open the file for you.
+#
+#           open-note "$top"
+#
+#       else
+#
+#           # Is there a single, general notes.org file in the matches?
+#   #        export generalnote=`echo "$matches"| grep -i /notes.org `
+#   #
+#   #        cnt=`echo "$matches"| grep -i "/notes.org" |wc -l`
+#   #        if [[ "$cnt" -eq "1" ]]; then
+#   #            # only print this message when we didn't have a unique match
+#   #            yellow "Found unique note.org"    # print this on the line of the match.
+#   #            open-note "$generalnote"
+#   #            return
+#   #        fi
+#   #
+#           topdir=`dirname "$top"`
+#           cd "$topdir"
+#           bright_yellow "-> $topdir"
+#
+#           #yellow "pick a file or be more specific."
+#       fi
+#   }
+
 function notes {
-
-    # TODO: search skid and n2 as well?
-    # TODO: don't just use filename: include the title (heuristic, first line=title)
-
     COMP_NOTES=~/projects/notes/.index/files
 
-    colormatches=`cat $COMP_NOTES |bymtime |cut -f2 |~/projects/env/bin/filter.py $@`
-    retcode="$?"
+    query=$(echo "$@" | sed 's/ /\ /g')
 
-    # clickable verion
-    #echo "$matches" |linepy 'print("file://" + line)'
-    echo "$colormatches"
-
-    export matches=`echo "$colormatches"| remove-color`
-
-    top=`echo "$matches" |head -n1 `
-
-    #n2 $@
-
-    if [[ "$retcode" -eq "0" ]]; then
-        # feeling lucky, so we'll open the file for you.
-
-        open-note "$top"
-
+    local results=$(cat $COMP_NOTES |bymtime |cut -f2 |bymtime -t |fzf -q "$query" --height 40% --layout reverse --border --preview 'cat {}' --color 'fg:#bbccdd,fg+:#ddeeff,bg:#334455,preview-bg:#223344,border:#778899')
+    
+    if [ -z "$results" ]
+    then
+        echo
     else
-
-        # Is there a single, general notes.org file in the matches?
-#        export generalnote=`echo "$matches"| grep -i /notes.org `
-#
-#        cnt=`echo "$matches"| grep -i "/notes.org" |wc -l`
-#        if [[ "$cnt" -eq "1" ]]; then
-#            # only print this message when we didn't have a unique match
-#            yellow "Found unique note.org"    # print this on the line of the match.
-#            open-note "$generalnote"
-#            return
-#        fi
-#
-        topdir=`dirname "$top"`
-        cd "$topdir"
-        bright_yellow "-> $topdir"
-
-        #yellow "pick a file or be more specific."
+        echo "$results"
+        open-note $results
     fi
 }
 
