@@ -45,25 +45,25 @@
 
 
 ;; Now install el-get at the very first
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+;(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (let (el-get-master-branch
-          ;; do not build recipes from emacswiki due to poor quality and
-          ;; documentation
-          el-get-install-skip-emacswiki-recipes)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  ;; build melpa packages for el-get
-  (el-get-install 'package)
-  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("melpa" . "http://melpa.org/packages/")))
-  (el-get-elpa-build-local-recipes))
-
+;(unless (require 'el-get nil 'noerror)
+;  (with-current-buffer
+;      (url-retrieve-synchronously
+;       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+;    (let (el-get-master-branch
+;          ;; do not build recipes from emacswiki due to poor quality and
+;          ;; documentation
+;          el-get-install-skip-emacswiki-recipes)
+;      (goto-char (point-max))
+;      (eval-print-last-sexp)))
+;  ;; build melpa packages for el-get
+;  (el-get-install 'package)
+;  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+;                           ("melpa" . "http://melpa.org/packages/")))
+;  (el-get-elpa-build-local-recipes))
+;
 
 ;; highlight URLs in comments/strings
 ;(add-hook 'find-file-hooks 'goto-address-prog-mode)  ;; todo: remove? does this even work?
@@ -72,7 +72,7 @@
   (add-to-list 'load-path (concat (expand-file-name "~/projects/env/emacs/") p)))
 
 (add-path "")
-(add-path "site-lisp/package.el")
+;(add-path "site-lisp/package.el")
 (add-path "site-lisp")
 ;(add-path "site-lisp/writegood-mode.el")
 ;(add-path "site-lisp/haskell-mode")
@@ -82,33 +82,34 @@
 ;(global-set-key (kbd "C-c C-g") 'grammarly-save-region-and-run)
 
 
-
 ;; Note: Install packages early. In some cases late installation is buggy
 ;; (apparently the case with org-mode stuff -- must install before we load
 ;; customizations)
 (require 'package)
-(package-initialize)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(package-initialize)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  
+(unless package-archive-contents    ;; Refresh the packages descriptions
+  (package-refresh-contents))
+
+(setq package-load-list '(all))     ;; List of packages to load
 ;(unless (package-installed-p 'scala-mode2)
 ;  (package-refresh-contents) (package-install 'scala-mode2))
-(unless (package-installed-p 'org-plus-contrib)
-  (package-refresh-contents) (package-install 'org-plus-contrib))
 (unless (package-installed-p 'org)
   (package-refresh-contents) (package-install 'org))
-(unless (package-installed-p 'color-theme)
-  (package-refresh-contents) (package-install 'color-theme))
+;(unless (package-installed-p 'org-plus-contrib)
+;  (package-refresh-contents) (package-install 'org-plus-contrib))
+;(unless (package-installed-p 'color-theme)
+;  (package-refresh-contents) (package-install 'color-theme))
 (unless (package-installed-p 'color-theme-sanityinc-tomorrow)
   (package-refresh-contents) (package-install 'color-theme-sanityinc-tomorrow))
-
+   
 (unless (package-installed-p 'cython-mode)
   (package-refresh-contents) (package-install 'cython-mode))
 (unless (package-installed-p 'flycheck-cython)
   (package-refresh-contents) (package-install 'flycheck-cython))
 (unless (package-installed-p 'pylint)
   (package-refresh-contents) (package-install 'pylint))
-
 
 (require 'cython-mode)
 ;(require 'flycheck-cython)
@@ -167,7 +168,7 @@
 (savehist-mode t)
 
 ;; Common lisp
-(require 'cl)
+;(require 'cl)
 (require 'ido)
 (require 'parenface)
 (require 'dired+)
@@ -470,8 +471,8 @@
   (add-to-list 'auto-mode-alist '("\\.tex$" . latex-setup))
   ;(load-library "matlab")
 
-  (autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
-  (setq auto-mode-alist (cons '("\\.\\(md\\|markdown\\)" . markdown-mode) auto-mode-alist))
+  ;(autoload 'markdown-mode "markdown-mode.el" "Major mode for editing Markdown files" t)
+  ;(setq auto-mode-alist (cons '("\\.\\(md\\|markdown\\)" . markdown-mode) auto-mode-alist))
 
   (if (window-system) (X-setup) (no-X-setup))
 
@@ -549,8 +550,7 @@
    (vector "#4d4d4c" "#c82829" "#718c00" "#eab700" "#4271ae" "#8959a8" "#3e999f" "#ffffff"))
  '(cursor-in-nonselected-windows nil)
  '(custom-safe-themes
-   (quote
-    ("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
+   '("628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default))
  '(fci-rule-color "#efefef")
  '(global-font-lock-mode t nil (font-lock))
  '(ibuffer-saved-filter-groups nil)
@@ -558,8 +558,7 @@
  '(inhibit-startup-screen t)
  '(mouse-wheel-mode t nil (mwheel))
  '(package-selected-packages
-   (quote
-    (pylint flycheck-cython color-theme-sanityinc-tomorrow color-theme org-plus-contrib)))
+   '(pylint flycheck-cython color-theme-sanityinc-tomorrow color-theme))
  '(show-paren-mode t nil (paren))
  '(transient-mark-mode t)
  '(truncate-lines t)
@@ -572,8 +571,8 @@
  ;; If there is more than one, they won't work right.
  '(comint-highlight-prompt ((t (:foreground "light blue"))))
  '(compilation-info ((((class color) (min-colors 16) (background light)) (:foreground "gray" :weight bold))))
- '(flymake-errline ((((class color)) (:underline "red"))))
- '(flymake-warnline ((((class color)) (:underline "yellow4")))))
+ '(flymake-error ((((class color)) (:underline "red"))))
+ '(flymake-warning ((((class color)) (:underline "yellow4")))))
 
 ;; <INDENTING TEXT>
 ;;   Code copied from:  http://www.emacswiki.org/emacs/IndentingText
@@ -661,5 +660,5 @@
 (pending-delete-mode 1)  ;; crucial! typed text replaces a selection, rather than append
 
 
-(require 'color-theme)
+;(require 'color-theme)
 (load-theme 'sanityinc-tomorrow-eighties)
