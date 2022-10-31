@@ -1,4 +1,4 @@
-personal_ws-1.1 en 751 
+personal_ws-1.1 en 766 
 ANF
 API
 AdaGrad
@@ -122,6 +122,7 @@ Minka
 NLP
 Naradowsky
 Nelder
+Neumann
 NeurIPS
 OOV
 Occam's
@@ -216,6 +217,7 @@ anaphor
 anaphora
 anaphors
 antiderivative
+antisymmetry
 approximator
 approximators
 argmax
@@ -242,12 +244,15 @@ backtrace
 benchmarking
 bigram
 bijection
+bijections
 bijective
 binarization
 binarize
 binarized
 binarizing
 blackbox
+boolean
+builtins
 bulleted
 cancelation
 canonicalization
@@ -270,6 +275,7 @@ combinatorial
 combinatorics
 commutativity
 complementizer
+composability
 composable
 compositional
 compositionality
@@ -324,6 +330,7 @@ discretize
 discretized
 discriminative
 discriminatively
+disequality
 disjunct
 disjunction
 disjunctively
@@ -346,6 +353,7 @@ enqueued
 enqueuing
 ensembling
 epipole
+equalities
 equational
 equivariance
 ergodic
@@ -358,6 +366,7 @@ extremal
 facebook
 featurization
 filename
+fixpoint
 formalisms
 frequentist
 frequentists
@@ -374,6 +383,7 @@ granularities
 hacky
 hamfistedly
 heldout
+homomorphism
 html
 http
 hw
@@ -457,6 +467,7 @@ monads
 monoid
 monomials
 monotonicity
+morphism
 morphologically
 morphotactics
 multi
@@ -488,6 +499,7 @@ nondeterministic
 nondeterministically
 nondifferentiable
 nonepisodic
+nonground
 nonhomogeneous
 nonidempotent
 nonlinearities
@@ -605,6 +617,7 @@ resamples
 resampling
 rescaled
 rescaling
+restartable
 revisitation
 reweight
 reweighted
@@ -674,6 +687,7 @@ subvector
 summand
 summarization
 superset
+supremum
 symlink
 templating
 thresholded
@@ -711,6 +725,7 @@ uncomputability
 undecidability
 underdetermined
 underestimator
+underspecification
 underspecified
 undirected
 unifications
